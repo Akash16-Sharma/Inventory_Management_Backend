@@ -1,0 +1,61 @@
+﻿@model BackendAPI.Models.User_Login
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+<form class="row g-3">
+    <div class="col-md-6">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="text" class="form-control" id="exampleInputEmail1"  placeholder="Enter email">
+
+    </div>
+    <div class="col-md-6">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    </div>
+
+    <a href="@Url.Action("Signup", "Account")">Don't have an account? Sign Up</a>
+
+
+    <div class="col-2">
+        <button onclick="onLogin()" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+
+
+    function onLogin() {
+
+        debugger
+        var email = $("#exampleInputEmail1").val();
+        var password = $("#exampleInputPassword1").val();
+
+        
+        $.ajax({
+            url: '@Url.Action("CheckLogin", "Account")',
+            type: 'POST',
+            data: JSON.stringify({
+                Username: email,
+                Password: password,
+            }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) {        
+                console.log(data);
+            },
+            error: function (jXhr) {
+        
+                console.log("AJAX error");
+            }
+        });
+    }
+
+
+
+</script>

@@ -1,0 +1,116 @@
+﻿@model BackendAPI.Models.AddAllInfo
+
+@{
+    ViewData["Title"] = "Signup";
+}
+
+
+<form class="row g-3">
+    <div class="col-md-6">
+        <label for="inputname" class="form-label">Organisation Name</label>
+        <input type="text" class="form-control" id="inputname">
+    </div>
+    <div class="col-md-6">
+        <label for="inputEmail4" class="form-label">Email</label>
+        <input type="email" class="form-control" id="inputEmail4">
+    </div>
+
+    <div class="col-md-4">
+        <label for="inputtype" class="form-label">Organisation Type</label>
+        <select id="inputtype" class="form-select">
+            <option selected>Select</option>
+            <option>Manufacturing</option>
+            <option>Warehouse </option>
+        </select>
+    </div>
+   
+    <div class="col-6">
+        <label for="inputAddress" class="form-label">Address</label>
+        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+    </div>
+
+    <div class="col-md-2">
+        <label for="inputCity" class="form-label">City</label>
+        <input type="text" class="form-control" id="inputCity">
+    </div>
+    <div class="col-md-2">
+        <label for="inputState" class="form-label">State</label>
+        <input type="text" class="form-control" id="inputState">
+    </div>
+    <div class="col-md-2">
+        <label for="inputZip" class="form-label">Zip</label>
+        <input type="text" class="form-control" id="inputZip">
+    </div>
+
+    <div class="col-md-4">
+        <label for="inputphone" class="form-label">Phone</label>
+        <input type="number" class="form-control" id="inputphone">
+    </div>
+   
+    <div class="col-md-6">
+        <label for="inputusername" class="form-label">Username</label>
+        <input type="text" class="form-control" id="inputusername">
+    </div>
+
+    <div class="col-md-6">
+        <label for="inputPassword4" class="form-label">Password</label>
+        <input type="password" class="form-control" id="inputPassword4">
+    </div>
+
+    <a href="@Url.Action("Login", "Account")">Already have an account? Sign in</a>
+
+
+    <div class="col-12">
+        <button type="submit" onclick="onSubmit()" class="btn btn-primary">Sign Up</button>
+    </div>
+
+</form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+
+
+    function onSubmit() {
+     
+        debugger
+        var name = $("#inputname").val();
+        var email = $("#inputEmail4").val();
+        var type = $("#inputtype").val();
+        var password = $("#inputPassword4").val();
+        var address = $("#inputAddress").val() + " " + $("#inputZip").val();
+        var city = $("#inputCity").val();
+        var state = $("#inputState").val();
+        var phone = $("#inputphone").val();
+        var username = $("#inputusername").val();
+
+        // Send data to the server using AJAX
+        $.ajax({
+            url: '@Url.Action("Signup", "Account")',  // Replace with your controller and action
+            type: 'POST',
+            data: JSON.stringify({
+                Name: name,
+                Org_Email: email,
+                Type: type,
+                Password: password,
+                Address: address,
+                CityID: city,
+                StateID: state,
+                PhoneNo: phone,
+                Username: username,
+            }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) {
+                // Handle success response from the server
+                console.log(data);
+            },
+            error: function (jXhr) {
+                // Handle error
+                console.log("AJAX error");
+            }
+        });
+    }
+    
+
+
+</script>
