@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using INVT_MNGMNT.Model.DataModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackendAPI.Models
 {
@@ -14,5 +15,6 @@ namespace BackendAPI.Models
         public DbSet<Cities_List> Cities_List { get; set; }
         public DbSet<User_Info> User_Infos { get; set; }
         public DbSet<User_Login> User_Login { get; set; }
+        public DbSet<Item> Items { get; set; }
     }
 }

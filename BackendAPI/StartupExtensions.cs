@@ -3,6 +3,7 @@ using BackendAPI.IRepository;
 using BackendAPI.Models;
 using BackendAPI.Models.Class;
 using BackendAPI.Repository;
+using INVT_MNGMNT.Model.DataModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BackendAPI
@@ -16,6 +17,9 @@ namespace BackendAPI
             services.AddScoped<AppSettings>();
             services.AddScoped<User_Info>();
             services.AddScoped<EncDycPassword>();
+            services.AddScoped<IItemRepo,ItemRepo>();
+            services.AddScoped<Item>();
+
             //Services.AddScoped<EncDycPassword>();
             services.AddScoped<IAuthenticateService, AuthenticateService>();
 
