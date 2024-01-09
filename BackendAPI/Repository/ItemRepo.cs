@@ -43,7 +43,7 @@ namespace BackendAPI.Repository
         {
           var del= _Item.Items.Where(x => x.Id == id).FirstOrDefault();
             del.IsActive=false;
-            _Item.Update(del);
+            _Item.Items.Update(del);
             int IsDelete= _Item.SaveChanges();
             if(IsDelete==1 )
             {
@@ -55,7 +55,9 @@ namespace BackendAPI.Repository
 
         public bool UpdateItem(Item Items)
         {
-           _Item.Items.Update(Items);
+            var itemData=_Item.Items.Where(x => x.Id==Items.Id).FirstOrDefault();
+            itemData = Items;
+           _Item.Items.Update(itemData);
            int IsUpdate= _Item.SaveChanges();
             if (IsUpdate==1 )
             {
