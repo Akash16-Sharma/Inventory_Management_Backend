@@ -28,8 +28,6 @@ if (string.IsNullOrEmpty(connectionString))
 builder.Services.AddDbContextPool<DataContext>(options =>
     options.UseSqlServer(connectionString));
 
-
-
 // Remove unnecessary registration of AppSettings
 // builder.Services.AddScoped<BackendAPI.Models.Class.AppSettings>();
 
@@ -38,6 +36,14 @@ builder.Services.AddInterfaceRepo();
 builder.Services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
 
 var app = builder.Build();
+
+// Enable CORS
+app.UseCors(options =>
+{
+    options.AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader();
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

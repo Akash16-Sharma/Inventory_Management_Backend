@@ -1,67 +1,106 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Items</title>
+    <!-- Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <h2>Add Items</h2>
-    <div class="container">
-    <form class="row g-3">
-
-        <div class="col-md-6">
-            <label for="inputname" class="form-label">Product Name</label>
-            <input type="text" class="form-control" id="inputname">
-        </div>
-        <div class="col-md-6">
-            <label for="inputtype" class="form-label">Unit Type</label>
-            <select id="inputtype" class="form-select">
-                <option selected>Select</option>
-                <option>Pcs</option>
-                <option>Box </option>
-            </select>
-        </div>
-
-        <div class="col-md-3">
-            <label for="inputEmail4" class="form-label">Buy Price</label>
-            <input type="number" class="form-control" id="inputEmail4">
-        </div>
-        <div class="col-md-3">
-            <label for="inputEmail4" class="form-label">Sell Price</label>
-            <input type="number" class="form-control" id="inputEmail4">
-        </div>
-        <div class="col-md-3">
-            <label for="inputEmail4" class="form-label">Min Stock Level</label>
-            <input type="number" class="form-control" id="inputEmail4">
-        </div>
-
-        <div class="col-md-4">
-            <label for="inputtype" class="form-label">Category</label>
-            <select id="inputtype" class="form-select">
-                <option selected>Select</option>
-                <option>Shirts</option>
-                <option>Color</option>
-            </select>
-        </div>
-        <div class="col-md-6">
-            <label for="inputEmail4" class="form-label">Barcode</label>
-            <input type="number" class="form-control" id="inputEmail4">
-        </div>
-        <div class="col-md-4">
-            <label for="inputtype" class="form-label">Supplier</label>
-            <select id="inputtype" class="form-select">
-                <option selected>Select</option>
-                <option>Akash</option>
-                <option>Divyajeet</option>
-            </select>
-        </div>
-
-    </form>
-    <div style="margin-top:20px">
-    <button type="button" class="btn btn-primary">ADD ITEM</button>
+    <div class="container mt-5">
+        <h2>Add Items</h2>
+        <form class="row g-3" id="addItemForm">
+            <div class="col-md-6">
+                <label for="inputname" class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="inputname">
+            </div>
+            <div class="col-md-6">
+                <label for="inputtype" class="form-label">Unit Type</label>
+                <select id="inputtype" class="form-select">
+                    <option selected>Select</option>
+                    <option>Pcs</option>
+                    <option>Box</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="buyPrice" class="form-label">Buy Price</label>
+                <input type="number" class="form-control" id="buyPrice">
+            </div>
+            <div class="col-md-3">
+                <label for="sellPrice" class="form-label">Sell Price</label>
+                <input type="number" class="form-control" id="sellPrice">
+            </div>
+            <div class="col-md-3">
+                <label for="minStockLevel" class="form-label">Min Stock Level</label>
+                <input type="number" class="form-control" id="minStockLevel">
+            </div>
+            <div class="col-md-4">
+                <label for="category" class="form-label">Category</label>
+                <select id="category" class="form-select">
+                    <option selected>Select</option>
+                    <option>Shirts</option>
+                    <option>Color</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="barcode" class="form-label">Barcode</label>
+                <input type="number" class="form-control" id="barcode">
+            </div>
+            <div class="col-md-4">
+                <label for="supplier" class="form-label">Supplier</label>
+                <select id="supplier" class="form-select">
+                    <option selected>Select</option>
+                    <option>Akash</option>
+                    <option>Divyajeet</option>
+                </select>
+            </div>
+            <div class="col-12 mt-3">
+                <button type="button" class="btn btn-primary" onclick="addItem()">ADD ITEM</button>
+            </div>
+        </form>
     </div>
 
-    </div>
+    <!-- Bootstrap JS and Popper.js scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+   
+    <script>
+        function addItem() {
+            var itemName = $("#inputname").val();
+            var unitType = $("#inputtype").val();
+            var buyPrice = $("#buyPrice").val();
+            var sellPrice = $("#sellPrice").val();
+            var minStockLevel = $("#minStockLevel").val();
+            var category = $("#category").val();
+            var barcode = $("#barcode").val();
+            var supplier = $("#supplier").val();
+
+            var apiEndpoint = 'http://localhost:39496/api/Item/AddItem';
+
+            $.ajax({
+                url: apiEndpoint,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    productName: itemName,
+                    unitType: unitType,
+                    buyPrice: buyPrice,
+                    sellPrice: sellPrice,
+                    minStockLevel: minStockLevel,
+                    category: category,
+                    barcode: barcode,
+                    supplier: supplier
+                }),
+                success: function (data) {
+                    console.log(data);
+                    // You can perform additional actions based on the API response
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    </script>
 </body>
 </html>
-
+c

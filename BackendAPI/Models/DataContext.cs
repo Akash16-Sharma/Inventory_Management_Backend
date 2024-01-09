@@ -1,4 +1,4 @@
-﻿using INVT_MNGMNT.Model.DataModels;
+﻿
 using Microsoft.EntityFrameworkCore;
 
 namespace BackendAPI.Models

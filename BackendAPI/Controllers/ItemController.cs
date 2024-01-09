@@ -1,5 +1,5 @@
 ﻿using BackendAPI.IRepository;
-using INVT_MNGMNT.Model.DataModels;
+using BackendAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +18,7 @@ namespace BackendAPI.Controllers
 
         [HttpPost]
         [Route("AddItem")]
-        public IActionResult AddItem(Item items )
+        public IActionResult AddItem([FromBody]Item items)
         {
             bool IsSaved=_itemRepo.AddItem(items);
             if (IsSaved )
@@ -31,9 +31,9 @@ namespace BackendAPI.Controllers
 
         [HttpPost]
         [Route("UpdateItem")]
-        public IActionResult UpdateItem(Item items) 
+        public IActionResult UpdateItem([FromBody]Item item) 
         {
-            bool IsUpdate=_itemRepo.UpdateItem(items);
+            bool IsUpdate=_itemRepo.UpdateItem(item);
             if (IsUpdate)
             {
                 return Ok(new { Status = 200, Message = "Inserted Successfully" });

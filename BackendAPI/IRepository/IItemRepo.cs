@@ -1,4 +1,6 @@
-﻿using INVT_MNGMNT.Model.DataModels;
+﻿
+
+using BackendAPI.Models;
 
 namespace BackendAPI.IRepository
 {

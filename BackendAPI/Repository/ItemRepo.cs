@@ -1,6 +1,6 @@
 ﻿using BackendAPI.IRepository;
 using BackendAPI.Models;
-using INVT_MNGMNT.Model.DataModels;
+
 
 namespace BackendAPI.Repository
 {
@@ -43,7 +43,7 @@ namespace BackendAPI.Repository
         {
           var del= _Item.Items.Where(x => x.Id == id).FirstOrDefault();
             del.IsActive=false;
-            _Item.Items.Add(del);
+            _Item.Update(del);
             int IsDelete= _Item.SaveChanges();
             if(IsDelete==1 )
             {
