@@ -19,15 +19,17 @@ namespace BackendAPI.Controllers
         private readonly IUser_Login _User_Login;
         private readonly AppSettings _appSettings;
         private readonly IOrganisation_Info _organisation_info;
+        private readonly ICity_State _city_state;
 
         private IAuthenticateService _authenticateService;
-        public AccountController(IUser_Login User_Login, IOptions<AppSettings> appSettings, IAuthenticateService authenticateService, IOrganisation_Info organisation_info)
+        public AccountController(IUser_Login User_Login, IOptions<AppSettings> appSettings, IAuthenticateService authenticateService, IOrganisation_Info organisation_info, ICity_State city_state)
         {
 
             _User_Login = User_Login;
             _appSettings = appSettings.Value;
             _authenticateService = authenticateService;
             _organisation_info = organisation_info;
+            _city_state = city_state;
         }
 
 
@@ -74,6 +76,33 @@ namespace BackendAPI.Controllers
             {
                 return Unauthorized(new { status = 401, message = "Username or Password is incorrect", value = "" });
             }
+        }
+
+
+
+        [HttpGet]
+        public IActionResult Statelist()
+        {
+            var data = _city_state.GetAllStates();
+            if(data != null)
+            {
+                return Ok(data);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Citylist(int Stateid)
+        {
+            var data = _city_state.GetAllCities(Stateid);
+            if(data != null)
+            {
+                return Ok(data);
+            }
+            return BadRequest();
         }
 
 
