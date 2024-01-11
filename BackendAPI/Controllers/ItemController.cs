@@ -24,8 +24,6 @@ namespace BackendAPI.Controllers
         }
 
 
-
-
         [HttpPost]
         [Route("UpdateItem/{itemId}")]
         public IActionResult UpdateItem(int itemId, [FromForm] ItemWithImage itemWithImage)

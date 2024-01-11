@@ -30,18 +30,25 @@
     </div>
 
     <div class="col-md-2">
-        <label for="inputCity" class="form-label">City</label>
-        <input type="text" class="form-control" id="inputCity">
-    </div>
-    <div class="col-md-2">
-        <label for="inputState" class="form-label">State</label>
-        <input type="text" class="form-control" id="inputState">
-    </div>
-    <div class="col-md-2">
         <label for="inputZip" class="form-label">Zip</label>
         <input type="text" class="form-control" id="inputZip">
     </div>
 
+    <div class="col-md-2">
+        <label for="inputState" class="form-label">State</label>
+        @Html.DropDownList("SelectedState",
+        new SelectList(ViewBag.StateListData, "id", "name"),
+        "Select State",
+        new { @class = "form-control", @id = "inputState",@onchange = "cityFetch(this.value)" })
+    </div>
+
+    <div class="col-md-2">
+        <label for="inputCity" class="form-label">City</label>
+        <select class="form-select" id="inputCity"></select>
+    </div>
+
+
+ 
     <div class="col-md-4">
         <label for="inputphone" class="form-label">Phone</label>
         <input type="number" class="form-control" id="inputphone">
@@ -69,6 +76,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 
+    function cityFetch(selValue) { 
+        debugger;
+        $.ajax({
+            url: '@Url.Action("GetCities", "Account")',
+            type: 'GET',
+            data: {Id: selValue},
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) {
+                var cityDropdown = $("#inputCity");
+                cityDropdown.empty();
+                $.each(data, function (i, city) {
+                    cityDropdown.append('<option value="' + city.id + '">' + city.name + '</option>');
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("AJAX error: " + textStatus + ", " + errorThrown);
+                console.log(jqXHR.responseText); 
+            }
+
+        });
+
+
+    }
 
     function onSubmit() {
      
