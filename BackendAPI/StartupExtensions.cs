@@ -21,7 +21,8 @@ namespace BackendAPI
             services.AddScoped<AppSettings>();
             services.AddScoped<User_Info>();
             services.AddScoped<EncDycPassword>();
-            
+
+            services.AddScoped<ItemWithImage>();
             services.AddScoped<Item>();
             services.AddScoped<UnitType>();
             services.AddScoped<Cities_List>();

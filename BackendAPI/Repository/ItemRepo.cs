@@ -55,15 +55,21 @@ namespace BackendAPI.Repository
 
         public bool UpdateItem(Item Items)
         {
-            var itemData=_Item.Items.Where(x => x.Id==Items.Id).FirstOrDefault();
-            itemData = Items;
-           _Item.Items.Update(itemData);
+            //var itemData=_Item.Items.Where(x => x.Id==Items.Id).FirstOrDefault();
+            //itemData = Items;
+           _Item.Items.Update(Items);
            int IsUpdate= _Item.SaveChanges();
             if (IsUpdate==1 )
             {
                 return true;
             }
             else { return false; }
+        }
+
+        public Item GetItemById(int id)
+        {
+            var ItemData=_Item.Items.Where(x=>x.Id==id).FirstOrDefault(); 
+            return ItemData;
         }
     }
 }

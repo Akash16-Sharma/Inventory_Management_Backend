@@ -45,6 +45,8 @@ app.UseCors(options =>
            .AllowAnyHeader();
 });
 
+app.UseStaticFiles();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
