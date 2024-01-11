@@ -32,7 +32,7 @@ namespace BackendAPI.Controllers
             _city_state = city_state;
         }
 
-        //testing
+     
         [HttpPost]
         public IActionResult AddOrganisation(AddAllInfo info)
         {
