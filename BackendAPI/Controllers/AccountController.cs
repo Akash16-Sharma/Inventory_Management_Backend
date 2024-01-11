@@ -15,7 +15,7 @@ namespace BackendAPI.Controllers
     public class AccountController : ControllerBase
     {
 
-
+     
         private readonly IUser_Login _User_Login;
         private readonly AppSettings _appSettings;
         private readonly IOrganisation_Info _organisation_info;
@@ -32,7 +32,7 @@ namespace BackendAPI.Controllers
             _city_state = city_state;
         }
 
-
+     
         [HttpPost]
         public IActionResult AddOrganisation(AddAllInfo info)
         {
