@@ -17,49 +17,54 @@ namespace BackendAPI.Controllers
             _itemRepo = itemRepo;
         }
 
+
+
+        [HttpGet]
+        [Route("GetItemInfo")]
+        public IActionResult GetItemInfo(int orgid)
+        {
+            var data= _itemRepo.GetItemInfo(orgid);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(data);
+            }
+        }
+        
+
         [HttpPost]
         [Route("AddItem")]
-        public void AddItem([FromForm] ItemWithImage itemWithImage)
+        public IActionResult AddItem([FromBody] Item item)
         {
+            bool IsSaved=_itemRepo.AddItem(item);
+            if (IsSaved)
+            {
+                return Ok();
+            }
+            else { return BadRequest(); }
         }
 
 
         [HttpPost]
         [Route("UpdateItem/{itemId}")]
-        public IActionResult UpdateItem(int itemId, [FromForm] ItemWithImage itemWithImage)
+        public IActionResult UpdateItem(Item item)
         {
-            try
-            {
-                // Retrieve the existing item from the repository
-                Item existingItem = _itemRepo.GetItemById(itemId);
 
-                if (existingItem == null)
-                {
-                    return NotFound(new { Status = 404, Message = "Item not found" });
-                }
-
-                // Check if the request contains a new image file
-                if (itemWithImage.ImageFile != null && itemWithImage.ImageFile.Length > 0)
-                {
-                    // Generate a unique filename for the new image
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(itemWithImage.ImageFile.FileName);
-
-                    // Specify the folder where the new image will be saved
-                    string uploadPath = Path.Combine("wwwroot/images", fileName);
-
-                    // Save the new image to the specified folder
-                    using (var fileStream = new FileStream(uploadPath, FileMode.Create))
-                    {
-                        itemWithImage.ImageFile.CopyTo(fileStream);
-                    }
-
-                    // Update the existing item's image path
-                   // existingItem.ImagePath = fileName;
-                }
-
-                // Update other properties of the existing item
-                existingItem = itemWithImage.Item;
-
+            var existingItem=_itemRepo.GetItemById(item.Id);
+            existingItem.Name = item.Name;
+            existingItem.Updated_By = item.Updated_By;
+            existingItem.Stock_Alert = item.Stock_Alert;
+            existingItem.Selling_Price = item.Selling_Price;
+            existingItem.Buying_Price = item.Buying_Price;
+            existingItem.Opening_Stock = item.Opening_Stock;
+            existingItem.Barcode = item.Barcode;
+            existingItem.Vendor_Id = item.Vendor_Id;
+            existingItem.Unit_Type_Id = item.Unit_Type_Id;
+            existingItem.Category_Id = item.Category_Id;
+            existingItem.InsertedOn = DateTime.Now;
                 // Save the updated item to the repository
                 bool IsUpdated = _itemRepo.UpdateItem(existingItem);
 
@@ -72,11 +77,8 @@ namespace BackendAPI.Controllers
                     return BadRequest(new { Status = 400, Message = "Failed to update item" });
                 }
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { Status = 500, Message = $"Internal Server Error: {ex.Message}" });
-            }
-        }
+           
+        
 
 
         [HttpPost]

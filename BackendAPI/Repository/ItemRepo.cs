@@ -71,5 +71,27 @@ namespace BackendAPI.Repository
             var ItemData=_Item.Items.Where(x=>x.Id==id).FirstOrDefault(); 
             return ItemData;
         }
+
+        public List<object> GetItemInfo(int orgid)
+        {
+            var data = (from category in _Item.Category
+                        join item in _Item.Items on category.Id equals item.Category_Id
+                        join vendor in _Item.Vendor on item.Vendor_Id equals vendor.Id
+                        join unitType in _Item.Unit_Type on item.Unit_Type_Id equals unitType.Id
+                        where item.Org_Id == orgid && item.IsActive == true
+                        select new
+                        {
+                            item.Name,
+                            item.Buying_Price,
+                            item.Selling_Price,
+                            item.Id,
+                            CategoryName = category.Name,  
+                            VendorName = vendor.Name,      
+                            UnitTypeName = unitType.Name,  
+                        }).ToList<object>();
+
+            return data;
+        }
+
     }
 }
