@@ -1,6 +1,8 @@
 using BackendAPI;
+using BackendAPI.IRepository;
 using BackendAPI.Models;
 using BackendAPI.Models.Class;
+using BackendAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +34,7 @@ builder.Services.AddDbContextPool<DataContext>(options =>
 // builder.Services.AddScoped<BackendAPI.Models.Class.AppSettings>();
 
 // Add the interface registration method
+builder.Services.AddScoped<IItemRepo, ItemRepo>();
 builder.Services.AddInterfaceRepo();
 builder.Services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
 

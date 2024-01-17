@@ -24,7 +24,6 @@ namespace FrontEnd_View.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-
             return View();
         }
 
