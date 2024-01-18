@@ -37,9 +37,9 @@ namespace BackendAPI.Repository
             }
         }
 
-        public bool DeleteCategory(int id)
+        public bool DeleteCategory(Category category)
         {
-            var DeleteData=_Category.Category.Where(x=>x.Id== id).FirstOrDefault();
+            var DeleteData=_Category.Category.Where(x=>x.Id==category.Id).FirstOrDefault();
             if (DeleteData!= null)
             {
                 DeleteData.IsActive = false;
@@ -51,9 +51,9 @@ namespace BackendAPI.Repository
             else return false;
         }
 
-        public List<Category> GetAllCategory()
+        public List<Category> GetAllCategory(int OrgId)
         {
-            var data=_Category.Category.Where(x=>x.IsActive==true).ToList();
+            var data=_Category.Category.Where(x=>x.OrgId==OrgId&&x.IsActive==true).ToList();
             return data;
         }
 

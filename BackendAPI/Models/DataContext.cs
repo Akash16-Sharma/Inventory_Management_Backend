@@ -1,4 +1,5 @@
 ﻿
+using BackendAPI.Models.Roles;
 using Microsoft.EntityFrameworkCore;
 
 namespace BackendAPI.Models
@@ -18,6 +19,8 @@ namespace BackendAPI.Models
         public DbSet<Item> Items { get; set; }
         public DbSet<UnitType> Unit_Type { get; set; }
         public DbSet<Category> Category { get; set; }
+        public DbSet<Staff> Staff { get; set; }
+        public DbSet<Access> StaffAccess { get; set; }
         public DbSet<Vendor> Vendor { get; set; }
     }
 }

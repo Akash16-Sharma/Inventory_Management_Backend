@@ -1,5 +1,7 @@
 ﻿using BackendAPI.IRepository;
+using BackendAPI.IRepository.Roles;
 using BackendAPI.Models;
+using BackendAPI.Models.Roles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,62 +12,175 @@ namespace BackendAPI.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategory _Category;
-        public CategoryController(ICategory category)
+        private readonly IRoles _roles;
+
+        public CategoryController(ICategory category, IRoles roles)
         {
             _Category = category;
+            _roles = roles;
         }
+
 
         [HttpGet]
         [Route("Get")]
-        public IActionResult Get()
+        public IActionResult Get(int OrgId, int StaffId)
         {
-            var data=_Category.GetAllCategory();
-            if(data == null)
+            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            if (CheckRoleTypeData.RoleType == "Admin")
             {
-                return NotFound();
+                var Catdata = _Category.GetAllCategory(OrgId);
+                if (Catdata == null)
+                {
+                    return NotFound(new { Message = "No categories found for the given organization." });
+                }
+                else
+                {
+                    return Ok(Catdata);
+                }
             }
             else
             {
-                return Ok(data);
+                var Accessdata = _roles.CheckAccess(StaffId);
+                for (var i = 0; i < Accessdata.Count; i++)
+                {
+
+                    if (Accessdata[i].SideBarName == "Category" && Accessdata[i].Read_Access == true)
+                    {
+                        var data = _Category.GetAllCategory(OrgId);
+                        if (data == null)
+                        {
+                            return NotFound(new { Message = "No categories found for the given organization and staff." });
+                           
+                        }
+                        else
+                        {
+                            return Ok(data);
+                           
+                        }
+
+                    }
+                }
             }
+            return BadRequest(new { Message = "Invalid request parameters." });
+
         }
+    
+
+           
+        
 
         [HttpPost]
         [Route("AddCategory")]
-        public IActionResult AddCategory([FromBody] Category category)
+        public IActionResult AddCategory([FromBody] Category category,int StaffId)
         {
-            bool IsSave=_Category.AddCategory(category);
-            if (IsSave)
+
+            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            if (CheckRoleTypeData.RoleType == "Admin")
             {
-                return Ok(new { Message = "Category Added Successfully" });
+                bool IsSave = _Category.AddCategory(category);
+                if (IsSave)
+                {
+                    return Ok(new { Message = "Category added successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Failed to add the category." });
+                }
             }
             else
-                return BadRequest();
-        }
+            {
+                var AccessData = _roles.CheckAccess(StaffId);
+                for (int i = 0; i < AccessData.Count; i++)
+                {
+                    if (AccessData[i].SideBarName == "Category" && AccessData[i].Create_Access == true)
+                    {
+                        bool IsSave = _Category.AddCategory(category);
+                        if (IsSave)
+                        {
+                            return Ok(new { Message = "Category added successfully." });
+                        }
+                        else
+                        {
+                            return BadRequest(new { Message = "Failed to add the category." });
+                        }
+                       
+                    }
+                }
+
+            }
+            return BadRequest(new { Message = "Invalid request parameters." });
+        } 
 
         [HttpPost]
         [Route("EditCategory")]
-        public IActionResult EditCategory([FromBody] Category category)
+        public IActionResult EditCategory([FromBody] Category category,int StaffId)
         {
-            bool IsUpdate=_Category.UpdateCategory(category);
-            if (IsUpdate)
+            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            if (CheckRoleTypeData.RoleType == "Admin")
             {
-                return Ok();
+                bool IsUpdate = _Category.UpdateCategory(category);
+                if (IsUpdate)
+                {
+                    return Ok(new { Message = "Category updated successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Failed to update the category." });
+                }
             }
             else
-                return BadRequest();
+            {
+                var AccessData = _roles.CheckAccess(StaffId);
+                for (int i = 0; i < AccessData.Count; i++)
+                {
+                    if (AccessData[i].SideBarName == "Category" && AccessData[i].Update_Access == true)
+                    {
+                        bool IsUpdate = _Category.UpdateCategory(category);
+                        if (IsUpdate)
+                        {
+                            return Ok(new { Message = "Category updated successfully." });
+                        }
+                        else
+                        {
+                            return BadRequest(new { Message = "Failed to update the category." });
+                        }
+                    }
+                }
+            }
+            return BadRequest(new { Message = "Invalid request parameters." });
         }
 
         [HttpPost]
         [Route("DeleteCategory")]
-        public IActionResult DeleteCategory(int id)
+        public IActionResult DeleteCategory(Category category,int staffid)
         {
-            bool IsDelete=_Category.DeleteCategory(id);
-            if (IsDelete)
+            var CheckRoleTypeData = _roles.CheckStaffType(staffid);
+            if (CheckRoleTypeData.RoleType == "Admin")
             {
-                return Ok();
+                bool IsDelete = _Category.DeleteCategory(category);
+                if (IsDelete)
+                {
+                    return Ok(new { Message = "Category deleted successfully." });
+                }
+                return BadRequest(new { Message = "Failed to delete the category." });
             }
-            return BadRequest();
+            else
+            {
+                var AccessData = _roles.CheckAccess(staffid);
+                for (int i = 0; i < AccessData.Count; i++)
+                {
+                    if (AccessData[i].SideBarName == "Category" && AccessData[i].Delete_Access == true)
+                    {
+                        bool IsDelete = _Category.DeleteCategory(category);
+                        if (IsDelete)
+                        {
+                            return Ok(new { Message = "Category deleted successfully." });
+                        }
+                        return BadRequest(new { Message = "Failed to delete the category." });
+                    }
+                }
+            }
+            return BadRequest(new { Message = "Invalid request parameters." });
         }
     }
 }

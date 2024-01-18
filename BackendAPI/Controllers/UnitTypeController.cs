@@ -1,5 +1,7 @@
 ﻿using BackendAPI.IRepository;
+using BackendAPI.IRepository.Roles;
 using BackendAPI.Models;
+using BackendAPI.Models.Roles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,60 +12,168 @@ namespace BackendAPI.Controllers
     public class UnitTypeController : ControllerBase
     {
         private readonly IUnitType _UnitTypeRepo;
+        private readonly IRoles _roles;
 
-        public UnitTypeController(IUnitType unitTypeRepo)
+        public UnitTypeController(IUnitType unitTypeRepo, IRoles roles)
         {
             _UnitTypeRepo = unitTypeRepo;
+            _roles = roles;
         }
 
         [HttpGet]
         [Route("GetAllUnitTypes")]
-        public IActionResult Get() 
+        public IActionResult Get(int OrgId, int StaffId)
         {
-            var data = _UnitTypeRepo.GetAllUnitType();
-            if(data == null)
+            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            if (CheckRoleTypeData.RoleType == "Admin")
             {
-                return NotFound();
+                var data = _UnitTypeRepo.GetAllUnitType(OrgId);
+                if (data == null)
+                {
+                    return NotFound(new { Message = "No unit types found for the given organization." });
+                }
+                else
+                {
+                    return Ok(data);
+                }
             }
             else
-                return Ok(data);
+            {
+                var AccessData = _roles.CheckAccess(StaffId);
+                for (int i = 0; i < AccessData.Count; i++)
+                {
+                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].Read_Access == true)
+                    {
+                        var data = _UnitTypeRepo.GetAllUnitType(OrgId);
+                        if (data == null)
+                        {
+                            return NotFound(new { Message = "No unit types found for the given organization and staff." });
+                        }
+                        else
+                        {
+                            return Ok(data);
+                        }
+                    }
+                }
+            }
+            return BadRequest(new { Message = "Invalid request parameters." });
         }
 
         [HttpPost]
         [Route("AddUnitType")]
-        public IActionResult AddUnitType([FromBody]UnitType unit)
+        public IActionResult AddUnitType([FromBody] UnitType unit, int StaffId)
         {
-            bool IsSaved=_UnitTypeRepo.AddUnitType(unit);
-            if(IsSaved)
+            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            if (CheckRoleTypeData.RoleType == "Admin")
             {
-                return Ok();
+                bool IsSaved = _UnitTypeRepo.AddUnitType(unit);
+                if (IsSaved)
+                {
+                    return Ok(new { Message = "Unit type added successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Failed to add the unit type." });
+                }
             }
-            else { return BadRequest(); }
+            else
+            {
+                var AccessData = _roles.CheckAccess(StaffId);
+                for (int i = 0; i < AccessData.Count; i++)
+                {
+                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].Create_Access == true)
+                    {
+                        bool IsSaved = _UnitTypeRepo.AddUnitType(unit);
+                        if (IsSaved)
+                        {
+                            return Ok(new { Message = "Unit type added successfully." });
+                        }
+                        else
+                        {
+                            return BadRequest(new { Message = "Failed to add the unit type." });
+                        }
+                    }
+                }
+            }
+            return BadRequest(new { Message = "Invalid request parameters." });
         }
 
         [HttpPost]
         [Route("UpdateUnitType")]
-        public IActionResult UpdateUnitType([FromBody]UnitType unit)
+        public IActionResult UpdateUnitType([FromBody] UnitType unit, int StaffId)
         {
-            bool IsUpdate=_UnitTypeRepo.UpdateUnitType(unit);
-            if(IsUpdate)
+            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            if (CheckRoleTypeData.RoleType == "Admin")
             {
-                return Ok();
+                bool IsUpdate = _UnitTypeRepo.UpdateUnitType(unit);
+                if (IsUpdate)
+                {
+                    return Ok(new { Message = "Unit type updated successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Failed to update the unit type." });
+                }
             }
-            else return BadRequest();
+            else
+            {
+                var AccessData = _roles.CheckAccess(StaffId);
+                for (int i = 0; i < AccessData.Count; i++)
+                {
+                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].Update_Access == true)
+                    {
+                        bool IsUpdate = _UnitTypeRepo.UpdateUnitType(unit);
+                        if (IsUpdate)
+                        {
+                            return Ok(new { Message = "Unit type updated successfully." });
+                        }
+                        else
+                        {
+                            return BadRequest(new { Message = "Failed to update the unit type." });
+                        }
+                    }
+                }
+            }
+            return BadRequest(new { Message = "Invalid request parameters." });
         }
 
         [HttpPost]
         [Route("DeleteUnitType")]
-        public IActionResult DeleteUnitType(int id)
+        public IActionResult DeleteUnitType([FromBody] UnitType unit, int StaffId)
         {
-            bool IsDelete=_UnitTypeRepo.DeleteUnitType(id);
-            if(IsDelete)
+            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            if (CheckRoleTypeData.RoleType == "Admin")
             {
-                return Ok();
+                bool IsDelete = _UnitTypeRepo.DeleteUnitType(unit);
+                if (IsDelete)
+                {
+                    return Ok(new { Message = "Unit type deleted successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Failed to delete the unit type." });
+                }
             }
             else
-                return BadRequest();
+            {
+                var AccessData = _roles.CheckAccess(StaffId);
+                for (int i = 0; i < AccessData.Count; i++)
+                {
+                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].Delete_Access == true)
+                    {
+                        bool IsDelete = _UnitTypeRepo.DeleteUnitType(unit);
+                        if (IsDelete)
+                        {
+                            return Ok(new { Message = "Unit type deleted successfully." });
+                        }
+                        else
+                        {
+                            return BadRequest(new { Message = "Failed to delete the unit type." });
+                        }
+                    }
+                }
+            }
+            return BadRequest(new { Message = "Invalid request parameters." });
         }
     }
 }

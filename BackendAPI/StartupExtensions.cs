@@ -1,7 +1,9 @@
 ﻿using BackendAPI.AuthServices;
 using BackendAPI.IRepository;
+using BackendAPI.IRepository.Roles;
 using BackendAPI.Models;
 using BackendAPI.Models.Class;
+using BackendAPI.Models.Roles;
 using BackendAPI.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +20,7 @@ namespace BackendAPI
             services.AddScoped<ICity_State, City_StateRepo>();
             services.AddScoped<ICategory, CategoryRepo>();
             services.AddScoped<IVendor, VendorRepo>();
+            services.AddScoped<IRoles, RolesRepo>();
             services.AddScoped<AppSettings>();
             services.AddScoped<User_Info>();
             services.AddScoped<EncDycPassword>();
@@ -29,6 +32,8 @@ namespace BackendAPI
             services.AddScoped<StateList>();
             services.AddScoped<Category>();
             services.AddScoped<Vendor>();
+            services.AddScoped<Staff>();
+            services.AddScoped<Access>();
 
 
             //Services.AddScoped<EncDycPassword>();

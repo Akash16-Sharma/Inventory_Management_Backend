@@ -7,5 +7,7 @@
         public bool IsActive { get; set; }
         public DateTime InsertedOn { get; set; }
         public int UpdatedBy {  get; set; }
+        public int OrgId {  get; set; }
+    
     }
 }

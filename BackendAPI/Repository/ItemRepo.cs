@@ -39,9 +39,9 @@ namespace BackendAPI.Repository
             
         }
 
-        public bool DeleteItem(int id)
+        public bool DeleteItem(Item Items)
         {
-          var del= _Item.Items.Where(x => x.Id == id).FirstOrDefault();
+          var del= _Item.Items.Where(x => x.Id == Items.Id).FirstOrDefault();
             del.IsActive=false;
             _Item.Items.Update(del);
             int IsDelete= _Item.SaveChanges();

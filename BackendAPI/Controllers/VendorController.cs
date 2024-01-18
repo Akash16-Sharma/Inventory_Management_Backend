@@ -1,5 +1,7 @@
 ﻿using BackendAPI.IRepository;
+using BackendAPI.IRepository.Roles;
 using BackendAPI.Models;
+using BackendAPI.Models.Roles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,62 +12,168 @@ namespace BackendAPI.Controllers
     public class VendorController : ControllerBase
     {
         private readonly IVendor _Vendor;
-        public VendorController(IVendor vendor)
+        private readonly IRoles _Roles;
+
+        public VendorController(IVendor vendor, IRoles roles)
         {
             _Vendor = vendor;
+            _Roles = roles;
         }
 
         [HttpGet]
         [Route("Get")]
-        public IActionResult Get()
+        public IActionResult Get(int OrgId, int StaffId)
         {
-            var vendor = _Vendor.GetVendor();
-            if (vendor == null)
+            var checkRoleTypeData = _Roles.CheckStaffType(StaffId);
+            if (checkRoleTypeData.RoleType == "Admin")
             {
-                return NotFound();
+                var vendor = _Vendor.GetVendor(OrgId);
+                if (vendor == null)
+                {
+                    return NotFound("No vendor found for the specified organization.");
+                }
+                else
+                {
+                    return Ok(vendor);
+                }
             }
             else
             {
-                return Ok(vendor);
+                var accessData = _Roles.CheckAccess(StaffId);
+                for (var i = 0; i < accessData.Count; i++)
+                {
+                    if (accessData[i].SideBarName == "Vendor" && accessData[i].Read_Access)
+                    {
+                        var vendor = _Vendor.GetVendor(OrgId);
+                        if (vendor == null)
+                        {
+                            return NotFound("No vendor found for the specified organization.");
+                        }
+                        else
+                        {
+                            return Ok(vendor);
+                        }
+                    }
+                }
             }
+            return BadRequest("Access denied.");
         }
 
         [HttpPost]
         [Route("AddVendor")]
-        public IActionResult AddVendor([FromBody]Vendor vendor)
+        public IActionResult AddVendor([FromBody] Vendor vendor, int StaffId)
         {
-            bool IsSave=_Vendor.AddVendor(vendor);
-            if(IsSave)
+            var checkRoleTypeData = _Roles.CheckStaffType(StaffId);
+            if (checkRoleTypeData.RoleType == "Admin")
             {
-                return Ok();
+                bool isSave = _Vendor.AddVendor(vendor);
+                if (isSave)
+                {
+                    return Ok("Vendor added successfully.");
+                }
+                else
+                {
+                    return BadRequest("Failed to add vendor.");
+                }
             }
             else
-            { return BadRequest(); }    
+            {
+                var accessData = _Roles.CheckAccess(StaffId);
+                for (var i = 0; i < accessData.Count; i++)
+                {
+                    if (accessData[i].SideBarName == "Vendor" && accessData[i].Create_Access)
+                    {
+                        bool isSave = _Vendor.AddVendor(vendor);
+                        if (isSave)
+                        {
+                            return Ok("Vendor added successfully.");
+                        }
+                        else
+                        {
+                            return BadRequest("Failed to add vendor.");
+                        }
+                    }
+                }
+            }
+            return BadRequest("Access denied.");
         }
 
         [HttpPost]
         [Route("UpdateVendor")]
-        public IActionResult UpdateVendor([FromBody] Vendor vendor)
+        public IActionResult UpdateVendor([FromBody] Vendor vendor, int StaffId)
         {
-            bool IsUpdate=_Vendor.UpdateVendor(vendor);
-            if(IsUpdate)
+            var checkRoleTypeData = _Roles.CheckStaffType(StaffId);
+            if (checkRoleTypeData.RoleType == "Admin")
             {
-                return Ok();
+                bool isUpdate = _Vendor.UpdateVendor(vendor);
+                if (isUpdate)
+                {
+                    return Ok("Vendor updated successfully.");
+                }
+                else
+                {
+                    return BadRequest("Failed to update vendor.");
+                }
             }
-            else { return BadRequest(); }
+            else
+            {
+                var accessData = _Roles.CheckAccess(StaffId);
+                for (var i = 0; i < accessData.Count; i++)
+                {
+                    if (accessData[i].SideBarName == "Vendor" && accessData[i].Create_Access)
+                    {
+                        bool isUpdate = _Vendor.UpdateVendor(vendor);
+                        if (isUpdate)
+                        {
+                            return Ok("Vendor updated successfully.");
+                        }
+                        else
+                        {
+                            return BadRequest("Failed to update vendor.");
+                        }
+                    }
+                }
+            }
+            return BadRequest("Access denied.");
         }
 
         [HttpPost]
         [Route("DeleteVendor")]
-        public IActionResult DeleteVendor(int id)
+        public IActionResult DeleteVendor(Vendor vendor, int StaffId)
         {
-            bool IsDelete=_Vendor.RemoveVendor(id);
-            if(IsDelete)
+            var checkRoleTypeData = _Roles.CheckStaffType(StaffId);
+            if (checkRoleTypeData.RoleType == "Admin")
             {
-                return Ok();
+                bool isDelete = _Vendor.RemoveVendor(vendor);
+                if (isDelete)
+                {
+                    return Ok("Vendor deleted successfully.");
+                }
+                else
+                {
+                    return BadRequest("Failed to delete vendor.");
+                }
             }
-            else return BadRequest();
+            else
+            {
+                var accessData = _Roles.CheckAccess(StaffId);
+                for (var i = 0; i < accessData.Count; i++)
+                {
+                    if (accessData[i].SideBarName == "Vendor" && accessData[i].Create_Access)
+                    {
+                        bool isDelete = _Vendor.RemoveVendor(vendor);
+                        if (isDelete)
+                        {
+                            return Ok("Vendor deleted successfully.");
+                        }
+                        else
+                        {
+                            return BadRequest("Failed to delete vendor.");
+                        }
+                    }
+                }
+            }
+            return BadRequest("Access denied.");
         }
-
     }
 }

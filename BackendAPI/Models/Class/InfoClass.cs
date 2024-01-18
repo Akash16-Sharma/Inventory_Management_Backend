@@ -2,7 +2,9 @@
 {
     public class InfoClass
     {
-        public int user_Id { get; set; }
+        public int OrgId { get; set; }
+        public int StaffId { get; set; }
+        public int RoleId { get; set; }
         public string auth_token { get; set; }  
     }
 }

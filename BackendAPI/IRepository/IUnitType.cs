@@ -4,9 +4,9 @@ namespace BackendAPI.IRepository
 {
     public interface IUnitType
     {
-        List <UnitType> GetAllUnitType();
+        List <UnitType> GetAllUnitType(int OrgId);
         bool AddUnitType(UnitType unitType);
-        bool DeleteUnitType(int id);
+        bool DeleteUnitType(UnitType unit);
         bool UpdateUnitType(UnitType unitType);
     }
 }
