@@ -42,7 +42,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].Read_Access == true)
+                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].IsShow == true)
                     {
                         var data = _UnitTypeRepo.GetAllUnitType(OrgId);
                         if (data == null)
@@ -81,7 +81,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].Create_Access == true)
+                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].IsCreate == true)
                     {
                         bool IsSaved = _UnitTypeRepo.AddUnitType(unit);
                         if (IsSaved)
@@ -98,7 +98,7 @@ namespace BackendAPI.Controllers
             return BadRequest(new { Message = "Invalid request parameters." });
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("UpdateUnitType")]
         public IActionResult UpdateUnitType([FromBody] UnitType unit, int StaffId)
         {
@@ -120,7 +120,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].Update_Access == true)
+                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].IsModify == true)
                     {
                         bool IsUpdate = _UnitTypeRepo.UpdateUnitType(unit);
                         if (IsUpdate)
@@ -137,7 +137,7 @@ namespace BackendAPI.Controllers
             return BadRequest(new { Message = "Invalid request parameters." });
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("DeleteUnitType")]
         public IActionResult DeleteUnitType([FromBody] UnitType unit, int StaffId)
         {
@@ -159,7 +159,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].Delete_Access == true)
+                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].IsModify == true)
                     {
                         bool IsDelete = _UnitTypeRepo.DeleteUnitType(unit);
                         if (IsDelete)

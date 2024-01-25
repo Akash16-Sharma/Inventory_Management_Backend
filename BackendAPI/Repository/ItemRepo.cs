@@ -8,9 +8,9 @@ namespace BackendAPI.Repository
     {
         private readonly DataContext _Item;
 
-        public ItemRepo(DataContext item)
+        public ItemRepo(DataContext Item)
         {
-            _Item = item;
+            _Item = Item;
         }
 
         public bool AddItem(Item Items)
@@ -53,17 +53,33 @@ namespace BackendAPI.Repository
                 return false;
         }
 
-        public bool UpdateItem(Item Items)
+        public bool UpdateItem(Item Item)
         {
-            //var itemData=_Item.Items.Where(x => x.Id==Items.Id).FirstOrDefault();
-            //itemData = Items;
-           _Item.Items.Update(Items);
-           int IsUpdate= _Item.SaveChanges();
-            if (IsUpdate==1 )
+            //var ItemData=_Item.Items.Where(x => x.Id==Items.Id).FirstOrDefault();
+            //ItemData = Items;
+            var existingItem = _Item.Items.Where(x => x.Id == Item.Id).FirstOrDefault();
+            if (existingItem != null)
             {
-                return true;
+                existingItem.Name = Item.Name;
+                existingItem.Updated_By = Item.Updated_By;
+                existingItem.Stock_Alert = Item.Stock_Alert;
+                existingItem.Selling_Price = Item.Selling_Price;
+                existingItem.Buying_Price = Item.Buying_Price;
+                existingItem.Opening_Stock = Item.Opening_Stock;
+                existingItem.Barcode = Item.Barcode;
+                existingItem.Vendor_Id = Item.Vendor_Id;
+                existingItem.Unit_Type_Id = Item.Unit_Type_Id;
+                existingItem.Category_Id = Item.Category_Id;
+                existingItem.InsertedOn = DateTime.Now;
+                _Item.Items.Update(existingItem);
+                int IsUpdate = _Item.SaveChanges();
+                if (IsUpdate == 1)
+                {
+                    return true;
+                }
+                else { return false; }
             }
-            else { return false; }
+            return false;
         }
 
         public Item GetItemById(int id)
@@ -75,16 +91,16 @@ namespace BackendAPI.Repository
         public List<object> GetItemInfo(int orgid)
         {
             var data = (from category in _Item.Category
-                        join item in _Item.Items on category.Id equals item.Category_Id
-                        join vendor in _Item.Vendor on item.Vendor_Id equals vendor.Id
-                        join unitType in _Item.Unit_Type on item.Unit_Type_Id equals unitType.Id
-                        where item.Org_Id == orgid && item.IsActive == true
+                        join Item in _Item.Items on category.Id equals Item.Category_Id
+                        join vendor in _Item.Vendor on Item.Vendor_Id equals vendor.Id
+                        join unitType in _Item.Unit_Type on Item.Unit_Type_Id equals unitType.Id
+                        where Item.Org_Id == orgid && Item.IsActive == true
                         select new
                         {
-                            item.Name,
-                            item.Buying_Price,
-                            item.Selling_Price,
-                            item.Id,
+                            Item.Name,
+                            Item.Buying_Price,
+                            Item.Selling_Price,
+                            Item.Id,
                             CategoryName = category.Name,  
                             VendorName = vendor.Name,      
                             UnitTypeName = unitType.Name,  

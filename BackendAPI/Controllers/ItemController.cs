@@ -44,7 +44,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "Item" && AccessData[i].Read_Access == true)
+                    if (AccessData[i].SideBarName == "Item" && AccessData[i].IsShow == true)
                     {
                         var data = _itemRepo.GetItemInfo(orgid);
                         if (data == null)
@@ -83,7 +83,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "Item" && AccessData[i].Create_Access == true)
+                    if (AccessData[i].SideBarName == "Item" && AccessData[i].IsCreate == true)
                     {
                         bool IsSaved = _itemRepo.AddItem(item);
                         if (IsSaved)
@@ -100,33 +100,18 @@ namespace BackendAPI.Controllers
             return BadRequest(new { Message = "Invalid request parameters." });
         }
 
-        [HttpPost]
-        [Route("UpdateItem/{itemId}")]
-        public IActionResult UpdateItem(Item item, int StaffId)
+        [HttpPut]
+        [Route("UpdateItem")]
+        public IActionResult UpdateItem([FromBody]Item item, int StaffId)
         {
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
-                var existingItem = _itemRepo.GetItemById(item.Id);
-                if (existingItem == null)
-                {
-                    return BadRequest(new { Message = "Item not found." });
-                }
-
-                existingItem.Name = item.Name;
-                existingItem.Updated_By = item.Updated_By;
-                existingItem.Stock_Alert = item.Stock_Alert;
-                existingItem.Selling_Price = item.Selling_Price;
-                existingItem.Buying_Price = item.Buying_Price;
-                existingItem.Opening_Stock = item.Opening_Stock;
-                existingItem.Barcode = item.Barcode;
-                existingItem.Vendor_Id = item.Vendor_Id;
-                existingItem.Unit_Type_Id = item.Unit_Type_Id;
-                existingItem.Category_Id = item.Category_Id;
-                existingItem.InsertedOn = DateTime.Now;
+               
+               
 
                 // Save the updated item to the repository
-                bool IsUpdated = _itemRepo.UpdateItem(existingItem);
+                bool IsUpdated = _itemRepo.UpdateItem(item);
 
                 if (IsUpdated)
                 {
@@ -142,28 +127,13 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "Item" && AccessData[i].Update_Access == true)
+                    if (AccessData[i].SideBarName == "Item" && AccessData[i].IsModify == true)
                     {
-                        var existingItem = _itemRepo.GetItemById(item.Id);
-                        if (existingItem == null)
-                        {
-                            return BadRequest(new { Message = "Item not found." });
-                        }
-
-                        existingItem.Name = item.Name;
-                        existingItem.Updated_By = item.Updated_By;
-                        existingItem.Stock_Alert = item.Stock_Alert;
-                        existingItem.Selling_Price = item.Selling_Price;
-                        existingItem.Buying_Price = item.Buying_Price;
-                        existingItem.Opening_Stock = item.Opening_Stock;
-                        existingItem.Barcode = item.Barcode;
-                        existingItem.Vendor_Id = item.Vendor_Id;
-                        existingItem.Unit_Type_Id = item.Unit_Type_Id;
-                        existingItem.Category_Id = item.Category_Id;
-                        existingItem.InsertedOn = DateTime.Now;
+                        
+                       
 
                         // Save the updated item to the repository
-                        bool IsUpdated = _itemRepo.UpdateItem(existingItem);
+                        bool IsUpdated = _itemRepo.UpdateItem(item);
 
                         if (IsUpdated)
                         {
@@ -179,7 +149,7 @@ namespace BackendAPI.Controllers
             return BadRequest(new { Message = "Invalid request parameters." });
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("DeleteItem")]
         public IActionResult DeleteItem([FromBody] Item item, int StaffId)
         {
@@ -201,7 +171,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "Item" && AccessData[i].Delete_Access == true)
+                    if (AccessData[i].SideBarName == "Item" && AccessData[i].IsModify == true)
                     {
                         bool IsDelete = _itemRepo.DeleteItem(item);
                         if (IsDelete)

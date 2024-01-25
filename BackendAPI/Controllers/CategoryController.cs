@@ -44,7 +44,7 @@ namespace BackendAPI.Controllers
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
 
-                    if (Accessdata[i].SideBarName == "Category" && Accessdata[i].Read_Access == true)
+                    if (Accessdata[i].SideBarName == "Category" && Accessdata[i].IsShow == true)
                     {
                         var data = _Category.GetAllCategory(OrgId);
                         if (data == null)
@@ -92,7 +92,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "Category" && AccessData[i].Create_Access == true)
+                    if (AccessData[i].SideBarName == "Category" && AccessData[i].IsCreate == true)
                     {
                         bool IsSave = _Category.AddCategory(category);
                         if (IsSave)
@@ -111,7 +111,7 @@ namespace BackendAPI.Controllers
             return BadRequest(new { Message = "Invalid request parameters." });
         } 
 
-        [HttpPost]
+        [HttpPut]
         [Route("EditCategory")]
         public IActionResult EditCategory([FromBody] Category category,int StaffId)
         {
@@ -133,7 +133,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "Category" && AccessData[i].Update_Access == true)
+                    if (AccessData[i].SideBarName == "Category" && AccessData[i].IsModify == true)
                     {
                         bool IsUpdate = _Category.UpdateCategory(category);
                         if (IsUpdate)
@@ -150,7 +150,7 @@ namespace BackendAPI.Controllers
             return BadRequest(new { Message = "Invalid request parameters." });
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("DeleteCategory")]
         public IActionResult DeleteCategory(Category category,int staffid)
         {
@@ -169,7 +169,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(staffid);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "Category" && AccessData[i].Delete_Access == true)
+                    if (AccessData[i].SideBarName == "Category" && AccessData[i].IsModify == true)
                     {
                         bool IsDelete = _Category.DeleteCategory(category);
                         if (IsDelete)

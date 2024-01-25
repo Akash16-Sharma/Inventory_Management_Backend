@@ -42,7 +42,7 @@ namespace BackendAPI.Controllers
                 var accessData = _Roles.CheckAccess(StaffId);
                 for (var i = 0; i < accessData.Count; i++)
                 {
-                    if (accessData[i].SideBarName == "Vendor" && accessData[i].Read_Access)
+                    if (accessData[i].SideBarName == "Vendor" && accessData[i].IsShow == true)
                     {
                         var vendor = _Vendor.GetVendor(OrgId);
                         if (vendor == null)
@@ -81,7 +81,7 @@ namespace BackendAPI.Controllers
                 var accessData = _Roles.CheckAccess(StaffId);
                 for (var i = 0; i < accessData.Count; i++)
                 {
-                    if (accessData[i].SideBarName == "Vendor" && accessData[i].Create_Access)
+                    if (accessData[i].SideBarName == "Vendor" && accessData[i].IsCreate==true)
                     {
                         bool isSave = _Vendor.AddVendor(vendor);
                         if (isSave)
@@ -98,7 +98,7 @@ namespace BackendAPI.Controllers
             return BadRequest("Access denied.");
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("UpdateVendor")]
         public IActionResult UpdateVendor([FromBody] Vendor vendor, int StaffId)
         {
@@ -120,7 +120,7 @@ namespace BackendAPI.Controllers
                 var accessData = _Roles.CheckAccess(StaffId);
                 for (var i = 0; i < accessData.Count; i++)
                 {
-                    if (accessData[i].SideBarName == "Vendor" && accessData[i].Create_Access)
+                    if (accessData[i].SideBarName == "Vendor" && accessData[i].IsModify == true)
                     {
                         bool isUpdate = _Vendor.UpdateVendor(vendor);
                         if (isUpdate)
@@ -137,7 +137,7 @@ namespace BackendAPI.Controllers
             return BadRequest("Access denied.");
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("DeleteVendor")]
         public IActionResult DeleteVendor(Vendor vendor, int StaffId)
         {
@@ -159,7 +159,7 @@ namespace BackendAPI.Controllers
                 var accessData = _Roles.CheckAccess(StaffId);
                 for (var i = 0; i < accessData.Count; i++)
                 {
-                    if (accessData[i].SideBarName == "Vendor" && accessData[i].Create_Access)
+                    if (accessData[i].SideBarName == "Vendor" && accessData[i].IsModify==true)
                     {
                         bool isDelete = _Vendor.RemoveVendor(vendor);
                         if (isDelete)

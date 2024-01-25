@@ -39,7 +39,7 @@ namespace BackendAPI.Controllers
                 return BadRequest();
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("UpdateStaff")]
         public IActionResult UpdateStaff([FromBody]Staff staff)
         {
@@ -51,7 +51,7 @@ namespace BackendAPI.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("DeleteStaff")]
         public IActionResult DeleteStaff([FromBody] Staff staff)
         {
