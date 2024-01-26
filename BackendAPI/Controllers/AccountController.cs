@@ -47,9 +47,9 @@ namespace BackendAPI.Controllers
         }
 
         [HttpGet]
-        public List<Organisation_Info> GetOrganisation()
+        public List<Organisation_Info> GetOrganisation(int OrgId)
         {
-            return _organisation_info.GetOrganisation_Infos();
+            return _organisation_info.GetOrganisation_Infos(OrgId);
         }
         
 

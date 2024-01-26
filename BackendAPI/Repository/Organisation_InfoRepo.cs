@@ -60,10 +60,9 @@ namespace BackendAPI.Repository
 
         }
 
-        public List<Organisation_Info> GetOrganisation_Infos()
+        public List<Organisation_Info> GetOrganisation_Infos(int OrgId)
         {
-            var data = _context.Organisation_Info.ToList();
-
+            var data = _context.Organisation_Info.Where(x=>x.Id==OrgId&&x.IsActive==true).ToList();
             return data;
         }
     }
