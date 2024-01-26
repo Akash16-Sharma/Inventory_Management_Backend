@@ -73,9 +73,9 @@
                     @item.unitTypeName
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    <a href="javascript:void(0);" onclick="openEditModal(@item.Id)">Edit</a>  |
 
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    <a href="javascript:void(0);" onclick="deleteItem(@item.id)">Delete</a>
                 </td>
             </tr>
         }
@@ -184,17 +184,118 @@
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- Modal for Editing Item -->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit Item</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Form fields for editing item details -->
+                            <div class="form-group">
+                                <label for="editInputName">Product Name</label>
+                                <input type="text" class="form-control" id="editInputName">
+                            </div>
 
-            @* modal code ends her e *@
+                            <div class="form-group">
+                                <label for="editInputType">Unit Type</label>
+                                <select id="editInputType" class="form-control">
+                                    <option selected>Select</option>
+                                    @foreach (var unit in ViewBag.Unit)
+                                    {
+                                        <option value="@unit.id">@unit.name</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editInputCategory">Category</label>
+                                <select id="editInputCategory" class="form-control">
+                                    <option selected>Select</option>
+                                    @foreach (var category in ViewBag.Category)
+                                    {
+                                        <option value="@category.id">@category.name</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editInputMinStock">Min Stock Level</label>
+                                <input type="number" class="form-control" id="editInputMinStock">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editInputOpenStock">Opening Stock</label>
+                                <input type="number" class="form-control" id="editInputOpenStock">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editInputBarcode">Barcode</label>
+                                <input type="number" class="form-control" id="editInputBarcode">
+                            </div>
+
+                            <hr style="margin-top:30px;margin-bottom:20px" />
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="editCbIsPurchase">
+                                <label class="form-check-label">
+                                    Purchase Information
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="editInputCostPrice">Cost Price</label>
+                                <input type="number" class="form-control" id="editInputCostPrice">
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="editCbIsSell">
+                                <label class="form-check-label">
+                                    Sell Information
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="editInputSellPrice">Selling Price</label>
+                                <input type="number" class="form-control" id="editInputSellPrice">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editInputSupplier">Supplier</label>
+                                <select id="editInputSupplier" class="form-control">
+                                    <option selected>Select</option>
+                                    @foreach (var vendor in ViewBag.Vendor)
+                                    {
+                                        <option value="@vendor.id">@vendor.name</option>
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="updateItem()">Save Changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
     </tbody>
 </table>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/jquery-3.7.1.min.js"></script>
 <script>
 
     $(document).ready(function () {
+
+        $("#save").click(function () {
+            $("#myModal").modal("show");
+        });
 
         $("#sellprice").prop("disabled", true);
         $("#costprice").prop("disabled", true);
@@ -220,6 +321,7 @@
             window.location.href = '/Item/ItemCategory';
         }
     }
+
     function updateInputPurchaseStatus() {
         // Enable or disable the input field based on the checkbox status
         if ($("#cbIsPurchase").prop("checked")) {
@@ -279,6 +381,60 @@
         });
     }
 
+    function deleteItem(ItemId) {
+        if (confirm("Are you sure you want to delete this Item?")) {
+            $.ajax({
+                url: '/Item/ItemDelete',
+                type: 'POST',
+                data: { Id: ItemId },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
+    }
+
+    function openEditModal(itemId) {
+         var itemDetails = getItemDetails(itemId);
+
+        $('#editInputName').val(itemDetails.name);
+        $('#editInputType').val(itemDetails.unitTypeId);
+        $('#editInputCategory').val(itemDetails.categoryId);
+        $('#editInputMinStock').val(itemDetails.minStockLevel);
+        $('#editInputOpenStock').val(itemDetails.openingStock);
+        $('#editInputBarcode').val(itemDetails.barcode);
+        $('#editCbIsPurchase').prop('checked', itemDetails.isPurchase);
+        $('#editInputCostPrice').val(itemDetails.costPrice);
+        $('#editCbIsSell').prop('checked', itemDetails.isSell);
+        $('#editInputSellPrice').val(itemDetails.sellPrice);
+        $('#editInputSupplier').val(itemDetails.supplierId);
+
+        // Open the edit modal
+        $('#editModal').modal('show');
+    }
+
+    function getItemDetails(itemId) {
+        //here get the data thru ajax 
+        var dummyItemDetails = {
+            name: 'Item Name',
+            unitTypeId: 1,
+            categoryId: 2,
+            minStockLevel: 10,
+            openingStock: 50,
+            barcode: '123456789',
+            isPurchase: true,
+            costPrice: 20.5,
+            isSell: true,
+            sellPrice: 30.0,
+            supplierId: 3
+         
+        };
+
+        return dummyItemDetails;
+    }
 
 </script>
 

@@ -109,6 +109,19 @@ namespace FrontEnd_View.Controllers
             return View(category);
         }
 
+        public IActionResult ItemDelete(int Id)
+        {
+            HttpResponseMessage responseMessage = _client.DeleteAsync(_client.BaseAddress +
+               "/Item/DeleteItem?id=" + Id).Result;
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
+
+        } //item delete by Id
+
         public IActionResult ItemCategoryAdd(Category cat) //category add
         {
             string data = JsonConvert.SerializeObject(cat);
@@ -122,6 +135,34 @@ namespace FrontEnd_View.Controllers
 
             return View();
         }
+
+        public IActionResult ItemCategoryDelete(int Id)
+        {
+            HttpResponseMessage responseMessage = _client.DeleteAsync(_client.BaseAddress +
+               "/Category/DeleteCategory?id=" + Id).Result;
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("ItemCategory");
+            }
+            return View();
+
+        } //category delete by Id
+
+        public IActionResult ItemCategoryEdit(Category cat) //category add
+        {
+            string data = JsonConvert.SerializeObject(cat);
+            StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage responseMessage = _client.PostAsync(_client.BaseAddress +
+                "/Category/EditCategory", con).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("ItemCategory");
+            }
+
+            return View();
+        }
+
 
     }
 }

@@ -100,7 +100,8 @@
         </div>
     </nav>
     <!-- NavBar END -->
-
+    @if (!Context.Request.Path.StartsWithSegments("/Account"))
+    {
     <div class="row" id="body-row">
         <!-- Sidebar -->
         <div id="sidebar-container" class="sidebar-expanded d-none d-md-block">
@@ -144,7 +145,7 @@
                         <span class="menu-collapsed">Orders</span>
                     </a>
                     <a href="#" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Add Supplier</span>
+                        <span class="menu-collapsed">Add Vendor</span>
                     </a>
                 </div>
 
@@ -185,8 +186,17 @@
         <div class="col p-4">
             @RenderBody()
         </div>
-    </div>
-    
+        </div>
+    }else
+    {
+        <div class="container">
+            <div id="body-row">
+                <div class="col p-4">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    }
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/sidebars.js"></script>
