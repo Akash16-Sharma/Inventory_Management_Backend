@@ -1,95 +1,304 @@
-﻿<style>
+﻿@model List<dynamic>
 
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    #addcat {
+        color: blue;
+        font-weight: bold;
+        background-color: #f0f0f0; /* Background color */
+        padding: 5px 10px; /* Padding to make it look like a button */
+        border: 1px solid #ccc; /* Border for a button-like appearance */
+        cursor: pointer;
+        display: block;
+        width: 100%;
+        text-align: left;
+    }
 </style>
-<h2>Add Items</h2>
-<div class="container">
-    <form class="row g-3">
 
-        <div class="col-md-3">
-            <label for="inputname" class="form-label">Product Name</label>
-            <input type="text" class="form-control" id="inputname">
-        </div>
+<h2>Items</h2>
 
-        <div class="col-md-3">
-            <label for="inputtype" class="form-label">Unit Type</label>
-            <select id="inputtype" class="form-select">
-                <option selected>Select</option>
-                <option>Pcs</option>
-                <option>Box </option>
-            </select>
-        </div>
-
-        <div class="col-md-3">
-            <label for="inputEmail4" class="form-label">Min Stock Level</label>
-            <input type="number" class="form-control" id="inputEmail4">
-        </div>
-
-        <div class="col-md-3">
-            <label for="inputEmail4" class="form-label">Opening Stock </label>
-            <input type="number" class="form-control" id="inputEmail4">
-        </div>
-
-
-        <div class="col-md-4">
-            <label for="inputtype" class="form-label">Category</label>
-            <select id="inputtype" class="form-select">
-                <option selected>Select</option>
-                <option>Shirts</option>
-                <option>Color</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label for="inputEmail4" class="form-label">Barcode</label>
-            <input type="number" class="form-control" id="inputEmail4">
-        </div>
-        <div class="col-md-4">
-            <label for="inputtype" class="form-label">Supplier</label>
-            <select id="inputtype" class="form-select">
-                <option selected>Select</option>
-                <option>Akash</option>
-                <option>Divyajeet</option>
-            </select>
-        </div>
-
-
-        <hr style="margin-top:30px;margin-bottom:20px" />
-
-        <div class="col-md-3">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="cbIsPurchase">
-                <label class="form-check-label">
-                    Purchase Information
-                </label>
-            </div>
-            <label for="inputEmail4" class="form-label">Cost Price</label>
-            <input type="number" class="form-control" id="ipcostprice">
-        </div>
-
-
-        <div class="col-md-3">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="cbIsSell">
-                <label class="form-check-label">
-                    Sell Info Information
-                </label>
-            </div>
-            <label for="inputEmail4" class="form-label">Selling Price</label>
-            <input type="number" class="form-control" id="ipsellprice">
-        </div>
-
-
-    </form>
-    <div style="margin-top:20px">
-        <button type="button" class="btn btn-primary">ADD ITEM</button>
-    </div>
+<div style="display:flex;flex-direction: row-reverse;margin-top:-30px;margin-bottom:15px">
+    <button type="button" id="new" class="btn btn-primary">NEW</button>
 
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Category Name
+            </th>
+            <th>
+                Buying Price
+            </th>
+            <th>
+                Selling Price
+            </th>
+            <th>
+                Vendor Name
+            </th>
+            <th>
+                Unit Type
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.name
+                </td>
+                <td>
+                    @item.categoryName
+                </td>
+                <td>
+                    @item.buying_Price
+                </td>
+                <td>
+                    @item.selling_Price
+                </td>
+                <td>
+                    @item.vendorName
+                </td>
+                <td>
+                    @item.unitTypeName
+                </td>
+                <td>
+                    <a href="javascript:void(0);" onclick="openEditModal(@item.Id)">Edit</a>  |
+
+                    <a href="javascript:void(0);" onclick="deleteItem(@item.id)">Delete</a>
+                </td>
+            </tr>
+        }
+
+        @* modal code strat here *@
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Items</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row" style="padding-bottom:10px">
+                            <div class="col-md-4">
+                                <label for="inputname" class="form-label">Product Name</label>
+                                <input type="text" class="form-control" id="inputname">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="inputtype" class="form-label">Unit Type</label>
+                                <select id="inputtype" class="form-control">
+                                    <option selected>Select</option>
+                                    @foreach (var unit in ViewBag.Unit)
+                                    {
+                                        <option value="@unit.id">@unit.name</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="inputtype" class="form-label">Category</label>
+                                <select id="category" onchange="handleSelection(this)" class="form-control">
+                                    <option selected>Select</option>
+                                    <option value="addcat">&#43; Add Category</option>
+
+                                    @foreach (var category in ViewBag.Category)
+                                    {
+                                        <option value="@category.id">@category.name</option>
+                                    }
+
+
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="inputEmail4" class="form-label">Min Stock Level</label>
+                                <input type="number" class="form-control" id="minstocklvl">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="inputEmail4" class="form-label">Opening Stock </label>
+                                <input type="number" class="form-control" id="openstock">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="inputEmail4" class="form-label">Barcode</label>
+                                <input type="number" class="form-control" id="barcode">
+                            </div>
+
+
+                            <hr style="margin-top:30px;margin-bottom:20px" />
+
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="cbIsPurchase">
+                                    <label class="form-check-label">
+                                        Purchase Information
+                                    </label>
+                                </div>
+                                <label for="inputEmail4" class="form-label">Cost Price</label>
+                                <input type="number" class="form-control" id="costprice">
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="cbIsSell">
+                                    <label class="form-check-label">
+                                        Sell Information
+                                    </label>
+                                </div>
+                                <label for="inputEmail4" class="form-label">Selling Price</label>
+                                <input type="number" class="form-control" id="sellprice">
+                                <div class="col-md-6">
+                                    <label for="inputtype" class="form-label">Supplier</label>
+                                    <select id="supplier" class="form-control">
+                                        <option selected>Select</option>
+                                        @foreach (var vendors in ViewBag.Vendor)
+                                        {
+                                            <option value="@vendors.id">@vendors.name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <div style="margin-top:20px">
+                                <button type="button" onclick="onSubmit()" class="btn btn-primary">ADD ITEM</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal for Editing Item -->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit Item</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Form fields for editing item details -->
+                            <div class="form-group">
+                                <label for="editInputName">Product Name</label>
+                                <input type="text" class="form-control" id="editInputName">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editInputType">Unit Type</label>
+                                <select id="editInputType" class="form-control">
+                                    <option selected>Select</option>
+                                    @foreach (var unit in ViewBag.Unit)
+                                    {
+                                        <option value="@unit.id">@unit.name</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editInputCategory">Category</label>
+                                <select id="editInputCategory" class="form-control">
+                                    <option selected>Select</option>
+                                    @foreach (var category in ViewBag.Category)
+                                    {
+                                        <option value="@category.id">@category.name</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editInputMinStock">Min Stock Level</label>
+                                <input type="number" class="form-control" id="editInputMinStock">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editInputOpenStock">Opening Stock</label>
+                                <input type="number" class="form-control" id="editInputOpenStock">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editInputBarcode">Barcode</label>
+                                <input type="number" class="form-control" id="editInputBarcode">
+                            </div>
+
+                            <hr style="margin-top:30px;margin-bottom:20px" />
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="editCbIsPurchase">
+                                <label class="form-check-label">
+                                    Purchase Information
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="editInputCostPrice">Cost Price</label>
+                                <input type="number" class="form-control" id="editInputCostPrice">
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="editCbIsSell">
+                                <label class="form-check-label">
+                                    Sell Information
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="editInputSellPrice">Selling Price</label>
+                                <input type="number" class="form-control" id="editInputSellPrice">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editInputSupplier">Supplier</label>
+                                <select id="editInputSupplier" class="form-control">
+                                    <option selected>Select</option>
+                                    @foreach (var vendor in ViewBag.Vendor)
+                                    {
+                                        <option value="@vendor.id">@vendor.name</option>
+                                    }
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="updateItem()">Save Changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+    </tbody>
+</table>
+
+<script src="~/js/jquery-3.7.1.min.js"></script>
 <script>
 
     $(document).ready(function () {
-        $("#ipsellprice").prop("disabled", true);
-        $("#ipcostprice").prop("disabled", true);
+
+        $("#save").click(function () {
+            $("#myModal").modal("show");
+        });
+
+        $("#sellprice").prop("disabled", true);
+        $("#costprice").prop("disabled", true);
 
         $("#cbIsPurchase").change(function () {
             // Update the status of the input field when the checkbox changes
@@ -99,28 +308,133 @@
             updateInputSellStatus();
 
         });
+
+        $("#new").click(function () {
+            $("#myModal").modal("show");
+        });
     });
+
+    function handleSelection(select) {
+        var selectedValue = select.value;
+
+        if (selectedValue === "addcat") {
+            window.location.href = '/Item/ItemCategory';
+        }
+    }
 
     function updateInputPurchaseStatus() {
         // Enable or disable the input field based on the checkbox status
         if ($("#cbIsPurchase").prop("checked")) {
-            $("#ipcostprice").prop("disabled", false);
+            $("#costprice").prop("disabled", false);
         } else {
-            $("#ipcostprice").val("");
-            $("#ipcostprice").prop("disabled", true);
+            $("#costprice").val("");
+            $("#costprice").prop("disabled", true);
         }
     }
 
     function updateInputSellStatus() {
         // Enable or disable the input field based on the checkbox status
         if ($("#cbIsSell").prop("checked")) {
-            $("#ipsellprice").prop("disabled", false);
+            $("#sellprice").prop("disabled", false);
         } else {
-            $("#ipsellprice").val("");
-            $("#ipsellprice").prop("disabled", true);
+            $("#sellprice").val("");
+            $("#sellprice").prop("disabled", true);
         }
     }
 
+    function onSubmit() {
+
+        var name = $("#inputname").val();
+        var type = $("#inputtype").val();
+        var category = $("#category").val();
+        var minstock = $("#minstocklvl").val();
+        var openstock = $("#openstock").val();
+        var barcode = $("#barcode").val();
+        var cprice = $("#costprice").val();
+        var sprice = $("#sellprice").val();
+        var supplier = $("#supplier").val();
+
+
+        $.ajax({
+            url: '/Item/AddItem',
+            type: 'POST',
+            data: {
+                Name: name,
+                Unit_Type_Id: type,
+                Category_Id: category,
+                Buying_Price: cprice,
+                Selling_Price: sprice,
+                Stock_Alert: minstock,
+                Opening_Stock: openstock,
+                Vendor_Id: supplier,
+                Barcode: barcode,
+            },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("AJAX error: " + textStatus + ", " + errorThrown);
+                console.log("Response Text: " + jqXHR.responseText);
+                console.log("Status Code: " + jqXHR.status);
+                console.log("Status Text: " + jqXHR.statusText);
+            }
+        });
+    }
+
+    function deleteItem(ItemId) {
+        if (confirm("Are you sure you want to delete this Item?")) {
+            $.ajax({
+                url: '/Item/ItemDelete',
+                type: 'POST',
+                data: { Id: ItemId },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
+    }
+
+    function openEditModal(itemId) {
+         var itemDetails = getItemDetails(itemId);
+
+        $('#editInputName').val(itemDetails.name);
+        $('#editInputType').val(itemDetails.unitTypeId);
+        $('#editInputCategory').val(itemDetails.categoryId);
+        $('#editInputMinStock').val(itemDetails.minStockLevel);
+        $('#editInputOpenStock').val(itemDetails.openingStock);
+        $('#editInputBarcode').val(itemDetails.barcode);
+        $('#editCbIsPurchase').prop('checked', itemDetails.isPurchase);
+        $('#editInputCostPrice').val(itemDetails.costPrice);
+        $('#editCbIsSell').prop('checked', itemDetails.isSell);
+        $('#editInputSellPrice').val(itemDetails.sellPrice);
+        $('#editInputSupplier').val(itemDetails.supplierId);
+
+        // Open the edit modal
+        $('#editModal').modal('show');
+    }
+
+    function getItemDetails(itemId) {
+        //here get the data thru ajax 
+        var dummyItemDetails = {
+            name: 'Item Name',
+            unitTypeId: 1,
+            categoryId: 2,
+            minStockLevel: 10,
+            openingStock: 50,
+            barcode: '123456789',
+            isPurchase: true,
+            costPrice: 20.5,
+            isSell: true,
+            sellPrice: 30.0,
+            supplierId: 3
+         
+        };
+
+        return dummyItemDetails;
+    }
 
 </script>
 

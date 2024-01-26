@@ -1,0 +1,241 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+    <link href="../../css/editor.css" rel="stylesheet">
+    <link href="narrow-jumbotron.css" rel="stylesheet">
+
+    <style>
+        input.larger {
+            width: 20px;
+            height: 20px;
+        }
+
+
+        .cbalign {
+            -webkit-writing-mode: vertical-lr;
+        }
+
+        .rowPm .endb {
+            pointer-events: auto;
+            background-color: transparent;
+        }
+
+        .disabled-row {
+            pointer-events: none;
+            opacity:0.4;
+        }
+    </style>
+
+</head>
+
+<div class="container">
+    <div class="row" style="padding-bottom:10px">
+        <div class="col-md-4">
+            <label for="inputname" class="form-label">Name</label>
+            <input type="text" class="form-control" id="inputname">
+        </div>
+
+        <div class="col-md-4">
+            <label for="inputEmail4" class="form-label">Email</label>
+            <input type="text" class="form-control" id="minstocklvl">
+        </div>
+
+        <div class="col-md-4">
+            <label for="inputEmail4" class="form-label">Phone </label>
+            <input type="number" class="form-control" id="openstock">
+        </div>
+
+        <div class="col-md-4">
+            <label for="inputEmail4" class="form-label">Password</label>
+            <input type="password" class="form-control" id="barcode">
+        </div>
+
+        @* roles persmisson code *@
+    </div>
+    <body>
+        <div class="row rowPms align-items-center">
+            <div class="col-sm-2"><h6>Show/Hide</h6></div>
+            <div class="col-sm-3"><h6></h6></div>
+            <div class="col-sm-3 col-5 "><h6>Create</h6></div>
+            <div class="col-sm-3"><h6>Modify</h6></div>
+        </div>
+
+        <div class="row rowPm">
+            <div class="col-sm-2 cbalign">
+                <label class="checkbox">
+                    <input type="checkbox" class="larger endb">&nbsp;
+                </label>
+            </div>
+            <div class="col-sm-3"><h6>Dashboard</h6></div>
+            
+        </div>
+
+        <div class="row rowPm">
+            <div class="col-sm-2 cbalign">
+                <label class="checkbox">
+                    <input type="checkbox" class="larger endb">&nbsp;
+                </label>
+            </div>
+            <div class="col-sm-3"><h6>Items</h6></div>
+            <div class="col-sm-3 col-5 cbalign">
+                <h6>
+                    <label class="checkbox">
+                        <input type="checkbox" class="larger">&nbsp;<br>
+                    </label>
+                </h6>
+            </div>
+            <div class="col-sm-3 cbalign">
+                <h6>
+                    <label class="checkbox">
+                        <input type="checkbox" class="larger">&nbsp;
+                    </label>
+                </h6>
+            </div>
+        </div>
+
+        <div class="row rowPm">
+            <div class="col-sm-2 cbalign">
+                <label class="checkbox">
+                    <input type="checkbox" class="larger endb">&nbsp;
+                </label>
+            </div>
+            <div class="col-sm-3"><h6>Category</h6></div>
+            <div class="col-sm-3 col-5 cbalign">
+                <h6>
+                    <label class="checkbox">
+                        <input type="checkbox" class="larger">&nbsp;<br>
+                    </label>
+                </h6>
+            </div>
+            <div class="col-sm-3 cbalign">
+                <h6>
+                    <label class="checkbox">
+                        <input type="checkbox" class="larger">&nbsp;
+                    </label>
+                </h6>
+            </div>
+        </div>
+
+        <div class="row rowPm">
+            <div class="col-sm-2 cbalign">
+                <label class="checkbox">
+                    <input type="checkbox" class="larger endb">&nbsp;
+                </label>
+            </div>
+            <div class="col-sm-3"><h6>Incoming Orders</h6></div>
+            <div class="col-sm-3 col-5 cbalign">
+                <h6>
+                    <label class="checkbox">
+                        <input type="checkbox" class="larger">&nbsp;<br>
+                    </label>
+                </h6>
+            </div>
+            <div class="col-sm-3 cbalign">
+                <h6>
+                    <label class="checkbox">
+                        <input type="checkbox" class="larger">&nbsp;
+                    </label>
+                </h6>
+            </div>
+        </div>
+
+        <div class="row rowPm">
+            <div class="col-sm-2 cbalign">
+                <label class="checkbox">
+                    <input type="checkbox" class="larger endb">&nbsp;
+                </label>
+            </div>
+            <div class="col-sm-3"><h6>Vendor</h6></div>
+            <div class="col-sm-3 col-5 cbalign">
+                <h6>
+                    <label class="checkbox">
+                        <input type="checkbox" class="larger">&nbsp;<br>
+                    </label>
+                </h6>
+            </div>
+            <div class="col-sm-3 cbalign">
+                <h6>
+                    <label class="checkbox">
+                        <input type="checkbox" class="larger">&nbsp;
+                    </label>
+                </h6>
+            </div>
+        </div>
+
+        <div class="row rowPm">
+            <div class="col-sm-2 cbalign">
+                <label class="checkbox">
+                    <input type="checkbox" class="larger endb">&nbsp;
+                </label>
+            </div>
+            <div class="col-sm-3"><h6>Outgoing Orders</h6></div>
+            <div class="col-sm-3 col-5 cbalign">
+                <h6>
+                    <label class="checkbox">
+                        <input type="checkbox" class="larger">&nbsp;<br>
+                    </label>
+                </h6>
+            </div>
+            <div class="col-sm-3 cbalign">
+                <h6>
+                    <label class="checkbox">
+                        <input type="checkbox" class="larger">&nbsp;
+                    </label>
+                </h6>
+            </div>
+        </div>
+
+        <div class="row rowPm">
+            <div class="col-sm-2 cbalign">
+                <label class="checkbox">
+                    <input type="checkbox" class="larger endb">&nbsp;
+                </label>
+            </div>
+            <div class="col-sm-3"><h6>Customer</h6></div>
+            <div class="col-sm-3 col-5 cbalign">
+                <h6>
+                    <label class="checkbox">
+                        <input type="checkbox" class="larger">&nbsp;<br>
+                    </label>
+                </h6>
+            </div>
+            <div class="col-sm-3 cbalign">
+                <h6>
+                    <label class="checkbox">
+                        <input type="checkbox" class="larger">&nbsp;
+                    </label>
+                </h6>
+            </div>
+        </div>
+
+       
+
+</body>
+</div>
+<div class="p-4">
+    <button type="button" class="btn btn-primary">Add User</button>
+</div>
+
+</html>
+<script src="~/js/jquery-3.7.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Initially disable entire row
+        $('.rowPm:not(:has(.endb:checked))').addClass('disabled-row');
+
+        // Enable or disable row based on 'endb' checkbox
+        $('.endb').change(function () {
+            var row = $(this).closest('.rowPm');
+            if (this.checked) {
+                row.removeClass('disabled-row');
+            } else {
+                row.addClass('disabled-row');
+            }
+        });
+    });
+
+</script>

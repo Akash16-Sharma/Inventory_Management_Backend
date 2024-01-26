@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\js\jquery-3.7.1.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\sidebars.css" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\sidebars.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.12">
