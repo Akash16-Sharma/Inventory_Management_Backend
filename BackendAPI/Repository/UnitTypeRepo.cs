@@ -40,9 +40,9 @@ namespace BackendAPI.Repository
             }
         }
 
-        public bool DeleteUnitType(int id)
+        public bool DeleteUnitType(UnitType unit)
         {
-            var DeleteData=_UnitType.Unit_Type.Where(x=>x.Id==id).FirstOrDefault();
+            var DeleteData=_UnitType.Unit_Type.Where(x=>x.Id==unit.Id).FirstOrDefault();
             if (DeleteData != null)
             {
                 DeleteData.IsActive = false;
@@ -54,9 +54,9 @@ namespace BackendAPI.Repository
             else { return false; }
         }
 
-        public List <UnitType> GetAllUnitType()
+        public List <UnitType> GetAllUnitType(int OrgId)
         {
-            var UnitTypeData = _UnitType.Unit_Type.Where(x=>x.IsActive==true).ToList();
+            var UnitTypeData = _UnitType.Unit_Type.Where(x=>x.OrgId==OrgId&&x.IsActive==true).ToList();
             return UnitTypeData;
         }
 

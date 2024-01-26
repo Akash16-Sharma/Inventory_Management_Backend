@@ -4,9 +4,9 @@ namespace BackendAPI.IRepository
 {
     public interface IVendor
     {
-       List <Vendor> GetVendor();
+       List <Vendor> GetVendor(int OrgId);
         bool AddVendor(Vendor vendor);
-        bool RemoveVendor(int id);
+        bool RemoveVendor(Vendor vendor);
         bool UpdateVendor(Vendor vendor);
     }
 }

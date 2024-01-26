@@ -1,4 +1,5 @@
 ﻿using BackendAPI.IRepository;
+using BackendAPI.IRepository.Roles;
 using BackendAPI.Models;
 using BackendAPI.Models.Class;
 using Microsoft.Extensions.Options;
@@ -26,9 +27,11 @@ namespace BackendAPI.AuthServices
 
 
 
-        public InfoClass Authenticate(string Username, string Password)
+        public InfoClass Authenticate(string Email, string Password)
         {
-            var user = _User_Login.Is_Login(Username, Password);
+            var user = _User_Login.CheckStaff(Email, Password);
+
+            //var StaffRole = _Roles.CheckAccess(user.Id);
 
             if (user == null)
             {
@@ -49,6 +52,9 @@ namespace BackendAPI.AuthServices
                 return new InfoClass
                 {
                     auth_token = tokenHandler.WriteToken(authToken),
+                    OrgId=user.OrgId,
+                    StaffId=user.Id,
+                   
                     
                 };
             }

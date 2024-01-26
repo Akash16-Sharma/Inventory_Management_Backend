@@ -47,9 +47,9 @@ namespace BackendAPI.Controllers
         }
 
         [HttpGet]
-        public List<Organisation_Info> GetOrganisation()
+        public List<Organisation_Info> GetOrganisation(int OrgId)
         {
-            return _organisation_info.GetOrganisation_Infos();
+            return _organisation_info.GetOrganisation_Infos(OrgId);
         }
         
 
@@ -57,9 +57,9 @@ namespace BackendAPI.Controllers
         public IActionResult login(User_Login loginData)
         {
 
-            var data = _User_Login.Is_Login(loginData.Username, loginData.Password);
+            //var data = _User_Login.Is_Login(loginData.Email, loginData.Password);
 
-            var authUser = _authenticateService.Authenticate(loginData.Username, loginData.Password);
+            var authUser = _authenticateService.Authenticate(loginData.Email, loginData.Password);
             if (authUser != null)
             {
                 if (authUser == null)

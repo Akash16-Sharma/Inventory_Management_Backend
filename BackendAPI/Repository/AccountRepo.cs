@@ -2,6 +2,7 @@
 using BackendAPI.IRepository;
 using BackendAPI.Models;
 using BackendAPI.Models.Class;
+using BackendAPI.Models.Roles;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -24,11 +25,25 @@ namespace BackendAPI.Repository
 
         }
 
-        public User_Login Is_Login(string Username, string Password)
+        public Staff CheckStaff(string Email, string Password)
         {
             string PassSecret = "b14ca5898a4e4133bbce2ea2315a1916";
             string EncPss = encypss.EncryptPassword(PassSecret, Password);
-            var data = _context.User_Login.Where(x => x.Username == Username && x.Password == EncPss&&x.ISActive==true).FirstOrDefault();
+            var data =_context.Staff.Where(x=>x.Email==Email&&x.Password==EncPss).FirstOrDefault();
+            if(data!=null)
+            {
+                return data;
+            }
+            else { return null; }
+        }
+
+       
+
+        public User_Login Is_Login(string Email, string Password)
+        {
+            string PassSecret = "b14ca5898a4e4133bbce2ea2315a1916";
+            string EncPss = encypss.EncryptPassword(PassSecret, Password);
+            var data = _context.User_Login.Where(x => x.Email == Email && x.Password == EncPss&&x.ISActive==true).FirstOrDefault();
             if (data != null)
             {
                 return data;

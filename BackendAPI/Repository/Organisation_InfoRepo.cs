@@ -2,6 +2,7 @@
 using BackendAPI.IRepository;
 using BackendAPI.Models;
 using BackendAPI.Models.Class;
+using BackendAPI.Models.Roles;
 using System;
 
 namespace BackendAPI.Repository
@@ -21,7 +22,7 @@ namespace BackendAPI.Repository
 
         public bool AddOrganisation_Info(AddAllInfo info)
         {
-            info.InsertedOn = DateTime.Now;
+            info.Inserted_On = DateTime.Now;
 
             // Creating Organisation Info
             var orgInfo = new Organisation_Info
@@ -34,7 +35,7 @@ namespace BackendAPI.Repository
                 Email = info.Org_Email,
                 Type = info.Type,
                 IsActive = true,
-                InsertedOn = info.InsertedOn,
+                InsertedOn = info.Inserted_On,
             };
 
             _context.Organisation_Info.Add(orgInfo);
@@ -42,26 +43,26 @@ namespace BackendAPI.Repository
 
             // Creating User Login Info
             string PassSecret = "b14ca5898a4e4133bbce2ea2315a1916";
-            var userLoginInfo = new User_Login
-            {
-                Username = info.Username,
-                Inserted_On = info.InsertedOn,
-                ISActive = true,
-                
-                Password = _encDycPassword.EncryptPassword(PassSecret, info.Password)
-                
-            };
+            
+            
+               Staff staff= new Staff();
+                staff.IsActive = true;
+                staff.Staff_Name = info.Name;
+                staff.Email = info.Org_Email;
+                staff.Password = _encDycPassword.EncryptPassword(PassSecret, info.Password);
+                staff.OrgId = orgInfo.Id;
+                staff.InsertedOn = DateTime.Now;
+                staff.RoleType = "Admin";
+                _context.Staff.Add(staff);
+                _context.SaveChanges();
+                return true;
 
-            _context.User_Login.Add(userLoginInfo);
-            _context.SaveChanges();
 
-            return true;
         }
 
-        public List<Organisation_Info> GetOrganisation_Infos()
+        public List<Organisation_Info> GetOrganisation_Infos(int OrgId)
         {
-            var data = _context.Organisation_Info.ToList();
-
+            var data = _context.Organisation_Info.Where(x=>x.Id==OrgId&&x.IsActive==true).ToList();
             return data;
         }
     }

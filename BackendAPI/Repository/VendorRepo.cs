@@ -24,15 +24,15 @@ namespace BackendAPI.Repository
             else { return false; }
         }
 
-        public List<Vendor> GetVendor()
+        public List<Vendor> GetVendor(int OrgId)
         {
-            var data=_Vendor.Vendor.Where(x => x.IsActive==true).ToList();
+            var data=_Vendor.Vendor.Where(x =>x.OrgId==OrgId&& x.IsActive==true).ToList();
             return data;
         }
 
-        public bool RemoveVendor(int id)
+        public bool RemoveVendor(Vendor vendor)
         {
-            var data = _Vendor.Vendor.Where(x => x.Id == id).FirstOrDefault();
+            var data = _Vendor.Vendor.Where(x => x.Id == vendor.Id).FirstOrDefault();
             data.IsActive=false;
             data.InsertedOn=DateTime.Now;
             _Vendor.Vendor.Update(data);
