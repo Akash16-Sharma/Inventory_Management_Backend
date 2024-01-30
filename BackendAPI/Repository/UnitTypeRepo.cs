@@ -15,7 +15,7 @@ namespace BackendAPI.Repository
         public bool AddUnitType(UnitType unitType)
         {
             unitType.InsertedOn=DateTime.Now;
-            var UnitTypeData=_UnitType.Unit_Type.Where(x=>x.Name == unitType.Name).FirstOrDefault();
+            var UnitTypeData=_UnitType.Unit_Type.Where(x=>x.Name == unitType.Name&&x.OrgId==unitType.OrgId).FirstOrDefault();
             if (UnitTypeData != null)
             {
                 UnitTypeData.IsActive = true;
@@ -40,11 +40,12 @@ namespace BackendAPI.Repository
             }
         }
 
-        public bool DeleteUnitType(UnitType unit)
+        public bool DeleteUnitType(int id, int StaffId)
         {
-            var DeleteData=_UnitType.Unit_Type.Where(x=>x.Id==unit.Id).FirstOrDefault();
+            var DeleteData=_UnitType.Unit_Type.Where(x=>x.Id==id).FirstOrDefault();
             if (DeleteData != null)
             {
+                DeleteData.UpdatedBy = StaffId;
                 DeleteData.IsActive = false;
                 DeleteData.InsertedOn= DateTime.Now;
                 _UnitType.Unit_Type.Update(DeleteData);
@@ -60,11 +61,18 @@ namespace BackendAPI.Repository
             return UnitTypeData;
         }
 
+        public UnitType GetUnitTypeById(int id)
+        {
+           var data=_UnitType.Unit_Type.Where(x=>x.Id== id).FirstOrDefault();
+            return data;
+        }
+
         public bool UpdateUnitType(UnitType unitType)
         {
             unitType.InsertedOn=DateTime.Now;
             var unittypedata=_UnitType.Unit_Type.Where(x=>x.Id==unitType.Id).FirstOrDefault();
             unittypedata.Name=unitType.Name;
+            unittypedata.UpdatedBy=unitType.UpdatedBy;
             _UnitType.Unit_Type.Update(unittypedata);
            int IsUpdated= _UnitType.SaveChanges();
             if(IsUpdated > 0)

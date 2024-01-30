@@ -10,6 +10,6 @@ namespace BackendAPI.IRepository
         Item GetItemById(int id);
         bool AddItem(Item Items);
         bool UpdateItem(Item Items);
-        bool DeleteItem(Item Items);
+        bool DeleteItem(int id,int staffid);
     }
 }

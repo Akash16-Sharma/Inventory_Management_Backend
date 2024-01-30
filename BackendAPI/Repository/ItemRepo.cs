@@ -39,18 +39,24 @@ namespace BackendAPI.Repository
             
         }
 
-        public bool DeleteItem(Item Items)
+        public bool DeleteItem(int id,int staffid)
         {
-          var del= _Item.Items.Where(x => x.Id == Items.Id).FirstOrDefault();
-            del.IsActive=false;
-            _Item.Items.Update(del);
-            int IsDelete= _Item.SaveChanges();
-            if(IsDelete==1 )
+          var del= _Item.Items.Where(x => x.Id == id).FirstOrDefault();
+           if(del != null)
             {
-                return true;
+                del.Updated_By = staffid;
+                del.InsertedOn= DateTime.Now;   
+                del.IsActive = false;
+                _Item.Items.Update(del);
+                int IsDelete = _Item.SaveChanges();
+                if (IsDelete == 1)
+                {
+                    return true;
+                }
+                else
+                    return false;
             }
-            else
-                return false;
+           return false;
         }
 
         public bool UpdateItem(Item Item)
@@ -71,6 +77,7 @@ namespace BackendAPI.Repository
                 existingItem.Unit_Type_Id = Item.Unit_Type_Id;
                 existingItem.Category_Id = Item.Category_Id;
                 existingItem.InsertedOn = DateTime.Now;
+                existingItem.Updated_By=Item.Updated_By;
                 _Item.Items.Update(existingItem);
                 int IsUpdate = _Item.SaveChanges();
                 if (IsUpdate == 1)

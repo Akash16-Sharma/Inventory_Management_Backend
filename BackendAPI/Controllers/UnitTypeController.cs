@@ -63,6 +63,7 @@ namespace BackendAPI.Controllers
         [Route("AddUnitType")]
         public IActionResult AddUnitType([FromBody] UnitType unit, int StaffId)
         {
+            unit.UpdatedBy = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
@@ -91,7 +92,7 @@ namespace BackendAPI.Controllers
                         else
                         {
                             return BadRequest(new { Message = "Failed to add the unit type." });
-                        }
+                        }break;
                     }
                 }
             }
@@ -102,6 +103,7 @@ namespace BackendAPI.Controllers
         [Route("UpdateUnitType")]
         public IActionResult UpdateUnitType([FromBody] UnitType unit, int StaffId)
         {
+            unit.UpdatedBy = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
@@ -130,7 +132,7 @@ namespace BackendAPI.Controllers
                         else
                         {
                             return BadRequest(new { Message = "Failed to update the unit type." });
-                        }
+                        }break;
                     }
                 }
             }
@@ -139,12 +141,12 @@ namespace BackendAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteUnitType")]
-        public IActionResult DeleteUnitType([FromBody] UnitType unit, int StaffId)
+        public IActionResult DeleteUnitType(int id, int StaffId)
         {
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
-                bool IsDelete = _UnitTypeRepo.DeleteUnitType(unit);
+                bool IsDelete = _UnitTypeRepo.DeleteUnitType(id, StaffId);
                 if (IsDelete)
                 {
                     return Ok(new { Message = "Unit type deleted successfully." });
@@ -161,7 +163,7 @@ namespace BackendAPI.Controllers
                 {
                     if (AccessData[i].SideBarName == "UnitType" && AccessData[i].IsModify == true)
                     {
-                        bool IsDelete = _UnitTypeRepo.DeleteUnitType(unit);
+                        bool IsDelete = _UnitTypeRepo.DeleteUnitType(id, StaffId);
                         if (IsDelete)
                         {
                             return Ok(new { Message = "Unit type deleted successfully." });
@@ -169,11 +171,50 @@ namespace BackendAPI.Controllers
                         else
                         {
                             return BadRequest(new { Message = "Failed to delete the unit type." });
-                        }
+                        }break;
                     }
                 }
             }
             return BadRequest(new { Message = "Invalid request parameters." });
+        }
+
+        [HttpPost]
+        [Route("GetUnitTypeById")]
+        public IActionResult GetUnitTypeById(int id,int StaffId)
+        {
+            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            if (CheckRoleTypeData.RoleType == "Admin")
+            {
+                var data = _UnitTypeRepo.GetUnitTypeById(id);
+                if (data == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(data);
+                }
+            }
+            else
+            {
+                var AccessData = _roles.CheckAccess(StaffId);
+                for (int i = 0; i < AccessData.Count; i++)
+                {
+                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].IsModify == true)
+                    {
+                        var data = _UnitTypeRepo.GetUnitTypeById(id);
+                        if (data == null)
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            return Ok(data);
+                        }
+                        break;
+                    }
+                }
+            } return BadRequest();
         }
     }
 }

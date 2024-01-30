@@ -65,6 +65,11 @@ namespace BackendAPI.Controllers
         [Route("AddItem")]
         public IActionResult AddItem([FromBody] Item item, int StaffId)
         {
+            if(item.Unit_Type_Id==0||item.Category_Id==0||item.Vendor_Id==0)
+            {
+                return BadRequest();
+            }
+            item.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
@@ -104,6 +109,7 @@ namespace BackendAPI.Controllers
         [Route("UpdateItem")]
         public IActionResult UpdateItem([FromBody]Item item, int StaffId)
         {
+            item.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
@@ -151,12 +157,12 @@ namespace BackendAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteItem")]
-        public IActionResult DeleteItem([FromBody] Item item, int StaffId)
+        public IActionResult DeleteItem(int id, int StaffId)
         {
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
-                bool IsDelete = _itemRepo.DeleteItem(item);
+                bool IsDelete = _itemRepo.DeleteItem(id, StaffId);
                 if (IsDelete)
                 {
                     return Ok(new { Status = 200, Message = "Item deleted successfully." });
@@ -173,7 +179,7 @@ namespace BackendAPI.Controllers
                 {
                     if (AccessData[i].SideBarName == "Item" && AccessData[i].IsModify == true)
                     {
-                        bool IsDelete = _itemRepo.DeleteItem(item);
+                        bool IsDelete = _itemRepo.DeleteItem(id, StaffId);
                         if (IsDelete)
                         {
                             return Ok(new { Status = 200, Message = "Item deleted successfully." });
@@ -187,5 +193,40 @@ namespace BackendAPI.Controllers
             }
             return BadRequest(new { Message = "Invalid request parameters." });
         }
-    }
+
+
+        [HttpPost]
+        [Route("GetItemById")]
+        public IActionResult GetItem(int id, int StaffId)
+        {
+            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            if (CheckRoleTypeData.RoleType == "Admin")
+            {
+                var ItemData = _itemRepo.GetItemById(id);
+                if (ItemData == null)
+                {
+                    return NotFound();
+                }
+                else { return Ok(new { Message = "Data Found", Value = ItemData }); }
+            }
+            else
+            {
+
+                var AccessData = _roles.CheckAccess(StaffId);
+                for (int i = 0; i < AccessData.Count; i++)
+                {
+                    if (AccessData[i].SideBarName == "Item" && AccessData[i].IsModify == true)
+                    {
+                        var ItemData = _itemRepo.GetItemById(id);
+                        if (ItemData == null)
+                        {
+                            return NotFound();
+                        }
+                        else { return Ok(new { Message = "Data Found", Value = ItemData }); }
+                    }
+                }
+            }
+            return BadRequest();
+        }
+        }
 }

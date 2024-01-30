@@ -81,7 +81,7 @@ namespace BackendAPI.Controllers
                 var accessData = _Roles.CheckAccess(StaffId);
                 for (var i = 0; i < accessData.Count; i++)
                 {
-                    if (accessData[i].SideBarName == "Vendor" && accessData[i].IsCreate==true)
+                    if (accessData[i].SideBarName == "Vendor" && accessData[i].IsCreate == true)
                     {
                         bool isSave = _Vendor.AddVendor(vendor);
                         if (isSave)
@@ -139,12 +139,12 @@ namespace BackendAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteVendor")]
-        public IActionResult DeleteVendor(Vendor vendor, int StaffId)
+        public IActionResult DeleteVendor(int id, int StaffId)
         {
             var checkRoleTypeData = _Roles.CheckStaffType(StaffId);
             if (checkRoleTypeData.RoleType == "Admin")
             {
-                bool isDelete = _Vendor.RemoveVendor(vendor);
+                bool isDelete = _Vendor.RemoveVendor(id, StaffId);
                 if (isDelete)
                 {
                     return Ok("Vendor deleted successfully.");
@@ -159,9 +159,9 @@ namespace BackendAPI.Controllers
                 var accessData = _Roles.CheckAccess(StaffId);
                 for (var i = 0; i < accessData.Count; i++)
                 {
-                    if (accessData[i].SideBarName == "Vendor" && accessData[i].IsModify==true)
+                    if (accessData[i].SideBarName == "Vendor" && accessData[i].IsModify == true)
                     {
-                        bool isDelete = _Vendor.RemoveVendor(vendor);
+                        bool isDelete = _Vendor.RemoveVendor(id, StaffId);
                         if (isDelete)
                         {
                             return Ok("Vendor deleted successfully.");
@@ -174,6 +174,45 @@ namespace BackendAPI.Controllers
                 }
             }
             return BadRequest("Access denied.");
+        }
+
+        [HttpPost]
+        [Route("GetVendorById")]
+        public IActionResult GetVendorById(int id,int StaffId)
+        {
+            var checkRoleTypeData = _Roles.CheckStaffType(StaffId);
+            if (checkRoleTypeData.RoleType == "Admin")
+            {
+                var data = _Vendor.GetVendorById(id);
+                if (data == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(data);
+                }
+            }
+            else
+            {
+                var accessData = _Roles.CheckAccess(StaffId);
+                for (var i = 0; i < accessData.Count; i++)
+                {
+                    if (accessData[i].SideBarName == "Vendor" && accessData[i].IsModify == true)
+                    {
+                        var data = _Vendor.GetVendorById(id);
+                        if (data == null)
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            return Ok(data);
+                        }
+                    }
+                }
+            }
+            return BadRequest();
         }
     }
 }

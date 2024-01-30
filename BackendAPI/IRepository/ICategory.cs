@@ -6,7 +6,7 @@ namespace BackendAPI.IRepository
     {
        List <Category> GetAllCategory(int OrgId);
         bool AddCategory(Category category);
-        bool DeleteCategory(Category category);
+        bool DeleteCategory(int id,int staffid);
         bool UpdateCategory(Category category);
     }
 }
