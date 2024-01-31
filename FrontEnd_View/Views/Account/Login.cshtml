@@ -2,14 +2,35 @@
 
 @{
     ViewData["Title"] = "Login";
+    <script src="~/js/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 }
 
+<style>
+    .bd-example-modal-lg .modal-dialog {
+        display: table;
+        position: relative;
+        margin: 0 auto;
+        top: calc(50% - 24px);
+    }
+
+    #loadingModal {
+        pointer-events: none;
+    }
+
+    .bd-example-modal-lg .modal-dialog .modal-content {
+        background-color: transparent;
+        border: none;
+    }
+
+</style>
 <h1>Login</h1>
 
-<form class="row g-3">
+<form class="row g-3" onsubmit="return false;">
     <div class="col-md-6">
         <label for="exampleInputEmail1">Email address</label>
-        <input type="text" class="form-control" id="exampleInputEmail1"  placeholder="Enter email">
+        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
 
     </div>
     <div class="col-md-6">
@@ -25,37 +46,45 @@
     </div>
 </form>
 
+<!-- Loading Modal -->
+<div class="modal fade bd-example-modal-lg" id="loadingModal" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="width: 48px">
+            <span class="fa fa-spinner fa-spin fa-3x"></span>
+        </div>
+    </div>
+</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
 <script>
-
-
     function onLogin() {
 
-        debugger
         var email = $("#exampleInputEmail1").val();
         var password = $("#exampleInputPassword1").val();
-
-        
+        $('#loadingModal').modal('show');
         $.ajax({
-            url: '@Url.Action("CheckLogin", "Account")',
+            url: '/Account/CheckLogin',
             type: 'POST',
-            data: JSON.stringify({
-                Username: email,
+            data: {
+                Email: email,
                 Password: password,
-            }),
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
-            success: function (data) {        
-                console.log(data);
             },
-            error: function (jXhr) {
-        
-                console.log("AJAX error");
+            success: function (data) {
+                $('#loadingModal').modal('hide');
+                if (data.success) {
+                    window.location.href = data.redirectUrl;
+                }
+                else {
+                    alert("Email or Password is Incorrect !");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("AJAX error: " + textStatus + ", " + errorThrown);
+
             }
         });
     }
-
 
 
 </script>

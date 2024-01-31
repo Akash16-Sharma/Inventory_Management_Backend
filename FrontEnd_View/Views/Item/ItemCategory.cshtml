@@ -35,7 +35,7 @@
                 </td>
 
                 <td>
-                    <a href="javascript:void(0);" onclick="editCategoryModal('@item.Name')">Edit</a> |
+                    <a href="javascript:void(0);" onclick="editCategoryModal('@item.Name','@item.Id')">Edit</a> |
                     <a href="javascript:void(0);" onclick="deleteCategory(@item.Id)">Delete</a>
                 </td>
             </tr>
@@ -83,6 +83,7 @@
                 <div class="col-md-6">
                     <label for="editCategoryName" class="form-label">Category Name</label>
                     <input type="text" class="form-control" id="editCategoryName">
+                    <input style="display:none" type="text" class="form-control" id="editCategoryID">
                 </div>  
             </div>
             <div class="modal-footer">
@@ -110,7 +111,8 @@
             type: 'POST',
             data: { Name: nameValue },
             success: function (response) {
-                console.log(response);
+                $('#myModal').modal('hide');              
+                location.reload();
             },
             error: function (error) {
                 console.log("Error: " + error);
@@ -125,7 +127,7 @@
                 type: 'POST',
                 data: { Id: categoryId },
                 success: function (response) {
-                    location.reload();
+                    console.log("deleted");
                 },
                 error: function (error) {
                     console.log("Error: " + error);
@@ -134,17 +136,32 @@
         }
     }
 
-    function editCategoryModal(categoryName) {
+    function editCategoryModal(categoryName,categoryId) {
         // Populate modal input with the category name
         $('#editCategoryName').val(categoryName);
-
+        $('#editCategoryID').val(categoryId);
         // Show the modal
         $('#editCategoryModal').modal('show');
     }
 
     function updateCategory() {
-    
-        $('#editCategoryModal').modal('hide');
+
+        var nameValue = $("#editCategoryName").val();
+        var catId = $('#editCategoryID').val();
+
+        $.ajax({
+            url: '/Item/ItemCategoryEdit',
+            type: 'POST',
+            data: { Name: nameValue, Id: catId },
+            success: function (response) {
+                $('#editCategoryModal').modal('hide');
+                location.reload();
+            },
+            error: function (error) {
+                console.log("Error: " + error);
+            }
+        });
     }
+    
 
 </script>

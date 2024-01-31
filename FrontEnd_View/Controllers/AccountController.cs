@@ -28,7 +28,7 @@ namespace FrontEnd_View.Controllers
         }
 
         [HttpPost]
-        public IActionResult CheckLogin([FromBody] User_Login log)
+        public IActionResult CheckLogin( User_Login log)
         {
             try
             {
@@ -39,17 +39,22 @@ namespace FrontEnd_View.Controllers
 
                 if (responseMessage.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Signup", "Account");
+                    string responseContent = responseMessage.Content.ReadAsStringAsync().Result;
+                    dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
+                    int orgId = responseObject.value.orgId;
+                    int staffId = responseObject.value.staffId;
+                    HttpContext.Session.SetInt32("orgId", orgId);
+                    HttpContext.Session.SetInt32("staffId", staffId);
+                    return Json(new { success = true, redirectUrl = Url.Action("ItemCategory", "Item") });
                 }
-
-                return View();
             }
             catch (Exception ex)
             {
-                return View();
-                throw;
+                return Json(new { success = false });
             }
+            return Json(new { success = false });
         }
+
 
         [HttpGet]
         public IActionResult Signup()
@@ -64,6 +69,7 @@ namespace FrontEnd_View.Controllers
                 stateLists =JsonConvert.DeserializeObject<List<StateList>>(data);
                 var stateListData = stateLists.Select(s => new { name = s.Name, id = s.Id }).ToList();
                 ViewBag.StateListData = stateListData;
+                return View();
             }
 
             return View();
@@ -81,7 +87,7 @@ namespace FrontEnd_View.Controllers
                     
                 if (responseMessage.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Login");
                 }
 
                 return View();
