@@ -34,6 +34,8 @@ namespace BackendAPI
             services.AddScoped<Vendor>();
             services.AddScoped<Staff>();
             services.AddScoped<Access>();
+            services.AddScoped<Controller_Functions>();
+            services.AddScoped<Excel>();
 
 
             //Services.AddScoped<EncDycPassword>();

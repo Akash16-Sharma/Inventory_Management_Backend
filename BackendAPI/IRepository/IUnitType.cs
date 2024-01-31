@@ -6,7 +6,8 @@ namespace BackendAPI.IRepository
     {
         List <UnitType> GetAllUnitType(int OrgId);
         bool AddUnitType(UnitType unitType);
-        bool DeleteUnitType(UnitType unit);
+        bool DeleteUnitType(int id,int StaffId);
         bool UpdateUnitType(UnitType unitType);
+        UnitType GetUnitTypeById(int id);
     }
 }

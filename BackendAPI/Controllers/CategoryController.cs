@@ -73,7 +73,7 @@ namespace BackendAPI.Controllers
         [Route("AddCategory")]
         public IActionResult AddCategory([FromBody] Category category,int StaffId)
         {
-
+            category.UpdatedBy = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
@@ -115,9 +115,11 @@ namespace BackendAPI.Controllers
         [Route("EditCategory")]
         public IActionResult EditCategory([FromBody] Category category,int StaffId)
         {
+            category.UpdatedBy = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
+               
                 bool IsUpdate = _Category.UpdateCategory(category);
                 if (IsUpdate)
                 {
@@ -130,11 +132,13 @@ namespace BackendAPI.Controllers
             }
             else
             {
+                
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
                     if (AccessData[i].SideBarName == "Category" && AccessData[i].IsModify == true)
                     {
+                       
                         bool IsUpdate = _Category.UpdateCategory(category);
                         if (IsUpdate)
                         {
@@ -152,12 +156,12 @@ namespace BackendAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteCategory")]
-        public IActionResult DeleteCategory(Category category,int staffid)
+        public IActionResult DeleteCategory(int id,int staffid)
         {
             var CheckRoleTypeData = _roles.CheckStaffType(staffid);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
-                bool IsDelete = _Category.DeleteCategory(category);
+                bool IsDelete = _Category.DeleteCategory(id,staffid);
                 if (IsDelete)
                 {
                     return Ok(new { Message = "Category deleted successfully." });
@@ -171,7 +175,7 @@ namespace BackendAPI.Controllers
                 {
                     if (AccessData[i].SideBarName == "Category" && AccessData[i].IsModify == true)
                     {
-                        bool IsDelete = _Category.DeleteCategory(category);
+                        bool IsDelete = _Category.DeleteCategory(id,staffid);
                         if (IsDelete)
                         {
                             return Ok(new { Message = "Category deleted successfully." });

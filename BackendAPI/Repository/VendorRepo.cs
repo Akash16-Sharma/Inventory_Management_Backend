@@ -30,9 +30,16 @@ namespace BackendAPI.Repository
             return data;
         }
 
-        public bool RemoveVendor(Vendor vendor)
+        public Vendor GetVendorById(int id)
         {
-            var data = _Vendor.Vendor.Where(x => x.Id == vendor.Id).FirstOrDefault();
+            var data = _Vendor.Vendor.Where(x => x.Id == id).FirstOrDefault();
+            return data;
+        }
+
+        public bool RemoveVendor(int id, int StaffId)
+        {
+            var data = _Vendor.Vendor.Where(x => x.Id == id).FirstOrDefault();
+            data.UpdatedBy=StaffId;
             data.IsActive=false;
             data.InsertedOn=DateTime.Now;
             _Vendor.Vendor.Update(data);
