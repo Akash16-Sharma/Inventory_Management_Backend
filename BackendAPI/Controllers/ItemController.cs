@@ -114,8 +114,6 @@ namespace BackendAPI.Controllers
             if (CheckRoleTypeData.RoleType == "Admin")
             {
                
-               
-
                 // Save the updated item to the repository
                 bool IsUpdated = _itemRepo.UpdateItem(item);
 
@@ -136,8 +134,6 @@ namespace BackendAPI.Controllers
                     if (AccessData[i].SideBarName == "Item" && AccessData[i].IsModify == true)
                     {
                         
-                       
-
                         // Save the updated item to the repository
                         bool IsUpdated = _itemRepo.UpdateItem(item);
 
@@ -195,7 +191,7 @@ namespace BackendAPI.Controllers
         }
 
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetItemById")]
         public IActionResult GetItem(int id, int StaffId)
         {
@@ -207,7 +203,7 @@ namespace BackendAPI.Controllers
                 {
                     return NotFound();
                 }
-                else { return Ok(new { Message = "Data Found", Value = ItemData }); }
+                else { return Ok(ItemData);}
             }
             else
             {
@@ -222,7 +218,7 @@ namespace BackendAPI.Controllers
                         {
                             return NotFound();
                         }
-                        else { return Ok(new { Message = "Data Found", Value = ItemData }); }
+                        else { return Ok(ItemData); }
                     }
                 }
             }

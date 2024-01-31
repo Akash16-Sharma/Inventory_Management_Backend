@@ -132,6 +132,25 @@ namespace FrontEnd_View.Controllers
 
         } //item delete by Id
 
+        [HttpGet]
+        public IActionResult ItemGetById(int Id)
+        {
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+               "/Item/GetItemById?id=" + Id + "&StaffId=" + StaffId).Result;
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                Item item = new Item();
+                string data = responseMessage.Content.ReadAsStringAsync().Result;
+                item = JsonConvert.DeserializeObject<Item>(data);
+                return new JsonResult(item);
+
+            }
+            return View();
+
+        } //item get by Id
+
         public IActionResult ItemCategoryAdd(Category cat) //category add
         {
             int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
@@ -151,8 +170,10 @@ namespace FrontEnd_View.Controllers
 
         public IActionResult ItemCategoryDelete(int Id)
         {
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+
             HttpResponseMessage responseMessage = _client.DeleteAsync(_client.BaseAddress +
-               "/Category/DeleteCategory?id=" + Id).Result;
+               "/Category/DeleteCategory?id=" + Id + "&StaffId=" + StaffId).Result;
 
             if (responseMessage.IsSuccessStatusCode)
             {
@@ -171,6 +192,23 @@ namespace FrontEnd_View.Controllers
             StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage responseMessage = _client.PutAsync(_client.BaseAddress +
                 "/Category/EditCategory?StaffId=" + StaffId, con).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("ItemCategory");
+            }
+
+            return View();
+        }
+
+        public IActionResult ItemUpdate(Item item) //category add
+        {
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            item.Org_Id = OrgId;
+            string data = JsonConvert.SerializeObject(item);
+            StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage responseMessage = _client.PutAsync(_client.BaseAddress +
+                "/Item/UpdateItem?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("ItemCategory");

@@ -127,7 +127,7 @@
                 type: 'POST',
                 data: { Id: categoryId },
                 success: function (response) {
-                    console.log("deleted");
+                    location.reload();
                 },
                 error: function (error) {
                     console.log("Error: " + error);
