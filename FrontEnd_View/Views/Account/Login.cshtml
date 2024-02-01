@@ -4,7 +4,7 @@
     ViewData["Title"] = "Login";
     <script src="~/js/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+   
 }
 
 <style>
@@ -24,7 +24,80 @@
         border: none;
     }
 
+
+    .my-form {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+
+        .my-form .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+    .login-form {
+        padding-top: 4rem;
+        padding-bottom: 1.5rem;
+    }
+
+        .login-form .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
 </style>
+
+<div class="login-form">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">LOGIN</div>
+                    <div class="card-body">
+                        <form onsubmit="return false;">
+                            <div class="form-group row">
+                                <label for="email_address" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="exampleInputEmail1" class="form-control" name="email-address" required autofocus>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+                                <div class="col-md-6">
+                                    <input type="password" id="exampleInputPassword1" class="form-control" name="password" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-4 offset-md-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="remember"> Remember Me
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-8 offset-md-4">
+                                <button type="submit" onclick="onLogin()" class="btn btn-primary">
+                                    Login
+                                </button>
+                                <a class="btn btn-link" href="@Url.Action("Signup", "Account")">Don't have an account? Sign Up</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@* <div class="container">
+
+
 <h1>Login</h1>
 
 <form class="row g-3" onsubmit="return false;">
@@ -38,13 +111,16 @@
         <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
     </div>
 
-    <a href="@Url.Action("Signup", "Account")">Don't have an account? Sign Up</a>
+
 
 
     <div class="col-2">
         <button onclick="onLogin()" class="btn btn-primary">Submit</button>
     </div>
 </form>
+</div>
+
+ *@
 
 <!-- Loading Modal -->
 <div class="modal fade bd-example-modal-lg" id="loadingModal" data-backdrop="static" data-keyboard="false" tabindex="-1">
@@ -54,8 +130,6 @@
         </div>
     </div>
 </div>
-
-
 
 <script>
     function onLogin() {

@@ -1,0 +1,181 @@
+﻿@model IEnumerable<BackendAPI.Models.Organisation_Info>
+
+
+<style>
+
+    [class^="col-md-"], [class*=" col-md-"] {
+        margin-bottom: 10px;
+    }
+
+</style>
+<html>
+<body>
+
+
+    @foreach (var organisationInfo in Model)
+    {
+        <h4>Organisation Information </h4>
+        <div style=" padding: 0.5rem 1.5rem 1.5rem 1.5rem;">
+            <form class="row g-3" id="myForm">
+                <div class="col-md-5">
+                    <label for="inputname" class="form-label">Organisation Name</label>
+                    <input type="text" class="form-control" id="inputname" value="@organisationInfo.Name">
+                </div>
+
+
+                <div class="col-md-4">
+                    <label for="inputtype" class="form-label">Organisation Type</label>
+                    <select id="inputtype" class="form-control">
+                        <option selected>Select</option>
+                        <option selected="@("Manufacturing" == organisationInfo.Type)">Manufacturing</option>
+                        <option selected="@("Warehouse" == organisationInfo.Type)">Warehouse</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="inputAddress" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="inputAddress" value="@organisationInfo.Address">
+                </div>
+
+                <div class="col-md-3">
+                    <label for="inputState" class="form-label">State</label>
+                    @Html.DropDownList("SelectedState",
+                new SelectList(ViewBag.StateListData, "id", "name", organisationInfo.StateID),
+                "Select State",
+                new { @class = "form-control", @id = "inputState", @onchange = "cityFetch(this.value)" })
+                </div>
+
+                <div class="col-md-3">
+                    <label for="inputCity" class="form-label">City</label>
+                    <select class="form-control" id="inputCity"></select>
+                </div>
+
+
+                <div class="col-md-4">
+                    <label for="inputphone" class="form-label">Phone</label>
+                    <input type="number" class="form-control" id="inputphone" value="@organisationInfo.PhoneNo">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="inputEmail4" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="inputEmail4" value="@organisationInfo.Email">
+                </div>
+            </form>
+        </div>
+
+    }
+    <h4>Personal  Information </h4>
+
+    <div style=" padding: 0.5rem 1.5rem 1.5rem 1.5rem;">
+        <form class="row g-2" id="myPrsnlForm">
+            <div class="col-md-3">
+                <label for="inputname" class="form-label">Name</label>
+                <input type="text" class="form-control" id="inputname">
+            </div>
+
+            <div class="col-md-3">
+                <label for="inputphone" class="form-label">Phone</label>
+                <input type="number" class="form-control" id="inputphone">
+            </div>
+
+            <div class="col-md-4">
+                <label for="inputEmail4" class="form-label">Email</label>
+                <input type="email" class="form-control" id="inputEmail4">
+            </div>
+        </form>
+    </div>
+
+    <div style="margin-top:10px">
+        <button type="submit" onclick="onEdit()" class="btn btn-primary" id="editBtn">
+            Edit
+        </button>
+
+        <button type="submit" onclick="onUpdate()" class="btn btn-primary" id="updateBtn" style="display:none;">
+            Update
+        </button>
+    </div>
+
+</body>
+</html>
+
+<script>
+
+    $(document).ready(function () {
+        cityFetch();
+        $('#myForm :input').prop('disabled', true);
+        $('#myPrsnlForm :input').prop('disabled', true);
+    });
+
+
+    function cityFetch() {
+
+        var selValue = $("#inputState").val();
+        debugger;
+        $.ajax({
+            url: '@Url.Action("GetCities", "Account")',
+            type: 'GET',
+            data: { Id: selValue },
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) {
+                var cityDropdown = $("#inputCity");
+                cityDropdown.empty();
+                $.each(data, function (i, city) {
+                    cityDropdown.append('<option value="' + city.id + '">' + city.name + '</option>');
+                });
+                var organisationInfoList = @Html.Raw(Json.Serialize(Model));
+                $("#inputCity").val(organisationInfoList[0].cityID);
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("AJAX error: " + textStatus + ", " + errorThrown);
+                console.log(jqXHR.responseText);
+            }
+        });
+    }
+
+    function onEdit() {
+
+        document.getElementById('editBtn').style.display = 'none';
+        document.getElementById('updateBtn').style.display = 'inline-block';
+        $('#myForm :input').prop('disabled', false);
+        $('#myPrsnlForm :input').prop('disabled', false);
+    }
+
+    function onUpdate() {
+
+        var name = $("#inputname").val();
+        var email = $("#inputEmail4").val();
+        var type = $("#inputtype").val();
+        var password = $("#inputPassword4").val();
+        var address = $("#inputAddress").val() + " " + $("#inputZip").val();
+        var city = $("#inputCity").val();
+        var state = $("#inputState").val();
+        var phone = $("#inputphone").val();
+
+
+        $.ajax({
+            url: '@Url.Action("Signup", "Account")', 
+            type: 'POST',
+            data: JSON.stringify({
+                Name: name,
+                Org_Email: email,
+                Type: type,
+                Address: address,
+                CityID: city,
+                StateID: state,
+                PhoneNo: phone,
+            }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (jXhr) {
+                console.log("AJAX error");
+            }
+        });
+
+    }
+
+</script>
