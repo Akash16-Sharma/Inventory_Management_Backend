@@ -8,5 +8,6 @@
         public string Email { get; set; }
         public DateTime InsertedOn { get; set; }
         public bool IsActive { get; set; }
+        public int OrgId { get; set; }
     }
 }

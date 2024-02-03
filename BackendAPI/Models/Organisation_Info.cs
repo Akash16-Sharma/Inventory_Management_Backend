@@ -15,5 +15,6 @@ namespace BackendAPI.Models
         public string Type { get; set; }
         public bool IsActive { get; set; }
         public DateTime InsertedOn { get; set; }
+        public int PinCode { get; set; }
     }
 }
