@@ -6,7 +6,7 @@
     <button type="button" id="save" class="btn btn-primary">NEW</button>
 
 </div>
-<table class="table">
+<table class="table" id="assignTable">
     <thead>
         <tr>
             <th>
@@ -94,10 +94,9 @@
 </div>
 
 
-<script src="~/js/jquery-3.7.1.min.js"></script>
 <script>
     $(document).ready(function () {
-
+        $('#assignTable').DataTable();
         $("#save").click(function () {
             $("#myModal").modal("show");
         });
