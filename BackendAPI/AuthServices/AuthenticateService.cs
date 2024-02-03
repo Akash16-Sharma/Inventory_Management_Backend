@@ -14,6 +14,7 @@ namespace BackendAPI.AuthServices
     {
         private readonly AppSettings _appSettings;
         private readonly IUser_Login _User_Login;
+        private readonly IOrganisation_Info _Organisation_Info;
 
 
         string JwtSecKey = "D7r7aTSsytKLxhwkSB5AhfXzEaz7SWuj";
@@ -30,7 +31,7 @@ namespace BackendAPI.AuthServices
         public InfoClass Authenticate(string Email, string Password)
         {
             var user = _User_Login.CheckStaff(Email, Password);
-
+            var Org = _Organisation_Info.GetOrgByID(user.OrgId);
             //var StaffRole = _Roles.CheckAccess(user.Id);
 
             if (user == null)
@@ -54,8 +55,7 @@ namespace BackendAPI.AuthServices
                     auth_token = tokenHandler.WriteToken(authToken),
                     OrgId=user.OrgId,
                     StaffId=user.Id,
-                   
-                    
+                    OrgName=Org.Name,
                 };
             }
         }
