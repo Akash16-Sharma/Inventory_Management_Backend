@@ -1,5 +1,4 @@
-﻿@model IEnumerable<BackendAPI.Models.Organisation_Info>
-
+﻿@model Tuple<BackendAPI.Models.Organisation_Info, BackendAPI.Models.User_Info>
 
 <style>
 
@@ -12,14 +11,15 @@
 <body>
 
 
-    @foreach (var organisationInfo in Model)
+    @if(Model.Item1 != null)
     {
         <h4>Organisation Information </h4>
         <div style=" padding: 0.5rem 1.5rem 1.5rem 1.5rem;">
             <form class="row g-3" id="myForm">
                 <div class="col-md-5">
                     <label for="inputname" class="form-label">Organisation Name</label>
-                    <input type="text" class="form-control" id="inputname" value="@organisationInfo.Name">
+                    <input type="text" class="form-control" id="inputname" value="@Model.Item1.Name">
+                    <input type="text" class="form-control" style="display:none" id="inputid" value="@Model.Item1.Id">
                 </div>
 
 
@@ -27,20 +27,20 @@
                     <label for="inputtype" class="form-label">Organisation Type</label>
                     <select id="inputtype" class="form-control">
                         <option selected>Select</option>
-                        <option selected="@("Manufacturing" == organisationInfo.Type)">Manufacturing</option>
-                        <option selected="@("Warehouse" == organisationInfo.Type)">Warehouse</option>
+                        <option selected="@("Manufacturing" == Model.Item1.Type)">Manufacturing</option>
+                        <option selected="@("Warehouse" == Model.Item1.Type)">Warehouse</option>
                     </select>
                 </div>
 
                 <div class="col-md-4">
                     <label for="inputAddress" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="inputAddress" value="@organisationInfo.Address">
+                    <input type="text" class="form-control" id="inputAddress" value="@Model.Item1.Address">
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="inputState" class="form-label">State</label>
                     @Html.DropDownList("SelectedState",
-                new SelectList(ViewBag.StateListData, "id", "name", organisationInfo.StateID),
+                new SelectList(ViewBag.StateListData, "id", "name", Model.Item1.StateID),
                 "Select State",
                 new { @class = "form-control", @id = "inputState", @onchange = "cityFetch(this.value)" })
                 </div>
@@ -50,41 +50,67 @@
                     <select class="form-control" id="inputCity"></select>
                 </div>
 
+                <div class="col-md-2">
+                    <label for="inputEmail4" class="form-label">Pincode</label>
+                    <input type="email" class="form-control" id="inputPincode" value="@Model.Item1.PinCode">
+                </div>
 
                 <div class="col-md-4">
                     <label for="inputphone" class="form-label">Phone</label>
-                    <input type="number" class="form-control" id="inputphone" value="@organisationInfo.PhoneNo">
+                    <input type="number" class="form-control" id="inputphone" value="@Model.Item1.PhoneNo">
                 </div>
 
                 <div class="col-md-6">
                     <label for="inputEmail4" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="inputEmail4" value="@organisationInfo.Email">
+                    <input type="email" class="form-control" id="inputEmail4" value="@Model.Item1.Email">
                 </div>
+
             </form>
         </div>
-
     }
     <h4>Personal  Information </h4>
-
+      @if(Model.Item2 != null)
+    {
     <div style=" padding: 0.5rem 1.5rem 1.5rem 1.5rem;">
         <form class="row g-2" id="myPrsnlForm">
             <div class="col-md-3">
                 <label for="inputname" class="form-label">Name</label>
-                <input type="text" class="form-control" id="inputname">
+                    <input type="text" class="form-control" id="prsnlname" value="@Model.Item2.Name">
             </div>
 
             <div class="col-md-3">
                 <label for="inputphone" class="form-label">Phone</label>
-                <input type="number" class="form-control" id="inputphone">
+                    <input type="number" class="form-control" id="prsnlphone" value="@Model.Item2.Phone">
             </div>
 
             <div class="col-md-4">
                 <label for="inputEmail4" class="form-label">Email</label>
-                <input type="email" class="form-control" id="inputEmail4">
+                    <input type="email" class="form-control" id="prsnlemail" value="@Model.Item2.Email">
             </div>
         </form>
     </div>
+    }
+    else
+    {
+        <div style="padding: 0.5rem 1.5rem 1.5rem 1.5rem;">
+            <form class="row g-2" id="myPrsnlForm">
+                <div class="col-md-3">
+                    <label for="inputname" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="prsnlname" value="">
+                </div>
 
+                <div class="col-md-3">
+                    <label for="inputphone" class="form-label">Phone</label>
+                    <input type="number" class="form-control" id="prsnlphone" value="">
+                </div>
+
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="prsnlemail" value="">
+                </div>
+            </form>
+        </div>
+    }
     <div style="margin-top:10px">
         <button type="submit" onclick="onEdit()" class="btn btn-primary" id="editBtn">
             Edit
@@ -99,9 +125,10 @@
 </html>
 
 <script>
-
+    var isPrsnInfo;
     $(document).ready(function () {
         cityFetch();
+            isPrsnInfo= $("#prsnlname").val();
         $('#myForm :input').prop('disabled', true);
         $('#myPrsnlForm :input').prop('disabled', true);
     });
@@ -112,7 +139,7 @@
         var selValue = $("#inputState").val();
         debugger;
         $.ajax({
-            url: '@Url.Action("GetCities", "Account")',
+            url: '@Url.Action("GetCities", "Setting")',
             type: 'GET',
             data: { Id: selValue },
             contentType: 'application/json; charset=utf-8',
@@ -143,28 +170,31 @@
     }
 
     function onUpdate() {
-
         var name = $("#inputname").val();
         var email = $("#inputEmail4").val();
         var type = $("#inputtype").val();
         var password = $("#inputPassword4").val();
-        var address = $("#inputAddress").val() + " " + $("#inputZip").val();
+        var address = $("#inputAddress").val();
         var city = $("#inputCity").val();
         var state = $("#inputState").val();
         var phone = $("#inputphone").val();
-
+        var pincode =$("#inputPincode").val();
+        var id = $("#inputid").val();
 
         $.ajax({
-            url: '@Url.Action("Signup", "Account")', 
+            url: '@Url.Action("UpdateOrg", "Setting")', 
             type: 'POST',
             data: JSON.stringify({
+                Id:id,
                 Name: name,
-                Org_Email: email,
+                Email: email,
                 Type: type,
                 Address: address,
                 CityID: city,
                 StateID: state,
                 PhoneNo: phone,
+                Pincode: pincode,
+                IsActive: true,
             }),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
@@ -175,6 +205,68 @@
                 console.log("AJAX error");
             }
         });
+       
+        addInfo(); //when org update then addinfo
+    }
+
+    function addInfo()
+    {
+        var isupdate;
+        var name = $("#prsnlname").val();
+        var phone = $("#prsnlphone").val();
+        var email = $("#prsnlemail").val();
+        var orgid = $("#inputid").val();
+
+        if (isPrsnInfo != "") //upadte code
+        {
+
+            $.ajax({
+                url: '@Url.Action("UpdateInfo", "Setting")',
+                type: 'POST',
+                data: JSON.stringify({
+                    Name: name,
+                    Phone: phone,
+                    Email: email,
+                    OrgId: orgid,
+                    IsActive: true,
+                    updateis: isupdate
+                }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    console.log("Updated Successfully");
+                },
+                error: function (jXhr) {
+                    console.log("AJAX error");
+                }
+            });
+            location.reload();
+
+        }else //add code
+        {
+           
+        $.ajax({
+                url: '@Url.Action("AddInfo", "Setting")',
+            type: 'POST',
+            data: JSON.stringify({
+                Name: name,
+                Phone: phone,
+                Email: email,
+                OrgId: orgid,
+                IsActive:true,
+                updateis: isupdate
+            }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) {
+                console.log("Data Added");
+            },
+            error: function (jXhr) {
+                console.log("AJAX error");
+            }
+        });
+            location.reload();
+    }
 
     }
 

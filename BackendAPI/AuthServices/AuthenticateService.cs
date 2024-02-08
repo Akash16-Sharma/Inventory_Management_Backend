@@ -20,10 +20,11 @@ namespace BackendAPI.AuthServices
         string JwtSecKey = "D7r7aTSsytKLxhwkSB5AhfXzEaz7SWuj";
 
 
-        public AuthenticateService(IOptions<AppSettings> appSettings, IUser_Login User_Login)
+        public AuthenticateService(IOptions<AppSettings> appSettings, IUser_Login User_Login, IOrganisation_Info organisation_Info)
         {
             _appSettings = appSettings.Value;
             _User_Login = User_Login;
+            _Organisation_Info = organisation_Info;
         }
 
 
@@ -31,7 +32,8 @@ namespace BackendAPI.AuthServices
         public InfoClass Authenticate(string Email, string Password)
         {
             var user = _User_Login.CheckStaff(Email, Password);
-            var Org = _Organisation_Info.GetOrgByID(user.OrgId);
+            int ids = user.OrgId;
+            var Org = _Organisation_Info.GetOrgByID(ids);
             //var StaffRole = _Roles.CheckAccess(user.Id);
 
             if (user == null)

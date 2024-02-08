@@ -1,0 +1,208 @@
+﻿@{
+    ViewData["Title"] = "IncOrders";
+}
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+<h1>Orders</h1>
+
+<form style="padding:10px">
+
+    <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Vendor</label>
+        <div class="col-sm-4">
+            @Html.DropDownList("SelectedState",
+            new SelectList(ViewBag.VendorListData, "id", "name"),
+            "Select Vendor",
+            new { @class = "form-control", @id = "inputState",@onchange = "cityFetch(this.value)" })
+        </div>
+    </div>
+    
+    <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Date</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" id="datepicker" aria-describedby="emailHelp">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Purchase Order</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" id="purOrd" aria-describedby="emailHelp" placeholder="PO-00001">
+        </div>
+    </div>
+
+	<div class="container">
+		<div class="row clearfix">
+			<div class="col-md-10 table-responsive">
+				<table class="table table-bordered table-hover table-sortable" id="tab_logic">
+					<thead>
+						<tr>
+                            <th class="text-left">
+								Item
+							</th>
+							<th class="text-center col-sm-2">
+								Available Qty
+							</th>
+                            <th class="text-center col-sm-2">
+                                Quantity
+                            </th>
+							<th class="text-center col-sm-1" >
+								Option
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr id='addr0' data-id="0" class="hidden">
+                            <td data-name="name">
+                                <select name='name' class="form-control item-select">
+                                    <option value="">Select Item</option>
+                                    @foreach (var item in ViewBag.ItemLists)
+                                    {
+                                        <option value="@item.id" data-buying-price="@item.buying_Price">@item.name</option>
+                                    }
+                                </select>
+                            </td>
+                            <td data-name="qty">
+                                <input type="number" disabled name='qty' placeholder='Quantity' class="form-control qty-input" />
+                            </td>
+                            <td data-name="avqty">
+                                <input type="number" name='avqty' placeholder='Quantity' class="form-control avqty-input" />
+                            </td>
+							@* <td data-name="sel" >
+                                <select name="sel0" class="form-control">
+									<option value="">Select Option</option>
+									<option value="1">Option 1</option>
+									<option value="2">Option 2</option>
+									<option value="3">Option 3</option>
+								</select>
+							</td> *@
+							<td data-name="del">
+								<button name="del0" class='btn btn-danger glyphicon glyphicon-remove row-remove'><span aria-hidden="true">×</span></button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+        <button id="add_row" type="button" class="btn btn-primary float-right">Add New Row</button>
+		
+	</div>
+
+    <button type="button" class="btn btn-primary float-left">Submit</button>
+</form>
+
+
+
+
+<script>
+    $(function () {
+        $("#datepicker").datepicker();
+    });
+
+    $(document).ready(function () {
+
+        $('.item-select').on('change', function () {
+            debugger;
+            var buyingPrice = $(this).find('option:selected').data('buying-price');
+            var row = $(this).closest('tr');
+            row.find('.qty-input').val(buyingPrice);
+        });
+
+        $("#add_row").on("click", function () {
+            // Dynamic Rows Code
+
+            // Get max row id and set new id
+            var newid = 0;
+            $.each($("#tab_logic tr"), function () {
+                if (parseInt($(this).data("id")) > newid) {
+                    newid = parseInt($(this).data("id"));
+                }
+            });
+            newid++;
+
+            var tr = $("<tr></tr>", {
+                id: "addr" + newid,
+                "data-id": newid
+            });
+
+            // Loop through each td and create new elements with name of newid
+            $.each($("#tab_logic tbody tr:nth(0) td"), function () {
+                var td;
+                var cur_td = $(this);
+
+                var children = cur_td.children();
+
+                // Add new td and element if it has a name
+                if ($(this).data("name") !== undefined) {
+                    td = $("<td></td>", {
+                        "data-name": $(cur_td).data("name")
+                    });
+
+                    var c = $(cur_td).find($(children[0]).prop('tagName')).clone().val("");
+                    c.attr("name", $(cur_td).data("name") + newid);
+
+                    // Check if it's the name column and add a change event
+                    if ($(cur_td).data("name") === "name") {
+                        c.addClass("form-control item-select");
+                        c.on("change", function () {
+                            var buyingPrice = $(this).find('option:selected').data('buying-price');
+                            $(this).closest('tr').find('.qty-input').val(buyingPrice);
+                        });
+                    }
+
+                    c.appendTo($(td));
+                    td.appendTo($(tr));
+                } else {
+                    td = $("<td></td>", {
+                        'text': $('#tab_logic tr').length
+                    }).appendTo($(tr));
+                }
+            });
+
+            // Add the new row
+            $(tr).appendTo($('#tab_logic'));
+
+            $(tr).find("td button.row-remove").on("click", function () {
+                $(this).closest("tr").remove();
+            });
+        });
+
+
+        // Sortable Code
+        var fixHelperModified = function (e, tr) {
+            var $originals = tr.children();
+            var $helper = tr.clone();
+
+            $helper.children().each(function (index) {
+                $(this).width($originals.eq(index).width())
+            });
+
+            return $helper;
+        };
+
+        $(".table-sortable tbody").sortable({
+            helper: fixHelperModified
+        }).disableSelection();
+
+        $(".table-sortable thead").disableSelection();
+
+        $("#add_row").trigger("click");
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var datePicker = document.getElementById("datepicker");
+
+        // Get the current date
+        var currentDate = new Date();
+
+        // Format the date as "MM/DD/YYYY"
+        var formattedDate = `${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getDate().toString().padStart(2, '0')}/${currentDate.getFullYear()}`;
+
+        // Set the formatted date to the input field
+        datePicker.value = formattedDate;
+    });
+
+</script>

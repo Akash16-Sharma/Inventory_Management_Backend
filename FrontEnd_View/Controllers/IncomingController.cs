@@ -86,6 +86,33 @@ namespace FrontEnd_View.Controllers
 
         public IActionResult IncOrders()  //show orders
         {
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            List<Vendor> vendor = new List<Vendor>();
+            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                "/Vendor/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string data = responseMessage.Content.ReadAsStringAsync().Result;
+                vendor = JsonConvert.DeserializeObject<List<Vendor>>(data);
+                var vendorlist = vendor.Select(s => new { name = s.Name, id = s.Id }).ToList();
+                ViewBag.VendorListData = vendorlist;
+            }
+
+            List<dynamic> items = new List<dynamic>();
+            HttpResponseMessage responseMessage2 = _client.GetAsync(_client.BaseAddress +
+                "/Item/GetItemInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+            if (responseMessage2.IsSuccessStatusCode)
+            {
+                string data = responseMessage2.Content.ReadAsStringAsync().Result;
+                items = JsonConvert.DeserializeObject<List<dynamic>>(data);
+                var itemlist = items.Select(s => new { name = $"{s.name} ({s.selling_Price})", id = s.id }).ToList();
+                var itemlists = items.Select(s => new { name = $"{s.name} ({s.selling_Price})", id = s.id, buying_Price = s.buying_Price }).ToList();
+
+                ViewBag.ItemLists = itemlists;
+            }
+
             return View();
         }
 

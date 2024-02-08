@@ -45,7 +45,7 @@ namespace BackendAPI.Controllers
 
 
         [HttpGet]
-        [Route("GetUserInfo/{orgid}")]
+        [Route("GetUserInfo")]
         public IActionResult GetUserInfo(int orgid, int StaffId)
         {
             var CheckRoleTypeData = _Roles.CheckStaffType(StaffId);
@@ -54,7 +54,7 @@ namespace BackendAPI.Controllers
                 var data = _organisation_info.UserInfo(orgid);
                 if (data == null)
                 {
-                    return NotFound();
+                    return Ok(); 
                 }
                 else
                 {
@@ -88,7 +88,7 @@ namespace BackendAPI.Controllers
 
         [HttpPut]
         [Route("UpdateOrg")]
-        public IActionResult UpdateOrg([FromBody] Organisation_Info info, int StaffId)
+        public IActionResult UpdateOrg(Organisation_Info info, int StaffId)
         {
             var CheckRoleTypeData = _Roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
