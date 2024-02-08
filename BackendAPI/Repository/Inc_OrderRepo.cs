@@ -1,0 +1,91 @@
+﻿using BackendAPI.IRepository;
+using BackendAPI.Models;
+
+namespace BackendAPI.Repository
+{
+    public class Inc_OrderRepo:IInc_Orders
+    {
+        private readonly DataContext _Context;
+        public Inc_OrderRepo(DataContext context)
+        {
+            _Context = context;
+        }
+
+        public bool AddOrder(Inc_Order order)
+        {
+            order.Inserted_On = DateTime.Now;
+            _Context.Inc_Order.Add(order);
+           int i= _Context.SaveChanges();
+            if(i>0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool DeleteOrder(int id,int StaffId)
+        {
+            var data=_Context.Inc_Order.Where(x=>x.Id==id).FirstOrDefault();
+            if (data != null)
+            {
+                data.Inserted_On= DateTime.Now;
+                data.IsActive=false;
+                data.Updated_By = StaffId;
+                _Context.Inc_Order.Update(data);
+                _Context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+
+
+        public List<object> GetOrderInfo(int orgid)
+        {
+            var data = (from incOrder in _Context.Inc_Order
+                        join vendor in _Context.Vendor on incOrder.Vendor_Id equals vendor.Id
+                        join item in _Context.Items on incOrder.Item_Id equals item.Id
+                        where incOrder.OrgId == orgid && incOrder.IsActive == true
+                        select new
+                        {
+                            incOrder.Id,
+                            incOrder.Quantity,
+                            incOrder.Actual_Date,
+                            incOrder.Expected_Date,
+                            VendorName = vendor.Name,
+                            ItemName = item.Name,
+                            ItemBuyingPrice = item.Buying_Price,
+                            // Add more properties as needed
+                        }).ToList<object>();
+
+            return data;
+        }
+
+
+        public Inc_Order GetOrderInfoById(int id)
+        {
+            var data = _Context.Inc_Order.Where(x => x.Id == id).FirstOrDefault();
+            return data;
+        }
+
+        public bool UpdateOrder(Inc_Order order)
+        {
+            var data = _Context.Inc_Order.Where(x => x.Id == order.Id).FirstOrDefault();
+            if(data != null)
+            {
+                data.Inserted_On= DateTime.Now;
+                data.Actual_Date = order.Actual_Date;
+                data.IsActive=false;
+                data.Updated_By = order.Updated_By;
+                data.Vendor_Id = order.Vendor_Id;
+                data.Item_Id= order.Item_Id;
+                data.Quantity = order.Quantity;
+                data.Expected_Date = order.Expected_Date;
+                _Context.Inc_Order.Update(data) ;
+                _Context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+    }
+}
