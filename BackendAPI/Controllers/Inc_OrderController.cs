@@ -14,7 +14,8 @@ namespace BackendAPI.Controllers
     {
         private readonly IInc_Orders _incord;
         private readonly IRoles _roles;
-        public Inc_OrderController(IInc_Orders incord,IRoles Roles)
+
+        public Inc_OrderController(IInc_Orders incord, IRoles Roles)
         {
             _incord = incord;
             _roles = Roles;
@@ -30,7 +31,7 @@ namespace BackendAPI.Controllers
                 var data = _incord.GetOrderInfo(orgid);
                 if (data == null)
                 {
-                    return NotFound();
+                    return NotFound("No order information found.");
                 }
                 else
                 {
@@ -42,13 +43,12 @@ namespace BackendAPI.Controllers
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsShow == true)
                     {
                         var data = _incord.GetOrderInfo(orgid);
                         if (data == null)
                         {
-                            return NotFound();
+                            return NotFound("No order information found.");
                         }
                         else
                         {
@@ -57,7 +57,7 @@ namespace BackendAPI.Controllers
                     }
                 }
             }
-            return BadRequest();
+            return BadRequest("Access denied.");
         }
 
         [HttpPost]
@@ -71,28 +71,33 @@ namespace BackendAPI.Controllers
                 bool IsAdd = _incord.AddOrder(order);
                 if (IsAdd)
                 {
-                    return Ok();
+                    return Ok("Order added successfully.");
                 }
-                else { return BadRequest(); }
+                else
+                {
+                    return BadRequest("Failed to add order.");
+                }
             }
             else
             {
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsCreate == true)
                     {
                         bool IsAdd = _incord.AddOrder(order);
                         if (IsAdd)
                         {
-                            return Ok();
+                            return Ok("Order added successfully.");
                         }
-                        else { return BadRequest(); }
+                        else
+                        {
+                            return BadRequest("Failed to add order.");
+                        }
                     }
                 }
-            } return BadRequest();
-        
+            }
+            return BadRequest("Access denied.");
         }
 
         [HttpPut]
@@ -106,28 +111,33 @@ namespace BackendAPI.Controllers
                 bool IsUpdate = _incord.UpdateOrder(order);
                 if (IsUpdate)
                 {
-                    return Ok();
+                    return Ok("Order updated successfully.");
                 }
-                else { return BadRequest(); }
+                else
+                {
+                    return BadRequest("Failed to update order.");
+                }
             }
             else
             {
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsModify == true)
                     {
                         bool IsUpdate = _incord.UpdateOrder(order);
                         if (IsUpdate)
                         {
-                            return Ok();
+                            return Ok("Order updated successfully.");
                         }
-                        else { return BadRequest(); }
+                        else
+                        {
+                            return BadRequest("Failed to update order.");
+                        }
                     }
                 }
             }
-            return BadRequest();
+            return BadRequest("Access denied.");
         }
 
         [HttpDelete]
@@ -139,25 +149,34 @@ namespace BackendAPI.Controllers
             {
                 bool IsDelete = _incord.DeleteOrder(id, StaffId);
                 if (IsDelete)
-                { return Ok(); }
-                else { return BadRequest(); }
+                {
+                    return Ok("Order deleted successfully.");
+                }
+                else
+                {
+                    return BadRequest("Failed to delete order.");
+                }
             }
             else
             {
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsModify == true)
                     {
                         bool IsDelete = _incord.DeleteOrder(id, StaffId);
                         if (IsDelete)
-                        { return Ok(); }
-                        else { return BadRequest(); }
+                        {
+                            return Ok("Order deleted successfully.");
+                        }
+                        else
+                        {
+                            return BadRequest("Failed to delete order.");
+                        }
                     }
                 }
             }
-            return BadRequest();
+            return BadRequest("Access denied.");
         }
 
         [HttpGet]
@@ -169,25 +188,34 @@ namespace BackendAPI.Controllers
             {
                 var data = _incord.GetOrderInfoById(id);
                 if (data != null)
-                { return Ok(); }
-                else { return BadRequest(); }
+                {
+                    return Ok(data);
+                }
+                else
+                {
+                    return BadRequest("No order information found for the given ID.");
+                }
             }
             else
             {
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsShow == true)
                     {
                         var data = _incord.GetOrderInfoById(id);
                         if (data != null)
-                        { return Ok(); }
-                        else { return BadRequest(); }
+                        {
+                            return Ok(data);
+                        }
+                        else
+                        {
+                            return BadRequest("No order information found for the given ID.");
+                        }
                     }
                 }
             }
-            return BadRequest();
+            return BadRequest("Access denied.");
         }
     }
 }
