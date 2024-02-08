@@ -22,5 +22,8 @@ namespace BackendAPI.Models
         public DbSet<Staff> Staff { get; set; }
         public DbSet<Access> StaffAccess { get; set; }
         public DbSet<Vendor> Vendor { get; set; }
+        public DbSet<Inc_Order> Inc_Order { get; set; }
+        public DbSet<Customer> Customer { get; set; }
+        public DbSet<Out_Order> Out_Order { get; set; }
     }
 }
