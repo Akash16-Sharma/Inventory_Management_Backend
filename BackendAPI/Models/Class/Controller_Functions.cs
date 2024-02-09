@@ -1,4 +1,5 @@
 ﻿using BackendAPI.IRepository.Roles;
+using BackendAPI.Models.Invoice;
 using ClosedXML.Excel;
 using System;
 
@@ -334,6 +335,114 @@ namespace BackendAPI.Models.Class
                 return vendor.Id;
             }
         }
-        
+
+
+
+
+
+        public string GenerateHtmlInvoice(Organisation_Info info, string customerName, InvoiceRequest item)
+        {
+            var currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+            var htmlContent = $@"
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Invoice</title>
+    <style>
+        body {{
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }}
+        .invoice {{
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }}
+        .header {{
+            text-align: right;
+            margin-bottom: 20px;
+        }}
+        .header p {{
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }}
+        h2 {{
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }}
+        p {{
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #555;
+        }}
+        .item {{
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }}
+        .item span {{
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }}
+        .total {{
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }}
+    </style>
+</head>
+<body>
+    <div class='invoice'>
+        <div class='header'>
+            <p>{info.Name}</p>
+            <p>Email: {info.Email}</p>
+            <p>Phone: {info.PhoneNo}</p>
+            <p>{currentDate}</p>
+        </div>
+        <h2>Invoice</h2>
+        <p>Dear {customerName},</p>
+
+        <div class='item'>
+            <span>Item:</span>
+            {item.Item_Name}
+        </div>
+        <div class='item'>
+            <span>Quantity:</span>
+            {item.Quantity}
+        </div>
+        <div class='item'>
+            <span>Unit Price:</span>
+            ${item.Buying_Price}
+        </div>
+        <div class='item'>
+            <span>Total Price:</span>
+            ${item.Quantity * item.Buying_Price}
+        </div>
+
+        <p class='total'>Total Amount: ${item.Quantity * item.Buying_Price}</p>
+    </div>
+</body>
+</html>";
+
+            return htmlContent;
+        }
+
+
+
+
     }
+
+
 }

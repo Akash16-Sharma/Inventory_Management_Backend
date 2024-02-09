@@ -7,5 +7,7 @@ namespace BackendAPI.IRepository
          bool AddOrganisation_Info(AddAllInfo Info);
 
         List<Organisation_Info> GetOrganisation_Infos(int OrgId);
+
+        Organisation_Info GetOrgById(int OrgId);
     }
 }

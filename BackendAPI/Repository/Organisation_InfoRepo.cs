@@ -65,5 +65,11 @@ namespace BackendAPI.Repository
             var data = _context.Organisation_Info.Where(x=>x.Id==OrgId&&x.IsActive==true).ToList();
             return data;
         }
+
+        public Organisation_Info GetOrgById(int OrgId)
+        {
+            var data=_context.Organisation_Info.Where(x=>x.Id==OrgId).FirstOrDefault();
+            return data;
+        }
     }
 }

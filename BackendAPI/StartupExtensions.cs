@@ -5,7 +5,10 @@ using BackendAPI.Models;
 using BackendAPI.Models.Class;
 using BackendAPI.Models.Roles;
 using BackendAPI.Repository;
+using DinkToPdf.Contracts;
+using DinkToPdf;
 using Microsoft.Extensions.DependencyInjection;
+using BackendAPI.Models.Invoice;
 
 namespace BackendAPI
 {
@@ -42,6 +45,8 @@ namespace BackendAPI
             services.AddScoped<Inc_Order>();
             services.AddScoped<Out_Order>();
             services.AddScoped<Customer>();
+            services.AddScoped<InvoiceRequest>();
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
 
 
