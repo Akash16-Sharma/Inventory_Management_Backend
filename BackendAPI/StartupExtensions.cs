@@ -22,6 +22,8 @@ namespace BackendAPI
             services.AddScoped<IVendor, VendorRepo>();
             services.AddScoped<IRoles, RolesRepo>();
             services.AddScoped<IInc_Orders,Inc_OrderRepo>();
+            services.AddScoped<IOut_Order,Out_OrderRepo>();
+            services.AddScoped<ICustomer,CustomerRepo>();
             services.AddScoped<AppSettings>();
             services.AddScoped<User_Info>();
             services.AddScoped<EncDycPassword>();
@@ -38,6 +40,8 @@ namespace BackendAPI
             services.AddScoped<Controller_Functions>();
             services.AddScoped<Excel>();
             services.AddScoped<Inc_Order>();
+            services.AddScoped<Out_Order>();
+            services.AddScoped<Customer>();
 
 
 
