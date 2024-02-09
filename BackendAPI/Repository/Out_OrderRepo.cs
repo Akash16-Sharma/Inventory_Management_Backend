@@ -14,17 +14,25 @@ namespace BackendAPI.Repository
 
         public bool AddOrder(Out_Order order)
         {
-            order.Inserted_On = DateTime.Now;
-            order.IsActive = true;
-            _context.Out_Order.Add(order);
-            _context.SaveChanges();
-            int i = _context.SaveChanges();
-            if(i > 0)
+            var ItemData=_context.Items.Where(x=>x.Id==order.Item_Id).FirstOrDefault();
+            if(ItemData.Opening_Stock<order.Quantity)
             {
-                return true;
+                return false;
             }
-            else
-            { return false; }
+           else
+            {
+                order.Inserted_On = DateTime.Now;
+                order.IsActive = true;
+                _context.Out_Order.Add(order);
+                _context.SaveChanges();
+                int i = _context.SaveChanges();
+                if (i > 0)
+                {
+                    return true;
+                }
+                else
+                { return false; }
+            }
         }
 
         public bool DeleteOrder(int Id, int StaffId)
