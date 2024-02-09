@@ -14,15 +14,17 @@ namespace BackendAPI.AuthServices
     {
         private readonly AppSettings _appSettings;
         private readonly IUser_Login _User_Login;
+        private readonly IOrganisation_Info _Organisation_Info;
 
 
         string JwtSecKey = "D7r7aTSsytKLxhwkSB5AhfXzEaz7SWuj";
 
 
-        public AuthenticateService(IOptions<AppSettings> appSettings, IUser_Login User_Login)
+        public AuthenticateService(IOptions<AppSettings> appSettings, IUser_Login User_Login, IOrganisation_Info organisation_Info)
         {
             _appSettings = appSettings.Value;
             _User_Login = User_Login;
+            _Organisation_Info = organisation_Info;
         }
 
 
@@ -30,7 +32,8 @@ namespace BackendAPI.AuthServices
         public InfoClass Authenticate(string Email, string Password)
         {
             var user = _User_Login.CheckStaff(Email, Password);
-
+            int ids = user.OrgId;
+            var Org = _Organisation_Info.GetOrgByID(ids);
             //var StaffRole = _Roles.CheckAccess(user.Id);
 
             if (user == null)
@@ -54,8 +57,7 @@ namespace BackendAPI.AuthServices
                     auth_token = tokenHandler.WriteToken(authToken),
                     OrgId=user.OrgId,
                     StaffId=user.Id,
-                   
-                    
+                    OrgName=Org.Name,
                 };
             }
         }

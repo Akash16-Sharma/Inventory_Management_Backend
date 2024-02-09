@@ -14,7 +14,7 @@ namespace BackendAPI.Models
         public DbSet<Organisation_Info> Organisation_Info { get; set; }
         public DbSet<StateList> State_List { get; set; }
         public DbSet<Cities_List> Cities_List { get; set; }
-        public DbSet<User_Info> User_Infos { get; set; }
+        public DbSet<User_Info> User_Info { get; set; }
         public DbSet<User_Login> User_Login { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<UnitType> Unit_Type { get; set; }

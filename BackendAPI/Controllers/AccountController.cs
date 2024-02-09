@@ -47,9 +47,15 @@ namespace BackendAPI.Controllers
         }
 
         [HttpGet]
-        public List<Organisation_Info> GetOrganisation(int OrgId)
+        public IActionResult GetOrganisation(int OrgId)
         {
-            return _organisation_info.GetOrganisation_Infos(OrgId);
+            var OrgData = _organisation_info.GetOrgByID(OrgId);
+            if (OrgData != null)
+            {
+                return Ok(OrgData);
+            }
+            else
+            { return BadRequest(); }
         }
         
 

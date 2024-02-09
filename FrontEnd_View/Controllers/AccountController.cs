@@ -43,8 +43,10 @@ namespace FrontEnd_View.Controllers
                     dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
                     int orgId = responseObject.value.orgId;
                     int staffId = responseObject.value.staffId;
+                    string orgname=  responseObject.value.orgName;
                     HttpContext.Session.SetInt32("orgId", orgId);
                     HttpContext.Session.SetInt32("staffId", staffId);
+                    HttpContext.Session.SetString("orgname", orgname);
                     return Json(new { success = true, redirectUrl = Url.Action("ItemCategory", "Item") });
                 }
             }
@@ -54,7 +56,6 @@ namespace FrontEnd_View.Controllers
             }
             return Json(new { success = false });
         }
-
 
         [HttpGet]
         public IActionResult Signup()
@@ -99,24 +100,15 @@ namespace FrontEnd_View.Controllers
             }
         }
 
-        [HttpGet]
-        public JsonResult GetCities(int Id)
+  
+        public IActionResult Logout()
         {
- 
-            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
-                "/Account/Citylist?Stateid=" + Id).Result;
 
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                List<Cities_List> citiesLists = new List<Cities_List>();
-                string data = responseMessage.Content.ReadAsStringAsync().Result;
-                citiesLists = JsonConvert.DeserializeObject<List<Cities_List>>(data);
-                return new JsonResult(citiesLists);
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Account");
 
-            }
-            else
-                return new JsonResult("null");
         }
+
 
     }
 }
