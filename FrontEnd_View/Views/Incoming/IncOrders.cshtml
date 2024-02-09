@@ -60,7 +60,7 @@
                                     <option value="">Select Item</option>
                                     @foreach (var item in ViewBag.ItemLists)
                                     {
-                                        <option value="@item.id" data-buying-price="@item.buying_Price">@item.name</option>
+                                        <option value="@item.id" data-opening-qty="@item.opening_Stock">@item.name</option>
                                     }
                                 </select>
                             </td>
@@ -90,7 +90,7 @@
 		
 	</div>
 
-    <button type="button" class="btn btn-primary float-left">Submit</button>
+    <button type="button" class="btn btn-primary float-left" onclick="OnSubmit()">Submit</button>
 </form>
 
 
@@ -105,9 +105,9 @@
 
         $('.item-select').on('change', function () {
             debugger;
-            var buyingPrice = $(this).find('option:selected').data('buying-price');
+            var opnqty = $(this).find('option:selected').data('opening-qty');
             var row = $(this).closest('tr');
-            row.find('.qty-input').val(buyingPrice);
+            row.find('.qty-input').val(opnqty);
         });
 
         $("#add_row").on("click", function () {
@@ -147,7 +147,7 @@
                     if ($(cur_td).data("name") === "name") {
                         c.addClass("form-control item-select");
                         c.on("change", function () {
-                            var buyingPrice = $(this).find('option:selected').data('buying-price');
+                            var buyingPrice = $(this).find('option:selected').data('opening-qty');
                             $(this).closest('tr').find('.qty-input').val(buyingPrice);
                         });
                     }
@@ -204,5 +204,44 @@
         // Set the formatted date to the input field
         datePicker.value = formattedDate;
     });
+
+    function OnSubmit(){
+        debugger;
+        var formData = {
+            VendorId: $("#inputState").val(),
+            Date: $("#datepicker").val(),
+            PurchaseOrder: $("#purOrd").val(),
+            Items: []
+        };
+
+        // Collect data from each row
+        $("#tab_logic tbody tr").each(function () {
+            if ($(this).find(".avqty-input").val() != '') {
+                var itemData = {
+                    ItemId: $(this).find(".item-select").val(),
+                    OrderQty: $(this).find(".avqty-input").val()
+
+                };
+            }
+            formData.Items.push(itemData);
+        });
+
+       
+        $.ajax({
+            url: '/Incoming/AddIncOrders', 
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+
+                console.log(response);
+            },
+            error: function (error) {
+
+                console.error(error);
+            }
+        });
+
+    }
 
 </script>

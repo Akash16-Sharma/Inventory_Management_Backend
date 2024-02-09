@@ -60,7 +60,7 @@
                     <input type="number" class="form-control" id="inputphone" value="@Model.Item1.PhoneNo">
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label for="inputEmail4" class="form-label">Email</label>
                     <input type="email" class="form-control" id="inputEmail4" value="@Model.Item1.Email">
                 </div>
@@ -83,7 +83,7 @@
                     <input type="number" class="form-control" id="prsnlphone" value="@Model.Item2.Phone">
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="inputEmail4" class="form-label">Email</label>
                     <input type="email" class="form-control" id="prsnlemail" value="@Model.Item2.Email">
             </div>
@@ -104,7 +104,7 @@
                     <input type="number" class="form-control" id="prsnlphone" value="">
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="inputEmail4" class="form-label">Email</label>
                     <input type="email" class="form-control" id="prsnlemail" value="">
                 </div>
@@ -150,8 +150,8 @@
                 $.each(data, function (i, city) {
                     cityDropdown.append('<option value="' + city.id + '">' + city.name + '</option>');
                 });
-                var organisationInfoList = @Html.Raw(Json.Serialize(Model));
-                $("#inputCity").val(organisationInfoList[0].cityID);
+                var organisationInfoList = @Html.Raw(Json.Serialize(Model.Item1));
+                $("#inputCity").val(organisationInfoList.cityID);
 
             },
             error: function (jqXHR, textStatus, errorThrown) {

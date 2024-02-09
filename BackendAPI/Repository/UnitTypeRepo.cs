@@ -57,10 +57,10 @@ namespace BackendAPI.Repository
 
         public List <UnitType> GetAllUnitType(int OrgId)
         {
-            var UnitTypeData = _UnitType.Unit_Type.Where(x=>x.OrgId==OrgId&&x.IsActive==true).ToList();
+            var UnitTypeData = _UnitType.Unit_Type.ToList(); //get all data
             return UnitTypeData;
         }
-
+            
         public UnitType GetUnitTypeById(int id)
         {
            var data=_UnitType.Unit_Type.Where(x=>x.Id== id).FirstOrDefault();

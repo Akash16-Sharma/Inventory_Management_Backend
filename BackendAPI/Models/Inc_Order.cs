@@ -6,6 +6,7 @@
         public int Vendor_Id {  get; set; }
         public int Item_Id { get; set; }
         public int Quantity { get; set; }
+        public DateTime Order_Date { get; set; }
         public DateTime Expected_Date { get; set; }
         public DateTime Actual_Date { get; set; }
         public int Updated_By { get; set; }

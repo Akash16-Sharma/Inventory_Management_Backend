@@ -76,7 +76,7 @@
 
                             <div class="col-12" style="padding:15px">
                                 <button type="submit" onclick="onSubmit()" class="btn btn-primary">Sign Up</button>
-                                <a href="/Account/login">Already have an account? Sign in</a>
+                                <a href="@Url.Action("Index", "Account")">Already have an account? Sign in</a>
                             </div>
 
                         </form>
@@ -92,7 +92,7 @@
     function cityFetch(selValue) {
         debugger;
         $.ajax({
-            url: '@Url.Action("GetCities", "Account")',
+            url: '@Url.Action("GetCities", "Setting")',
             type: 'GET',
             data: { Id: selValue },
             contentType: 'application/json; charset=utf-8',
@@ -117,7 +117,8 @@
         var email = $("#inputEmail4").val();
         var type = $("#inputtype").val();
         var password = $("#inputPassword4").val();
-        var address = $("#inputAddress").val() + " " + $("#inputZip").val();
+        var address = $("#inputAddress").val() 
+        var pincode = $("#inputZip").val();      
         var city = $("#inputCity").val();
         var state = $("#inputState").val();
         var phone = $("#inputphone").val();
@@ -135,6 +136,7 @@
                 CityID: city,
                 StateID: state,
                 PhoneNo: phone,
+                PinCode:pincode,
             }),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',

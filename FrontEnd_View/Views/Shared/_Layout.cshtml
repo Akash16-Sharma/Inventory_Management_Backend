@@ -17,6 +17,7 @@
 </head>
 @{
     var orgname = Context.Request.HttpContext.Session.GetString("orgname");
+ 
 }
 <body>
 <style>
@@ -105,7 +106,7 @@
         </div>
     </nav>
     <!-- NavBar END -->
-    @if (!Context.Request.Path.StartsWithSegments("/Account"))
+    @if (orgname != null)
     {
     <div class="row" id="body-row">
         <!-- Sidebar -->

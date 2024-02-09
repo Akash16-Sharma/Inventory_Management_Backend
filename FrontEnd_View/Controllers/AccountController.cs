@@ -21,8 +21,8 @@ namespace FrontEnd_View.Controllers
             _client.BaseAddress = baseAddress;
         }
 
-        [HttpGet]
-        public IActionResult Login()
+
+        public IActionResult Index()
         {
             return View();
         }
@@ -105,7 +105,7 @@ namespace FrontEnd_View.Controllers
         {
 
             HttpContext.Session.Clear();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Account");
 
         }
 

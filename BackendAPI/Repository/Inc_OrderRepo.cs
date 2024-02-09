@@ -14,6 +14,8 @@ namespace BackendAPI.Repository
         public bool AddOrder(Inc_Order order)
         {
             order.Inserted_On = DateTime.Now;
+            order.Actual_Date = DateTime.Now; //testing purpose
+            order.Expected_Date = DateTime.Now;
             _Context.Inc_Order.Add(order);
            int i= _Context.SaveChanges();
             if(i>0)

@@ -1,4 +1,5 @@
 ﻿using BackendAPI.Models;
+using FrontEnd_View.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
@@ -107,14 +108,21 @@ namespace FrontEnd_View.Controllers
             {
                 string data = responseMessage2.Content.ReadAsStringAsync().Result;
                 items = JsonConvert.DeserializeObject<List<dynamic>>(data);
-                var itemlist = items.Select(s => new { name = $"{s.name} ({s.selling_Price})", id = s.id }).ToList();
-                var itemlists = items.Select(s => new { name = $"{s.name} ({s.selling_Price})", id = s.id, buying_Price = s.buying_Price }).ToList();
+              //  var itemlist = items.Select(s => new { name = s.name, id = s.id, opening_Stock = s.opening_Stock }).ToList();
+                var itemlists = items.Select(s => new { name = s.name, id = s.id, opening_Stock = s.opening_Stock }).ToList();
 
                 ViewBag.ItemLists = itemlists;
             }
 
             return View();
         }
+
+
+        public IActionResult AddIncOrders([FromBody] FullIncOrder ord)
+        {
+
+            return View();
+        } 
 
     }
 }
