@@ -104,6 +104,7 @@ namespace BackendAPI.Repository
 
         public Staff CheckStaffType(int StaffId)
         {
+            
             var data=_datacontext.Staff.Where(x=>x.Id==StaffId).FirstOrDefault();
             return data;
         }
