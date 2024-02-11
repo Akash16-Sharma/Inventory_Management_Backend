@@ -8,5 +8,6 @@ namespace FrontEnd_View.Models
         public string Date { get; set; }
         public string PurchaseOrder { get; set; }
         public List<IncItemsDetail> Items { get; set; }
+        public int OrgId { get; set; }
     }
 }

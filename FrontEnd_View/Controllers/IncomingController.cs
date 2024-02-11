@@ -117,12 +117,40 @@ namespace FrontEnd_View.Controllers
             return View();
         }
 
-
         public IActionResult AddIncOrders([FromBody] FullIncOrder ord)
         {
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            ord.OrgId = OrgId;
+            string data = JsonConvert.SerializeObject(ord);
+            StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage responseMessage = _client.PostAsync(_client.BaseAddress +
+                "/Inc_Order/AddOrder?StaffId=" + StaffId, con).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
 
             return View();
         } 
+
+        public IActionResult GetIncORders()
+        {
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            List<dynamic> incord = new List<dynamic>();
+            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                "/Inc_Order/GetOrderInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string data = responseMessage.Content.ReadAsStringAsync().Result;
+                incord = JsonConvert.DeserializeObject<List<dynamic>>(data);
+            }
+
+            return View(incord);
+
+        }
 
     }
 }
