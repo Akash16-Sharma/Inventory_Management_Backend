@@ -62,20 +62,25 @@ namespace BackendAPI.Controllers
 
         [HttpPost]
         [Route("AddOrder")]
-        public IActionResult AddOrder([FromBody] Inc_Order order, int StaffId)
+        public IActionResult AddOrder([FromBody]OrderRequest ord, int StaffId)
         {
-            order.Updated_By = StaffId;
+            ord.Inc_Orders.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
-                bool IsAdd = _incord.AddOrder(order);
-                if (IsAdd)
+                for (var i = 0; i < ord.OrderItems.Count; i++)
                 {
-                    return Ok("Order added successfully.");
-                }
-                else
-                {
-                    return BadRequest("Failed to add order.");
+                    ord.Inc_Orders.Item_Id = ord.OrderItems[i].Item_Id;
+                    ord.Inc_Orders.Quantity= ord.OrderItems[i].Quantity;
+                    bool IsAdd = _incord.AddOrder(ord.Inc_Orders);
+                    if (IsAdd&&i==ord.OrderItems.Count)
+                    {
+                        return Ok("Order added successfully.");
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
             else
@@ -85,14 +90,19 @@ namespace BackendAPI.Controllers
                 {
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsCreate == true)
                     {
-                        bool IsAdd = _incord.AddOrder(order);
-                        if (IsAdd)
+                        for (var a = 0; a < ord.OrderItems.Count; a++)
                         {
-                            return Ok("Order added successfully.");
-                        }
-                        else
-                        {
-                            return BadRequest("Failed to add order.");
+                            ord.Inc_Orders.Item_Id = ord.OrderItems[a].Item_Id;
+                            ord.Inc_Orders.Quantity = ord.OrderItems[a].Quantity;
+                            bool IsAdd = _incord.AddOrder(ord.Inc_Orders);
+                            if (IsAdd&&a==ord.OrderItems.Count)
+                            {
+                                return Ok("Order added successfully.");
+                            }
+                            else
+                            {
+                                continue;
+                            }
                         }
                     }
                 }
@@ -102,20 +112,25 @@ namespace BackendAPI.Controllers
 
         [HttpPut]
         [Route("UpdateOrder")]
-        public IActionResult UpdateOrder([FromBody] Inc_Order order, int StaffId)
+        public IActionResult UpdateOrder([FromBody] OrderRequest ord, int StaffId)
         {
-            order.Updated_By = StaffId;
+            ord.Inc_Orders.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
-                bool IsUpdate = _incord.UpdateOrder(order);
-                if (IsUpdate)
+                for (var i = 0; i < ord.OrderItems.Count; i++)
                 {
-                    return Ok("Order updated successfully.");
-                }
-                else
-                {
-                    return BadRequest("Failed to update order.");
+                    ord.Inc_Orders.Item_Id = ord.OrderItems[i].Item_Id;
+                    ord.Inc_Orders.Quantity = ord.OrderItems[i].Quantity;
+                    bool IsUpdate = _incord.UpdateOrder(ord.Inc_Orders);
+                    if (IsUpdate&&i==ord.OrderItems.Count)
+                    {
+                        return Ok("Order updated successfully.");
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
             else
@@ -125,14 +140,19 @@ namespace BackendAPI.Controllers
                 {
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsModify == true)
                     {
-                        bool IsUpdate = _incord.UpdateOrder(order);
-                        if (IsUpdate)
+                        for (var a = 0; a < ord.OrderItems.Count; a++)
                         {
-                            return Ok("Order updated successfully.");
-                        }
-                        else
-                        {
-                            return BadRequest("Failed to update order.");
+                            ord.Inc_Orders.Item_Id = ord.OrderItems[a].Item_Id;
+                            ord.Inc_Orders.Quantity = ord.OrderItems[a].Quantity;
+                            bool IsUpdate = _incord.UpdateOrder(ord.Inc_Orders);
+                            if (IsUpdate&&a==ord.OrderItems.Count)
+                            {
+                                return Ok("Order updated successfully.");
+                            }
+                            else
+                            {
+                                continue;
+                            }
                         }
                     }
                 }

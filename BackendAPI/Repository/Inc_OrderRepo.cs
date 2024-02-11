@@ -13,6 +13,7 @@ namespace BackendAPI.Repository
 
         public bool AddOrder(Inc_Order order)
         {
+            order.Id = 0;
             order.Inserted_On = DateTime.Now;
             order.Actual_Date = DateTime.Now; //testing purpose
             order.Expected_Date = DateTime.Now;
