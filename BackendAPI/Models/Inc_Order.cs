@@ -23,6 +23,7 @@ namespace BackendAPI.Models
         public DateTime Inserted_On { get; set; }
         public int OrgId { get; set; }
         public bool IsActive { get; set; }
+        public string Purchase_Order_Id { get; set; }
     }
 
     [Owned]
