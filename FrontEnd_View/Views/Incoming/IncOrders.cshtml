@@ -15,7 +15,7 @@
             @Html.DropDownList("SelectedState",
             new SelectList(ViewBag.VendorListData, "id", "name"),
             "Select Vendor",
-            new { @class = "form-control", @id = "inputState",@onchange = "cityFetch(this.value)" })
+            new { @class = "form-control", @id = "inputVend"})
         </div>
     </div>
     
@@ -205,43 +205,41 @@
         datePicker.value = formattedDate;
     });
 
-    function OnSubmit(){
+    function OnSubmit() {
         debugger;
-        var formData = {
-            VendorId: $("#inputState").val(),
-            Date: $("#datepicker").val(),
-            PurchaseOrder: $("#purOrd").val(),
-            Items: []
+
+        var inc_Orders = {
+            Vendor_Id: $("#inputVend").val(),
+            Order_Date: $("#datepicker").val(),
+            Quantity: $("#purOrd").val(),
         };
 
         // Collect data from each row
+        var orderItems = [];
         $("#tab_logic tbody tr").each(function () {
             if ($(this).find(".avqty-input").val() != '') {
                 var itemData = {
-                    ItemId: $(this).find(".item-select").val(),
-                    OrderQty: $(this).find(".avqty-input").val()
-
+                    Item_Id: $(this).find(".item-select").val(),
+                    Quantity: $(this).find(".avqty-input").val()
                 };
+
+                orderItems.push(itemData);
             }
-            formData.Items.push(itemData);
         });
 
-       
         $.ajax({
-            url: '/Incoming/AddIncOrders', 
+            url: '/Incoming/AddIncOrders',
             type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
+            data: { Inc_Orders: inc_Orders, OrderItems: orderItems },
             success: function (response) {
-
                 console.log(response);
             },
             error: function (error) {
-
                 console.error(error);
             }
         });
-
     }
+
+
 
 </script>
