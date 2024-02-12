@@ -17,6 +17,7 @@ namespace BackendAPI.Repository
             order.Inserted_On = DateTime.Now;
             order.Actual_Date = DateTime.Now; //testing purpose
             order.Expected_Date = DateTime.Now;
+            order.IsActive = true;
             _Context.Inc_Order.Add(order);
            int i= _Context.SaveChanges();
             if(i>0)
@@ -43,6 +44,28 @@ namespace BackendAPI.Repository
 
 
 
+        public List<object> GetOrderInfoByPurchase(string Purchase_Order_Id)
+        {
+            var data = (from incOrder in _Context.Inc_Order
+                        join vendor in _Context.Vendor on incOrder.Vendor_Id equals vendor.Id
+                        join item in _Context.Items on incOrder.Item_Id equals item.Id
+                        where incOrder.Purchase_Order_Id == Purchase_Order_Id&&incOrder.IsActive==true
+                        select new
+                        {
+                            incOrder.Id,
+                            incOrder.Quantity,
+                            incOrder.Actual_Date,
+                            incOrder.Expected_Date,
+                            incOrder.Order_Date,
+                            VendorName = vendor.Name,
+                            ItemName = item.Name,
+                            ItemBuyingPrice = item.Buying_Price,
+                            // Add more properties as needed
+                        }).ToList<object>();
+
+            return data;
+        }
+
         public List<object> GetOrderInfo(int orgid)
         {
             var data = (from incOrder in _Context.Inc_Order
@@ -52,14 +75,13 @@ namespace BackendAPI.Repository
                         select new
                         {
                             incOrder.Id,
-                            incOrder.Quantity,
-                            incOrder.Actual_Date,
-                            incOrder.Expected_Date,
+                            incOrder.Purchase_Order_Id,
+                            incOrder.Order_Date,
                             VendorName = vendor.Name,
-                            ItemName = item.Name,
-                            ItemBuyingPrice = item.Buying_Price,
-                            // Add more properties as needed
-                        }).ToList<object>();
+                        })
+                        .GroupBy(x => x.Purchase_Order_Id) // Group by Purchase Order Id
+                        .Select(group => group.First())    // Select the first item from each group
+                        .ToList<object>();
 
             return data;
         }
@@ -70,6 +92,8 @@ namespace BackendAPI.Repository
             var data = _Context.Inc_Order.Where(x => x.Id == id).FirstOrDefault();
             return data;
         }
+
+       
 
         public bool UpdateOrder(Inc_Order order)
         {

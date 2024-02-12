@@ -60,6 +60,45 @@ namespace BackendAPI.Controllers
             return BadRequest("Access denied.");
         }
 
+        [HttpGet]
+        [Route("GetOrderInfoByPurchaseOrderId")]
+        public IActionResult GetOrderInfoByPurchaseOrderId(string PurchaseOrderId, int StaffId)
+        {
+            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            if (CheckRoleTypeData.RoleType == "Admin")
+            {
+                var data = _incord.GetOrderInfoByPurchase(PurchaseOrderId);
+                if (data == null)
+                {
+                    return NotFound("No order information found.");
+                }
+                else
+                {
+                    return Ok(data);
+                }
+            }
+            else
+            {
+                var Accessdata = _roles.CheckAccess(StaffId);
+                for (var i = 0; i < Accessdata.Count; i++)
+                {
+                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsShow == true)
+                    {
+                        var data = _incord.GetOrderInfoByPurchase(PurchaseOrderId);
+                        if (data == null)
+                        {
+                            return NotFound("No order information found.");
+                        }
+                        else
+                        {
+                            return Ok(data);
+                        }
+                    }
+                }
+            }
+            return BadRequest("Access denied.");
+        }
+
         [HttpPost]
         [Route("AddOrder")]
         public IActionResult AddOrder([FromBody]OrderRequest ord, int StaffId)
@@ -72,7 +111,7 @@ namespace BackendAPI.Controllers
                 {
                     ord.Inc_Orders.Item_Id = ord.OrderItems[i].Item_Id;
                     ord.Inc_Orders.Quantity= ord.OrderItems[i].Quantity;
-                    bool IsAdd = _incord.AddOrder(ord.Inc_Orders);
+                    bool IsAdd = _incord.AddOrder(ord.Inc_Orders); 
                     if (IsAdd&&i==ord.OrderItems.Count)
                     {
                         return Ok("Order added successfully.");
