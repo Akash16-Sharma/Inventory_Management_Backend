@@ -101,7 +101,7 @@ namespace BackendAPI.Controllers
 
         [HttpPost]
         [Route("AddOrder")]
-        public IActionResult AddOrder([FromBody]OrderRequest ord, int StaffId)
+        public IActionResult AddOrder([FromBody]IncOrderRequest ord, int StaffId)
         {
             ord.Inc_Orders.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
@@ -151,7 +151,7 @@ namespace BackendAPI.Controllers
 
         [HttpPut]
         [Route("UpdateOrder")]
-        public IActionResult UpdateOrder([FromBody] OrderRequest ord, int StaffId)
+        public IActionResult UpdateOrder([FromBody] IncOrderRequest ord, int StaffId)
         {
             ord.Inc_Orders.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);

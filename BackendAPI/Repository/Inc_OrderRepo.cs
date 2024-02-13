@@ -16,7 +16,7 @@ namespace BackendAPI.Repository
             order.Id = 0;
             order.Inserted_On = DateTime.Now;
             order.Actual_Date = DateTime.Now; //testing purpose
-            order.Expected_Date = DateTime.Now;
+            //order.Expected_Date = DateTime.Now;
             order.IsActive = true;
             _Context.Inc_Order.Add(order);
            int i= _Context.SaveChanges();

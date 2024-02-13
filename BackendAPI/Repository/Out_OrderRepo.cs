@@ -21,6 +21,7 @@ namespace BackendAPI.Repository
             }
            else
             {
+                order.Id = 0;
                 order.Inserted_On = DateTime.Now;
                 order.IsActive = true;
                 _context.Out_Order.Add(order);
@@ -42,6 +43,7 @@ namespace BackendAPI.Repository
             {
                 data.IsActive = false;
                 data.Updated_By = StaffId;
+                data.Inserted_On= DateTime.Now;
                 _context.Out_Order.Update(data);
                 _context.SaveChanges();
                 return true;
@@ -55,12 +57,32 @@ namespace BackendAPI.Repository
             return data;
         }
 
-        public List<object> GetOutOrders(int OrgId)
+        public List<object> GetOutOrderInfo(int orgid)
+        {
+            var data = (from outorder in _context.Out_Order
+                        join customer in _context.Customer on outorder.Customer_Id equals customer.Id
+                        join item in _context.Items on outorder.Item_Id equals item.Id
+                        where outorder.OrgId == orgid && outorder.IsActive == true
+                        select new
+                        {
+                            outorder.Id,
+                            outorder.Sales_Order_Id,
+                            outorder.Order_Date,
+                            CustomerName = customer.Name,
+                        })
+                         .GroupBy(x => x.Sales_Order_Id) // Group by Sales Order Id
+                         .Select(group => group.First())    // Select the first item from each group
+                         .ToList<object>();
+
+            return data;
+        }
+
+        public List<object> GetOutOrdersBySalesOrderID(string SalesOrderID)
         {
             var data = (from outOrder in _context.Out_Order
                         join customer in _context.Customer on outOrder.Customer_Id equals customer.Id
                         join item in _context.Items on outOrder.Item_Id equals item.Id
-                        where outOrder.OrgId == OrgId && outOrder.IsActive == true
+                        where outOrder.Sales_Order_Id == SalesOrderID && outOrder.IsActive == true
                         select new
                         {
                             outOrder.Id,
@@ -87,8 +109,10 @@ namespace BackendAPI.Repository
                 data.Expected_Date = order.Expected_Date;
                 data.Actual_Date = order.Actual_Date;
                 data.Quantity = order.Quantity;
+                data.Inserted_On=DateTime.Now;
                 _context.Out_Order.Update(data);
                 _context.SaveChanges();
+                data.Id = 0;
                 return true;
             }
             return false;

@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackendAPI.Models
 {
-    public class OrderRequest
+    public class IncOrderRequest
     {
-       public List<OrderItem> OrderItems { get; set; }
+       public List<IncOrderItem> OrderItems { get; set; }
        public Inc_Order Inc_Orders { get; set; }
     }
     public class Inc_Order
@@ -27,7 +27,7 @@ namespace BackendAPI.Models
     }
 
     [Owned]
-    public class OrderItem
+    public class IncOrderItem
     {
         public int Item_Id { get; set; }
         public int Quantity { get; set; }

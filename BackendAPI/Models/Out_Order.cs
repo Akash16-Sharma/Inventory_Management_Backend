@@ -1,5 +1,12 @@
-﻿namespace BackendAPI.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace BackendAPI.Models
 {
+    public class Out_OrderRequest
+    {
+        public List<OutOrderItem>OrderItems { get; set; }
+        public Out_Order order { get; set; }
+    }
     public class Out_Order
     {
         public int Id { get; set; }
@@ -10,7 +17,15 @@
         public DateTime Actual_Date { get; set; }
         public int Updated_By { get; set; }
         public DateTime Inserted_On { get; set; }
+        public DateTime Order_Date { get; set; }
         public int OrgId { get; set; }
         public bool IsActive { get; set; }
+        public string Sales_Order_Id { get; set; }
+    }
+    [Owned]
+    public class OutOrderItem
+    {
+        public int Item_Id { get; set; }
+        public int Quantity { get; set; }
     }
 }
