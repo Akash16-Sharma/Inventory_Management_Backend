@@ -25,7 +25,7 @@ namespace BackendAPI.Controllers
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
-                var data = _OutOrder.GetOutOrders(orgid);
+                var data = _OutOrder.GetOutOrderInfo(orgid);
                 if (data == null)
                 {
                     return NotFound("No order information found.");
@@ -42,7 +42,46 @@ namespace BackendAPI.Controllers
                 {
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsShow == true)
                     {
-                        var data = _OutOrder.GetOutOrders(orgid);
+                        var data = _OutOrder.GetOutOrderInfo(orgid);
+                        if (data == null)
+                        {
+                            return NotFound("No order information found.");
+                        }
+                        else
+                        {
+                            return Ok(data);
+                        }
+                    }
+                }
+            }
+            return BadRequest("Access denied.");
+        }
+
+        [HttpGet]
+        [Route("GetOrderInfoBySalesOrderId")]
+        public IActionResult GetOrderInfoBySalesOrderId(string SalesOrderID, int StaffId)
+        {
+            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            if (CheckRoleTypeData.RoleType == "Admin")
+            {
+                var data = _OutOrder.GetOutOrdersBySalesOrderID(SalesOrderID);
+                if (data == null)
+                {
+                    return NotFound("No order information found.");
+                }
+                else
+                {
+                    return Ok(data);
+                }
+            }
+            else
+            {
+                var Accessdata = _roles.CheckAccess(StaffId);
+                for (var i = 0; i < Accessdata.Count; i++)
+                {
+                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsShow == true)
+                    {
+                        var data = _OutOrder.GetOutOrdersBySalesOrderID(SalesOrderID);
                         if (data == null)
                         {
                             return NotFound("No order information found.");
