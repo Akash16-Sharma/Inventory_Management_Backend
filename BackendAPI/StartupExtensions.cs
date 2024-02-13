@@ -24,6 +24,7 @@ namespace BackendAPI
             services.AddScoped<IInc_Orders,Inc_OrderRepo>();
             services.AddScoped<IOut_Order,Out_OrderRepo>();
             services.AddScoped<ICustomer,CustomerRepo>();
+            services.AddScoped<IDashboard,DashboardRepo>();
             services.AddScoped<AppSettings>();
             services.AddScoped<User_Info>();
             services.AddScoped<EncDycPassword>();

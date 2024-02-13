@@ -24,6 +24,7 @@ namespace BackendAPI.Models
         public int OrgId { get; set; }
         public bool IsActive { get; set; }
         public string Purchase_Order_Id { get; set; }
+       // public float PurchaseAmount { get; set; }
     }
 
     [Owned]

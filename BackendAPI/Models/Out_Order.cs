@@ -21,6 +21,7 @@ namespace BackendAPI.Models
         public int OrgId { get; set; }
         public bool IsActive { get; set; }
         public string Sales_Order_Id { get; set; }
+       // public float SellAmount { get; set; }
     }
     [Owned]
     public class OutOrderItem
