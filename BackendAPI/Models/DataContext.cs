@@ -1,4 +1,5 @@
 ﻿
+using BackendAPI.Models.Invoice;
 using BackendAPI.Models.Roles;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,5 +26,6 @@ namespace BackendAPI.Models
         public DbSet<Inc_Order> Inc_Order { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<Out_Order> Out_Order { get; set; }
+        public DbSet<Billing> Billing { get; set; }
     }
 }

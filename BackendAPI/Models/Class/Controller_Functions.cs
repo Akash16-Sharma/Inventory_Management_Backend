@@ -1,7 +1,9 @@
-﻿using BackendAPI.IRepository.Roles;
+﻿using BackendAPI.IRepository;
+using BackendAPI.IRepository.Roles;
 using BackendAPI.Models.Invoice;
 using ClosedXML.Excel;
 using System;
+using System.Text;
 
 namespace BackendAPI.Models.Class
 {
@@ -10,12 +12,16 @@ namespace BackendAPI.Models.Class
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment _environment;
         private readonly DataContext _dataContext;
         private readonly IRoles _Roles;
+        private readonly ICustomer _customer;
+        private readonly IOut_Order _order;
 
-        public Controller_Functions(Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, DataContext dataContext,IRoles Roles)
+        public Controller_Functions(Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, DataContext dataContext,IRoles Roles, IOrganisation_Info info, ICustomer customer, IOut_Order order)
         {
             _environment = environment;
             _dataContext = dataContext;
             _Roles = Roles;
+            _customer = customer;
+            _order = order;
         }
 
         public void ImportExcel(int StaffId,String Sidebarname,IFormFile File)
@@ -340,7 +346,7 @@ namespace BackendAPI.Models.Class
 
 
 
-        public string GenerateHtmlInvoice(Organisation_Info info, string customerName, InvoiceRequest item)
+        public string GenerateHtmlInvoice(Organisation_Info info, List<object> orderData)
         {
             var currentDate = DateTime.Now.ToString("yyyy-MM-dd");
 
@@ -352,55 +358,7 @@ namespace BackendAPI.Models.Class
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>Invoice</title>
     <style>
-        body {{
-            font-family: 'Arial', sans-serif;
-            margin: 20px;
-            line-height: 1.6;
-        }}
-        .invoice {{
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border: 1px solid #ddd;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }}
-        .header {{
-            text-align: right;
-            margin-bottom: 20px;
-        }}
-        .header p {{
-            margin: 5px 0;
-            font-size: 14px;
-            color: #555;
-        }}
-        h2 {{
-            color: #333;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }}
-        p {{
-            font-size: 16px;
-            margin-bottom: 15px;
-            color: #555;
-        }}
-        .item {{
-            margin-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
-        }}
-        .item span {{
-            display: block;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }}
-        .total {{
-            font-weight: bold;
-            font-size: 18px;
-            color: #333;
-        }}
+        /* Your existing styles here */
     </style>
 </head>
 <body>
@@ -412,32 +370,45 @@ namespace BackendAPI.Models.Class
             <p>{currentDate}</p>
         </div>
         <h2>Invoice</h2>
-        <p>Dear {customerName},</p>
+        
+        {GenerateOrderItemsHtml(orderData)}
 
-        <div class='item'>
-            <span>Item:</span>
-            {item.Item_Name}
-        </div>
-        <div class='item'>
-            <span>Quantity:</span>
-            {item.Quantity}
-        </div>
-        <div class='item'>
-            <span>Unit Price:</span>
-            ${item.Buying_Price}
-        </div>
-        <div class='item'>
-            <span>Total Price:</span>
-            ${item.Quantity * item.Buying_Price}
-        </div>
-
-        <p class='total'>Total Amount: ${item.Quantity * item.Buying_Price}</p>
+        <p class='total'>Total Amount: ${orderData.Sum(item => (int)item.GetType().GetProperty("Quantity").GetValue(item) * (decimal)item.GetType().GetProperty("ItemSellingPrice").GetValue(item))}</p>
     </div>
 </body>
 </html>";
 
             return htmlContent;
         }
+
+        private string GenerateOrderItemsHtml(List<object> orderData)
+        {
+            StringBuilder itemsHtml = new StringBuilder();
+
+            foreach (var item in orderData)
+            {
+                itemsHtml.Append($@"
+        <div class='item'>
+            <span>Item:</span>
+            {item.GetType().GetProperty("ItemName").GetValue(item)}
+        </div>
+        <div class='item'>
+            <span>Quantity:</span>
+            {item.GetType().GetProperty("Quantity").GetValue(item)}
+        </div>
+        <div class='item'>
+            <span>Unit Price:</span>
+            ${item.GetType().GetProperty("ItemSellingPrice").GetValue(item)}
+        </div>
+        <div class='item'>
+            <span>Total Price:</span>
+            ${Convert.ToDecimal(item.GetType().GetProperty("Quantity").GetValue(item)) * (decimal)item.GetType().GetProperty("ItemSellingPrice").GetValue(item)}
+        </div>");
+            }
+
+            return itemsHtml.ToString();
+        }
+
 
 
 
