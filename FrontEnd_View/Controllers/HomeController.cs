@@ -5,7 +5,7 @@ namespace FrontEnd_View.Controllers
     public class HomeController : Controller
     {
 
-        public IActionResult Index()
+        public IActionResult Index()   //dashboard 
         {
             return View();
         }

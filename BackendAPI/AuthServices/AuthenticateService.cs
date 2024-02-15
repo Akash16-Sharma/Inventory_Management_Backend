@@ -28,12 +28,9 @@ namespace BackendAPI.AuthServices
         }
 
 
-
         public InfoClass Authenticate(string Email, string Password)
         {
             var user = _User_Login.CheckStaff(Email, Password);
-            int ids = user.OrgId;
-            var Org = _Organisation_Info.GetOrgByID(ids);
             //var StaffRole = _Roles.CheckAccess(user.Id);
 
             if (user == null)
@@ -42,6 +39,8 @@ namespace BackendAPI.AuthServices
             }
             else
             {
+                int ids = user.OrgId;
+                var Org = _Organisation_Info.GetOrgByID(ids);
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var jwtsecKey = Encoding.ASCII.GetBytes(JwtSecKey);
                 var tokenDescriptor = new SecurityTokenDescriptor

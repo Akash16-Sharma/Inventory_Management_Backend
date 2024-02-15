@@ -5,8 +5,9 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
-<h1>Orders</h1>
+<a href="/Incoming/GetIncOrders" style="float: right;" class="btn btn-link">Back to List</a>
 
+<h1>Orders</h1>
 <form style="padding:10px">
 
     <div class="form-group row">
@@ -84,13 +85,13 @@
 						</tr>
 					</tbody>
 				</table>
+        <button id="add_row" type="button" class="btn btn-success float-right">+</button>
 			</div>
 		</div>
-        <button id="add_row" type="button" class="btn btn-primary float-right">Add New Row</button>
 		
+    <button type="button" class="btn btn-primary float-left" onclick="OnSubmit()">Submit</button>
 	</div>
 
-    <button type="button" class="btn btn-primary float-left" onclick="OnSubmit()">Submit</button>
 </form>
 
 
@@ -209,9 +210,9 @@
         debugger;
 
         var inc_Orders = {
+            Purchase_Order_Id:$("#purOrd").val(),
             Vendor_Id: $("#inputVend").val(),
             Order_Date: $("#datepicker").val(),
-            Quantity: $("#purOrd").val(),
         };
 
         // Collect data from each row
@@ -232,6 +233,7 @@
             type: 'POST',
             data: { Inc_Orders: inc_Orders, OrderItems: orderItems },
             success: function (response) {
+                location.reload();
                 console.log(response);
             },
             error: function (error) {

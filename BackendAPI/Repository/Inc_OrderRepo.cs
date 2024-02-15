@@ -53,12 +53,15 @@ namespace BackendAPI.Repository
                         select new
                         {
                             incOrder.Id,
+                            incOrder.Purchase_Order_Id, //added by prateek
+                            incOrder.Vendor_Id,
                             incOrder.Quantity,
                             incOrder.Actual_Date,
                             incOrder.Expected_Date,
                             incOrder.Order_Date,
                             VendorName = vendor.Name,
                             ItemName = item.Name,
+                            ItemId =item.Id,
                             ItemBuyingPrice = item.Buying_Price,
                             // Add more properties as needed
                         }).ToList<object>();
@@ -102,7 +105,7 @@ namespace BackendAPI.Repository
             {
                 data.Inserted_On= DateTime.Now;
                 data.Actual_Date = order.Actual_Date;
-                data.IsActive=false;
+                data.IsActive=true;
                 data.Updated_By = order.Updated_By;
                 data.Vendor_Id = order.Vendor_Id;
                 data.Item_Id= order.Item_Id;
