@@ -78,6 +78,7 @@ namespace FrontEnd_View.Controllers
             int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
             int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
             item.Org_Id = OrgId;
+            if (item.Barcode == null) { item.Barcode = ""; }
             try
             {
                 string data = JsonConvert.SerializeObject(item);
