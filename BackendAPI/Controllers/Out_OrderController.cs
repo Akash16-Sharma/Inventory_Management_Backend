@@ -148,8 +148,9 @@ namespace BackendAPI.Controllers
 
         [HttpPut]
         [Route("UpdateOrder")]
-        public IActionResult UpdateOrder([FromBody] Out_OrderRequest order, int StaffId)
+        public IActionResult UpdateOrder([FromBody] Out_OrderRequest order, int StaffId,string SellOrderId)
         {
+            int Count = 0;
             order.order.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
@@ -158,13 +159,14 @@ namespace BackendAPI.Controllers
                 {
                     order.order.Item_Id = order.OrderItems[i].Item_Id;
                     order.order.Quantity = order.OrderItems[i].Quantity;
-                    bool IsUpdate = _OutOrder.UpdateOrder(order.order);
+                    bool IsUpdate = _OutOrder.UpdateOrder(order.order,SellOrderId,Count);
                     if (IsUpdate&&i==order.OrderItems.Count)
                     {
                         return Ok("Order updated successfully.");
                     }
                     else
                     {
+                        Count++;
                         continue;
                     }
                 }
@@ -180,16 +182,18 @@ namespace BackendAPI.Controllers
                         {
                             order.order.Item_Id = order.OrderItems[j].Item_Id;
                             order.order.Quantity = order.OrderItems[j].Quantity;
-                            bool IsUpdate = _OutOrder.UpdateOrder(order.order);
-                            if (IsUpdate)
+                            bool IsUpdate = _OutOrder.UpdateOrder(order.order,SellOrderId,Count);
+                            if (IsUpdate&&j==order.OrderItems.Count)
                             {
                                 return Ok("Order updated successfully.");
                             }
                             else
                             {
+                                Count++;
                                 continue;
                             }
                         }
+                        return Ok("Order updated successfully.");
                     }
                 }
             }
@@ -198,12 +202,12 @@ namespace BackendAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteOrder")]
-        public IActionResult DeleteOrder(int id, int StaffId)
+        public IActionResult DeleteOrder(string SellOrderId, int StaffId)
         {
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
-                bool IsDelete = _OutOrder.DeleteOrder(id, StaffId);
+                bool IsDelete = _OutOrder.DeleteOrder(SellOrderId, StaffId);
                 if (IsDelete)
                 {
                     return Ok("Order deleted successfully.");
@@ -220,7 +224,7 @@ namespace BackendAPI.Controllers
                 {
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsModify == true)
                     {
-                        bool IsDelete = _OutOrder.DeleteOrder(id, StaffId);
+                        bool IsDelete = _OutOrder.DeleteOrder(SellOrderId, StaffId);
                         if (IsDelete)
                         {
                             return Ok("Order deleted successfully.");
