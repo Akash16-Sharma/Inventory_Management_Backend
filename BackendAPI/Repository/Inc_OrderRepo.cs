@@ -108,22 +108,30 @@ namespace BackendAPI.Repository
 
        
 
-        public bool UpdateOrder(Inc_Order order)
+        public bool UpdateOrder(Inc_Order order,string PurchaseOrderId,int count)
         {
-            var data = _Context.Inc_Order.Where(x => x.Id == order.Id).FirstOrDefault();
-            if(data != null)
+            var i = count;
+            var Incdata = _Context.Inc_Order.Where(x => x.Purchase_Order_Id == PurchaseOrderId && x.IsActive == true).ToList();
+            
+            if(Incdata != null)
             {
-                data.Inserted_On= DateTime.Now;
-                data.Actual_Date = order.Actual_Date;
-                data.IsActive=false;
-                data.Updated_By = order.Updated_By;
-                data.Vendor_Id = order.Vendor_Id;
-                data.Item_Id= order.Item_Id;
-                data.Quantity = order.Quantity;
-                data.Expected_Date = order.Expected_Date;
-                _Context.Inc_Order.Update(data) ;
-                _Context.SaveChanges();
-                return true;
+                while (i < Incdata.Count)
+                {
+                    order.Id = 0;
+                    order.Id= Incdata[i].Id;
+                    var data = _Context.Inc_Order.Where(x => x.Id == order.Id).FirstOrDefault();
+                    data.Inserted_On = DateTime.Now;
+                    data.Actual_Date = order.Actual_Date;
+                    data.IsActive = true;
+                    data.Updated_By = order.Updated_By;
+                    data.Vendor_Id = order.Vendor_Id;
+                    data.Item_Id = order.Item_Id;
+                    data.Quantity = order.Quantity;
+                    data.Expected_Date = order.Expected_Date;
+                    _Context.Inc_Order.Update(data);
+                    _Context.SaveChanges();
+                    return true;
+                }
             }
             return false;
         }
