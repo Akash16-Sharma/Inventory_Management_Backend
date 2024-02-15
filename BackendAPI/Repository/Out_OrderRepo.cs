@@ -38,16 +38,19 @@ namespace BackendAPI.Repository
             }
         }
 
-        public bool DeleteOrder(int Id, int StaffId)
+        public bool DeleteOrder(string SellOrderId, int StaffId)
         {
-            var data=_context.Out_Order.Where(x=>x.Id==Id).FirstOrDefault();
+            var data=_context.Out_Order.Where(x=>x.Sales_Order_Id==SellOrderId).ToList();
             if(data!=null)
             {
-                data.IsActive = false;
-                data.Updated_By = StaffId;
-                data.Inserted_On= DateTime.Now;
-                _context.Out_Order.Update(data);
-                _context.SaveChanges();
+                for (var i = 0; i < data.Count; i++)
+                {
+                    data[i].IsActive = false;
+                    data[i].Updated_By = StaffId;
+                    data[i].Inserted_On = DateTime.Now;
+                    _context.Out_Order.Update(data[i]);
+                    _context.SaveChanges();
+                }
                 return true;
             }
             return false;
@@ -100,22 +103,28 @@ namespace BackendAPI.Repository
             return data;
         }
 
-        public bool UpdateOrder(Out_Order order)
+        public bool UpdateOrder(Out_Order order, string SellOrderId, int Count)
         {
-            var data = _context.Out_Order.Where(x => x.Id == order.Id).FirstOrDefault(); 
-            if(data!=null)
+            var i = Count;
+            var OutDataList=_context.Out_Order.Where(x=>x.Sales_Order_Id==SellOrderId&&x.IsActive==true).ToList();
+            while (i < OutDataList.Count)
             {
-                data.Customer_Id = order.Customer_Id;
-                data.Updated_By= order.Updated_By;
-                data.Item_Id= order.Item_Id;
-                data.Expected_Date = order.Expected_Date;
-                data.Actual_Date = order.Actual_Date;
-                data.Quantity = order.Quantity;
-                data.Inserted_On=DateTime.Now;
-                _context.Out_Order.Update(data);
-                _context.SaveChanges();
-                data.Id = 0;
-                return true;
+                order.Id = 0;
+                order.Id = OutDataList[i].Id;
+                var data = _context.Out_Order.Where(x => x.Id == order.Id).FirstOrDefault();
+                if (data != null)
+                {
+                    data.Customer_Id = order.Customer_Id;
+                    data.Updated_By = order.Updated_By;
+                    data.Item_Id = order.Item_Id;
+                    data.Expected_Date = order.Expected_Date;
+                    data.Actual_Date = order.Actual_Date;
+                    data.Quantity = order.Quantity;
+                    data.Inserted_On = DateTime.Now;
+                    _context.Out_Order.Update(data);
+                    _context.SaveChanges();
+                    return true;
+                }
             }
             return false;
         }

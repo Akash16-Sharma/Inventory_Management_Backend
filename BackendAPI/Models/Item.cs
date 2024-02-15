@@ -8,8 +8,8 @@
         public int Category_Id { get; set; }
         public string Name { get; set; }
        // public string ImagePath { get; set; }
-        public int Buying_Price { get; set; }
-        public int Selling_Price { get; set; }
+        public decimal Buying_Price { get; set; }
+        public decimal Selling_Price { get; set; }
         public int Stock_Alert { get; set; }
         public int Opening_Stock { get; set; }
         public int Vendor_Id { get; set; }
