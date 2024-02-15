@@ -9,12 +9,14 @@ namespace BackendAPI.Models.Class
 {
     public class Controller_Functions
     {
+        [Obsolete]
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment _environment;
         private readonly DataContext _dataContext;
         private readonly IRoles _Roles;
         private readonly ICustomer _customer;
         private readonly IOut_Order _order;
 
+        [Obsolete]
         public Controller_Functions(Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, DataContext dataContext,IRoles Roles, IOrganisation_Info info, ICustomer customer, IOut_Order order)
         {
             _environment = environment;
@@ -24,6 +26,7 @@ namespace BackendAPI.Models.Class
             _order = order;
         }
 
+        [Obsolete]
         public void ImportExcel(int StaffId,String Sidebarname,IFormFile File)
         {
             if (Sidebarname == "Category")
@@ -358,7 +361,50 @@ namespace BackendAPI.Models.Class
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>Invoice</title>
     <style>
-        /* Your existing styles here */
+        body {{
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }}
+        .invoice {{
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }}
+        .header {{
+            text-align: right;
+            margin-bottom: 20px;
+        }}
+        .header p {{
+            margin: 5px 0;
+            font-size: 14px;
+        }}
+        h2 {{
+            color: #343a40;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }}
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }}
+        th, td {{
+            border: 1px solid #ced4da;
+            padding: 10px;
+            text-align: left;
+        }}
+        .total {{
+            font-weight: bold;
+            font-size: 18px;
+            color: #343a40;
+            margin-top: 20px;
+        }}
     </style>
 </head>
 <body>
@@ -370,10 +416,22 @@ namespace BackendAPI.Models.Class
             <p>{currentDate}</p>
         </div>
         <h2>Invoice</h2>
-        
-        {GenerateOrderItemsHtml(orderData)}
 
-        <p class='total'>Total Amount: ${orderData.Sum(item => (int)item.GetType().GetProperty("Quantity").GetValue(item) * (decimal)item.GetType().GetProperty("ItemSellingPrice").GetValue(item))}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {GenerateOrderItemsHtml(orderData)}
+            </tbody>
+        </table>
+
+        <p class='total'>Total Amount: ${CalculateTotalAmount(orderData)}</p>
     </div>
 </body>
 </html>";
@@ -388,26 +446,31 @@ namespace BackendAPI.Models.Class
             foreach (var item in orderData)
             {
                 itemsHtml.Append($@"
-        <div class='item'>
-            <span>Item:</span>
-            {item.GetType().GetProperty("ItemName").GetValue(item)}
-        </div>
-        <div class='item'>
-            <span>Quantity:</span>
-            {item.GetType().GetProperty("Quantity").GetValue(item)}
-        </div>
-        <div class='item'>
-            <span>Unit Price:</span>
-            ${item.GetType().GetProperty("ItemSellingPrice").GetValue(item)}
-        </div>
-        <div class='item'>
-            <span>Total Price:</span>
-            ${Convert.ToDecimal(item.GetType().GetProperty("Quantity").GetValue(item)) * (decimal)item.GetType().GetProperty("ItemSellingPrice").GetValue(item)}
-        </div>");
+            <tr>
+                <td>{item.GetType().GetProperty("ItemName").GetValue(item)}</td>
+                <td>{item.GetType().GetProperty("Quantity").GetValue(item)}</td>
+                <td>${item.GetType().GetProperty("ItemSellingPrice").GetValue(item)}</td>
+                <td>${CalculateItemTotalPrice(item)}</td>
+            </tr>");
             }
 
             return itemsHtml.ToString();
         }
+
+        private decimal CalculateItemTotalPrice(object item)
+        {
+            decimal quantity = Convert.ToDecimal(item.GetType().GetProperty("Quantity").GetValue(item));
+            decimal sellingPrice = (decimal)item.GetType().GetProperty("ItemSellingPrice").GetValue(item);
+            return quantity * sellingPrice;
+        }
+
+        private decimal CalculateTotalAmount(List<object> orderData)
+        {
+            return orderData.Sum(item => CalculateItemTotalPrice(item));
+        }
+
+
+
 
 
 

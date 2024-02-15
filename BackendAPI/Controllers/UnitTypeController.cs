@@ -92,7 +92,7 @@ namespace BackendAPI.Controllers
                         else
                         {
                             return BadRequest(new { Message = "Failed to add the unit type." });
-                        }break;
+                        }
                     }
                 }
             }
@@ -132,7 +132,7 @@ namespace BackendAPI.Controllers
                         else
                         {
                             return BadRequest(new { Message = "Failed to update the unit type." });
-                        }break;
+                        }
                     }
                 }
             }
@@ -171,7 +171,7 @@ namespace BackendAPI.Controllers
                         else
                         {
                             return BadRequest(new { Message = "Failed to delete the unit type." });
-                        }break;
+                        }
                     }
                 }
             }
@@ -211,7 +211,7 @@ namespace BackendAPI.Controllers
                         {
                             return Ok(data);
                         }
-                        break;
+                       
                     }
                 }
             } return BadRequest();
