@@ -14,9 +14,14 @@ namespace BackendAPI.Repository
         public bool AddOrder(Inc_Order order)
         {
             order.Id = 0;
+
+           // var item_Data = _Context.Items.Where(x => x.Id == order.Item_Id).FirstOrDefault();
+
+            //order.PurchaseAmount = item_Data.Buying_Price * order.Quantity;
+           // item_Data.Id = 0;
             order.Inserted_On = DateTime.Now;
             order.Actual_Date = DateTime.Now; //testing purpose
-            order.Expected_Date = DateTime.Now;
+            //order.Expected_Date = DateTime.Now;
             order.IsActive = true;
             _Context.Inc_Order.Add(order);
            int i= _Context.SaveChanges();

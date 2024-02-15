@@ -25,7 +25,7 @@ namespace BackendAPI.Controllers
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
-                var data = _OutOrder.GetOutOrders(orgid);
+                var data = _OutOrder.GetOutOrderInfo(orgid);
                 if (data == null)
                 {
                     return NotFound("No order information found.");
@@ -42,7 +42,46 @@ namespace BackendAPI.Controllers
                 {
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsShow == true)
                     {
-                        var data = _OutOrder.GetOutOrders(orgid);
+                        var data = _OutOrder.GetOutOrderInfo(orgid);
+                        if (data == null)
+                        {
+                            return NotFound("No order information found.");
+                        }
+                        else
+                        {
+                            return Ok(data);
+                        }
+                    }
+                }
+            }
+            return BadRequest("Access denied.");
+        }
+
+        [HttpGet]
+        [Route("GetOrderInfoBySalesOrderId")]
+        public IActionResult GetOrderInfoBySalesOrderId(string SalesOrderID, int StaffId)
+        {
+            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            if (CheckRoleTypeData.RoleType == "Admin")
+            {
+                var data = _OutOrder.GetOutOrdersBySalesOrderID(SalesOrderID);
+                if (data == null)
+                {
+                    return NotFound("No order information found.");
+                }
+                else
+                {
+                    return Ok(data);
+                }
+            }
+            else
+            {
+                var Accessdata = _roles.CheckAccess(StaffId);
+                for (var i = 0; i < Accessdata.Count; i++)
+                {
+                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsShow == true)
+                    {
+                        var data = _OutOrder.GetOutOrdersBySalesOrderID(SalesOrderID);
                         if (data == null)
                         {
                             return NotFound("No order information found.");
@@ -59,20 +98,25 @@ namespace BackendAPI.Controllers
 
         [HttpPost]
         [Route("AddOrder")]
-        public IActionResult AddOrder([FromBody] Out_Order order, int StaffId)
+        public IActionResult AddOrder([FromBody] Out_OrderRequest order, int StaffId)
         {
-            order.Updated_By = StaffId;
+            order.order.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
-                bool IsAdd = _OutOrder.AddOrder(order);
-                if (IsAdd)
+                for (var i = 0; i < order.OrderItems.Count; i++)
                 {
-                    return Ok("Order added successfully.");
-                }
-                else
-                {
-                    return BadRequest("Failed to add order.");
+                    order.order.Item_Id = order.OrderItems[i].Item_Id;
+                    order.order.Quantity= order.OrderItems[i].Quantity;
+                    bool IsAdd = _OutOrder.AddOrder(order.order);
+                    if (IsAdd&&i==order.OrderItems.Count)
+                    {
+                        return Ok("Order added successfully.");
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
             else
@@ -82,14 +126,19 @@ namespace BackendAPI.Controllers
                 {
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsCreate == true)
                     {
-                        bool IsAdd = _OutOrder.AddOrder(order);
-                        if (IsAdd)
+                        for (var a = 0; a < order.OrderItems.Count; a++)
                         {
-                            return Ok("Order added successfully.");
-                        }
-                        else
-                        {
-                            return BadRequest("Failed to add order.");
+                            order.order.Item_Id = order.OrderItems[a].Item_Id;
+                            order.order.Quantity = order.OrderItems[a].Quantity;
+                            bool IsAdd = _OutOrder.AddOrder(order.order);
+                            if (IsAdd&&a==order.OrderItems.Count)
+                            {
+                                return Ok("Order added successfully.");
+                            }
+                            else
+                            {
+                                continue;
+                            }
                         }
                     }
                 }
@@ -99,20 +148,25 @@ namespace BackendAPI.Controllers
 
         [HttpPut]
         [Route("UpdateOrder")]
-        public IActionResult UpdateOrder([FromBody] Out_Order order, int StaffId)
+        public IActionResult UpdateOrder([FromBody] Out_OrderRequest order, int StaffId)
         {
-            order.Updated_By = StaffId;
+            order.order.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
-                bool IsUpdate = _OutOrder.UpdateOrder(order);
-                if (IsUpdate)
+                for (var i = 0; i < order.OrderItems.Count; i++)
                 {
-                    return Ok("Order updated successfully.");
-                }
-                else
-                {
-                    return BadRequest("Failed to update order.");
+                    order.order.Item_Id = order.OrderItems[i].Item_Id;
+                    order.order.Quantity = order.OrderItems[i].Quantity;
+                    bool IsUpdate = _OutOrder.UpdateOrder(order.order);
+                    if (IsUpdate&&i==order.OrderItems.Count)
+                    {
+                        return Ok("Order updated successfully.");
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
             else
@@ -122,14 +176,19 @@ namespace BackendAPI.Controllers
                 {
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsModify == true)
                     {
-                        bool IsUpdate = _OutOrder.UpdateOrder(order);
-                        if (IsUpdate)
+                        for (var j = 0; j < order.OrderItems.Count; j++)
                         {
-                            return Ok("Order updated successfully.");
-                        }
-                        else
-                        {
-                            return BadRequest("Failed to update order.");
+                            order.order.Item_Id = order.OrderItems[j].Item_Id;
+                            order.order.Quantity = order.OrderItems[j].Quantity;
+                            bool IsUpdate = _OutOrder.UpdateOrder(order.order);
+                            if (IsUpdate)
+                            {
+                                return Ok("Order updated successfully.");
+                            }
+                            else
+                            {
+                                continue;
+                            }
                         }
                     }
                 }
