@@ -151,7 +151,7 @@ namespace BackendAPI.Controllers
 
         [HttpPut]
         [Route("UpdateOrder")]
-        public IActionResult UpdateOrder([FromBody] IncOrderRequest ord, int StaffId,string PurchaseOrderId)
+        public IActionResult UpdateOrder([FromBody] IncOrderRequest ord, int StaffId)
         {
             ord.Inc_Orders.Updated_By = StaffId;
             int count = 0;
@@ -163,7 +163,7 @@ namespace BackendAPI.Controllers
                     ord.Inc_Orders.Item_Id = ord.OrderItems[i].Item_Id;
                     ord.Inc_Orders.Quantity = ord.OrderItems[i].Quantity;
                     
-                    bool IsUpdate = _incord.UpdateOrder(ord.Inc_Orders, PurchaseOrderId,count);
+                    bool IsUpdate = _incord.UpdateOrder(ord.Inc_Orders, ord.Inc_Orders.Purchase_Order_Id,count);
                     if (IsUpdate&&i==ord.OrderItems.Count)
                     {
                         return Ok("Order updated successfully.");
@@ -186,7 +186,7 @@ namespace BackendAPI.Controllers
                         {
                             ord.Inc_Orders.Item_Id = ord.OrderItems[a].Item_Id;
                             ord.Inc_Orders.Quantity = ord.OrderItems[a].Quantity;
-                            bool IsUpdate = _incord.UpdateOrder(ord.Inc_Orders, PurchaseOrderId,count);
+                            bool IsUpdate = _incord.UpdateOrder(ord.Inc_Orders, ord.Inc_Orders.Purchase_Order_Id, count);
                             if (IsUpdate&&a==ord.OrderItems.Count)
                             {
                                 return Ok("Order updated successfully.");

@@ -17,8 +17,13 @@
         text-align: left;
     }
 
-    .col-md-4{
-        padding-bottom:10px;
+    .required:after {
+        content: " *";
+        color: red;
+    }
+
+    .col-md-4 {
+        padding-bottom: 10px;
     }
 
     .col-md-6 {
@@ -91,394 +96,398 @@
 
     </tbody>
 </table>
-        @* New Item Modal  *@
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add Items</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+@* New Item Modal  *@
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Items</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row" style="padding-bottom:10px">
+                    <div class="col-md-4">
+                        <label for="inputname" class="form-label required">Product Name</label>
+                        <input type="text" class="form-control" id="inputname">
                     </div>
-                    <div class="modal-body">
 
-                        <div class="row" style="padding-bottom:10px">
-                            <div class="col-md-4">
-                                <label for="inputname" class="form-label">Product Name</label>
-                                <input type="text" class="form-control" id="inputname">
+                    <div class="col-md-4">
+                        <label for="inputtype" class="form-label required">Unit Type</label>
+                        <select id="inputtype" class="form-control">
+                            <option selected>Select</option>
+                            @foreach (var unit in ViewBag.Unit)
+                            {
+                                <option value="@unit.id">@unit.name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="inputtype" class="form-label required">Category</label>
+                        <select id="category" onchange="handleSelection(this)" class="form-control">
+                            <option selected>Select</option>
+                            <option value="addcat">&#43; Add Category</option>
+
+                            @foreach (var category in ViewBag.Category)
+                            {
+                                <option value="@category.id">@category.name</option>
+                            }
+
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="inputEmail4" class="form-label">Min Stock Level</label>
+                        <input type="number" class="form-control" id="minstocklvl">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="inputEmail4" class="form-label">Opening Stock </label>
+                        <input type="number" class="form-control" id="openstock">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="inputEmail4" class="form-label">Barcode</label>
+                        <input type="number" class="form-control" id="barcode">
+                    </div>
+
+
+                    <hr style="margin-top:30px;margin-bottom:20px" />
+
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="cbIsPurchase">
+                            <label class="form-check-label">
+                                Purchase Information
+                            </label>
+                        </div>
+                        <label for="inputEmail4" class="form-label">Cost Price</label>
+                        <input type="number" class="form-control" id="costprice">
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="cbIsSell">
+                            <label class="form-check-label">
+                                Sell Information
+                            </label>
+                        </div>
+                        <label for="inputEmail4" class="form-label">Selling Price</label>
+                        <input type="number" class="form-control" id="sellprice">
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputtype" class="form-label required">Supplier</label>
+                        <select id="supplier" class="form-control">
+                            <option selected>Select</option>
+                            @foreach (var vendors in ViewBag.Vendor)
+                            {
+                                <option value="@vendors.id">@vendors.name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div style="margin-top:20px">
+                        <button type="button" onclick="onSubmit()" class="btn btn-primary">ADD ITEM</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Editing Item Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for editing item details -->
+                <div class="row" style="padding-bottom:10px">
+                    <div class="col-md-4">
+                        <label for="inputname" class="form-label required">Product Name</label>
+                        <input type="text" class="form-control" id="editInputName">
+                        <input type="text" style="display:none" class="form-control" id="editId">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="inputtype" class="form-label required">Unit Type</label>
+                        <select id="editinputtype" class="form-control">
+                            <option selected>Select</option>
+                            @foreach (var unit in ViewBag.Unit)
+                            {
+                                <option value="@unit.id">@unit.name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="inputtype" class="form-label required">Category</label>
+                        <select id="editInputCategory" class="form-control">
+                            <option selected>Select</option>
+                            @foreach (var category in ViewBag.Category)
+                            {
+                                <option value="@category.id">@category.name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="inputEmail4" class="form-label">Min Stock Level</label>
+                        <input type="number" class="form-control" id="editInputMinStock">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="editInputOpenStock">Opening Stock</label>
+                        <input type="number" class="form-control" id="editInputOpenStock">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="editInputBarcode">Barcode</label>
+                        <input type="number" class="form-control" id="editInputBarcode">
+                    </div>
+
+                    <hr style="margin-top:30px;margin-bottom:20px" />
+
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="editCbIsPurchase">
+                            <label class="form-check-label">
+                                Purchase Information
+                            </label>
+                        </div>
+
+                        <label for="editInputCostPrice">Cost Price</label>
+                        <input type="number" class="form-control" id="editInputCostPrice">
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="editCbIsSell">
+                            <label class="form-check-label">
+                                Sell Information
+                            </label>
+
+
+                            <label for="editInputSellPrice">Selling Price</label>
+                            <input type="number" class="form-control" id="editInputSellPrice">
+
+                            <div class="col-md-6">
                             </div>
 
-                            <div class="col-md-4">
-                                <label for="inputtype" class="form-label">Unit Type</label>
-                                <select id="inputtype" class="form-control">
+                            <div class="col-md-12">
+                                <label for="editInputSupplier" class="required">Supplier</label>
+                                <select id="editInputSupplier" class="form-control">
                                     <option selected>Select</option>
-                                    @foreach (var unit in ViewBag.Unit)
+                                    @foreach (var vendor in ViewBag.Vendor)
                                     {
-                                        <option value="@unit.id">@unit.name</option>
-                                    }
-                                </select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="inputtype" class="form-label">Category</label>
-                                <select id="category" onchange="handleSelection(this)" class="form-control">
-                                    <option selected>Select</option>
-                                    <option value="addcat">&#43; Add Category</option>
-
-                                    @foreach (var category in ViewBag.Category)
-                                    {
-                                        <option value="@category.id">@category.name</option>
-                                    }
-
-
-                                </select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="inputEmail4" class="form-label">Min Stock Level</label>
-                                <input type="number" class="form-control" id="minstocklvl">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="inputEmail4" class="form-label">Opening Stock </label>
-                                <input type="number" class="form-control" id="openstock">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="inputEmail4" class="form-label">Barcode</label>
-                                <input type="number" class="form-control" id="barcode">
-                            </div>
-
-
-                            <hr style="margin-top:30px;margin-bottom:20px" />
-
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="cbIsPurchase">
-                                    <label class="form-check-label">
-                                        Purchase Information
-                                    </label>
-                                </div>
-                                <label for="inputEmail4" class="form-label">Cost Price</label>
-                                <input type="number" class="form-control" id="costprice">
-                            </div>
-
-
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="cbIsSell">
-                                    <label class="form-check-label">
-                                        Sell Information
-                                    </label>
-                                </div>
-                                <label for="inputEmail4" class="form-label">Selling Price</label>
-                                <input type="number" class="form-control" id="sellprice">
-                            </div>
-                            <div class="col-md-6">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="inputtype" class="form-label">Supplier</label>
-                                <select id="supplier" class="form-control">
-                                    <option selected>Select</option>
-                                    @foreach (var vendors in ViewBag.Vendor)
-                                    {
-                                        <option value="@vendors.id">@vendors.name</option>
+                                        <option value="@vendor.id">@vendor.name</option>
                                     }
                                 </select>
                             </div>
                         </div>
-
-                        <div class="modal-footer">
-                            <div style="margin-top:20px">
-                                <button type="button" onclick="onSubmit()" class="btn btn-primary">ADD ITEM</button>
-                            </div>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="updateItem()">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Editing Item Modal -->
-        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Item</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Form fields for editing item details -->
-                        <div class="row" style="padding-bottom:10px">
-                            <div class="col-md-4">
-                                <label for="inputname" class="form-label">Product Name</label>
-                                <input type="text" class="form-control" id="editInputName">
-                                <input type="text" style="display:none" class="form-control" id="editId">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="inputtype" class="form-label">Unit Type</label>
-                                <select id="editinputtype" class="form-control">
-                                    <option selected>Select</option>
-                                    @foreach (var unit in ViewBag.Unit)
-                                    {
-                                        <option value="@unit.id">@unit.name</option>
-                                    }
-                                </select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="inputtype" class="form-label">Category</label>
-                                <select id="editInputCategory" class="form-control">
-                                    <option selected>Select</option>
-                                    @foreach (var category in ViewBag.Category)
-                                    {
-                                        <option value="@category.id">@category.name</option>
-                                    }
-                                </select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="inputEmail4" class="form-label">Min Stock Level</label>
-                                <input type="number" class="form-control" id="editInputMinStock">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="editInputOpenStock">Opening Stock</label>
-                                <input type="number" class="form-control" id="editInputOpenStock">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="editInputBarcode">Barcode</label>
-                                <input type="number" class="form-control" id="editInputBarcode">
-                            </div>
-
-                            <hr style="margin-top:30px;margin-bottom:20px" />
-
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="editCbIsPurchase">
-                                    <label class="form-check-label">
-                                        Purchase Information
-                                    </label>
-                                </div>
-
-                                <label for="editInputCostPrice">Cost Price</label>
-                                <input type="number" class="form-control" id="editInputCostPrice">
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="editCbIsSell">
-                                    <label class="form-check-label">
-                                        Sell Information
-                                    </label>
-
-
-                                    <label for="editInputSellPrice">Selling Price</label>
-                                    <input type="number" class="form-control" id="editInputSellPrice">
-
-                                    <div class="col-md-6">
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <label for="editInputSupplier">Supplier</label>
-                                        <select id="editInputSupplier" class="form-control">
-                                            <option selected>Select</option>
-                                            @foreach (var vendor in ViewBag.Vendor)
-                                            {
-                                                <option value="@vendor.id">@vendor.name</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" onclick="updateItem()">Save Changes</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
 
 
+        <script>
 
-<script>
+            $(document).ready(function () {
 
-    $(document).ready(function () {
+                $('#assignTable').DataTable();
 
-        $('#assignTable').DataTable();
+                $("#save").click(function () {
+                    $("#myModal").modal("show");
+                });
 
-        $("#save").click(function () {
-            $("#myModal").modal("show");
-        });
+                $("#sellprice").prop("disabled", true);
+                $("#costprice").prop("disabled", true);
 
-        $("#sellprice").prop("disabled", true);
-        $("#costprice").prop("disabled", true);
+                $("#cbIsPurchase").change(function () {
+                    // Update the status of the input field when the checkbox changes
+                    updateInputPurchaseStatus();
+                });
+                $("#cbIsSell").change(function () {
+                    updateInputSellStatus();
 
-        $("#cbIsPurchase").change(function () {
-            // Update the status of the input field when the checkbox changes
-            updateInputPurchaseStatus();
-        });
-        $("#cbIsSell").change(function () {
-            updateInputSellStatus();
+                });
 
-        });
-
-        $("#new").click(function () {
-            $("#myModal").modal("show");
-        });
-    });
-
-    function handleSelection(select) {
-        var selectedValue = select.value;
-
-        if (selectedValue === "addcat") {
-            window.location.href = '/Item/ItemCategory';
-        }
-    }
-
-    function updateInputPurchaseStatus() {
-        // Enable or disable the input field based on the checkbox status
-        if ($("#cbIsPurchase").prop("checked")) {
-            $("#costprice").prop("disabled", false);
-        } else {
-            $("#costprice").val("");
-            $("#costprice").prop("disabled", true);
-        }
-    }
-
-    function updateInputSellStatus() {
-        // Enable or disable the input field based on the checkbox status
-        if ($("#cbIsSell").prop("checked")) {
-            $("#sellprice").prop("disabled", false);
-        } else {
-            $("#sellprice").val("");
-            $("#sellprice").prop("disabled", true);
-        }
-    }
-
-    function onSubmit() {
-
-        var name = $("#inputname").val();
-        var type = $("#inputtype").val();
-        var category = $("#category").val();
-        var minstock = $("#minstocklvl").val();
-        var openstock = $("#openstock").val();
-        var barcode = $("#barcode").val();
-        var cprice = $("#costprice").val();
-        var sprice = $("#sellprice").val();
-        var supplier = $("#supplier").val();
-
-
-        $.ajax({
-            url: '/Item/AddItem',
-            type: 'POST',
-            data: {
-                Name: name,
-                Unit_Type_Id: type,
-                Category_Id: category,
-                Buying_Price: cprice,
-                Selling_Price: sprice,
-                Stock_Alert: minstock,
-                Opening_Stock: openstock,
-                Vendor_Id: supplier,
-                Barcode: barcode,
-            },
-            success: function (data) {
-                $("#myModal").modal("hide");
-                location.reload();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log("AJAX error: " + textStatus + ", " + errorThrown);
-                console.log("Response Text: " + jqXHR.responseText);
-                console.log("Status Code: " + jqXHR.status);
-                console.log("Status Text: " + jqXHR.statusText);
-            }
-        });
-    }
-
-    function deleteItem(ItemId) {
-        if (confirm("Are you sure you want to delete this Item?")) {
-            $.ajax({
-                url: '/Item/ItemDelete',
-                type: 'POST',
-                data: { Id: ItemId },
-                success: function (response) {
-                    location.reload();
-                },
-                error: function (error) {
-                    console.log("Error: " + error);
-                }
+                $("#new").click(function () {
+                    $("#myModal").modal("show");
+                });
             });
-        }
-    }
 
-    function openEditModal(Id) {
-        debugger;
-        $.ajax({
-            url: '/Item/ItemGetById',
-            type: 'GET',
-            data: { Id: Id },
-            success: function (response) {
-                $('#editId').val(Id);
-                $('#editInputName').val(response.name);
-                $('#editinputtype').val(response.unit_Type_Id);
-                $('#editInputCategory').val(response.category_Id);
-                $('#editInputMinStock').val(response.stock_Alert);
-                $('#editInputOpenStock').val(response.opening_Stock);
-                $('#editInputBarcode').val(response.barcode);
-                $('#editCbIsPurchase').prop('checked', response.isPurchase);
-                $('#editInputCostPrice').val(response.buying_Price);
-                $('#editCbIsSell').prop('checked', response.isSell);
-                $('#editInputSellPrice').val(response.selling_Price);
-                $('#editInputSupplier').val(response.vendor_Id);
-                $('#editModal').modal('show');
-            },
-            error: function (error) {
-                console.log("Error: " + error);
+            function handleSelection(select) {
+                var selectedValue = select.value;
+
+                if (selectedValue === "addcat") {
+                    window.location.href = '/Item/ItemCategory';
+                }
             }
-        });
 
-    }
+            $('.modal .close').on('click', function () {
+                // Trigger the close event for the modal that contains the clicked close button
+                $(this).closest('.modal').modal('hide');
+            });
 
-
-   function updateItem()
-   {
-        $.ajax({
-            url: '/Item/ItemUpdate',
-            type: 'POST',
-            data: {
-                // Pass the updated values to the server
-                Id: $('#editId').val(),
-                Name: $('#editInputName').val(),
-                Unit_Type_Id: $('#editinputtype').val(),
-                Category_Id: $('#editInputCategory').val(),
-                Stock_Alert: $('#editInputMinStock').val(),
-                Opening_Stock: $('#editInputOpenStock').val(),
-                Barcode: $('#editInputBarcode').val(),
-                IsPurchase: $('#editCbIsPurchase').prop('checked'),
-                Buying_Price: $('#editInputCostPrice').val(),
-                IsSell: $('#editCbIsSell').prop('checked'),
-                Selling_Price: $('#editInputSellPrice').val(),
-                Vendor_Id: $('#editInputSupplier').val(),
-                isActive:true,
-
-            },
-            success: function (data) {
-                $('#editModal').modal('hide');
-                location.reload();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error('Update failed:', errorThrown);
-                // Handle error as needed
+            function updateInputPurchaseStatus() {
+                // Enable or disable the input field based on the checkbox status
+                if ($("#cbIsPurchase").prop("checked")) {
+                    $("#costprice").prop("disabled", false);
+                } else {
+                    $("#costprice").val("");
+                    $("#costprice").prop("disabled", true);
+                }
             }
-        });
 
-   }
+            function updateInputSellStatus() {
+                // Enable or disable the input field based on the checkbox status
+                if ($("#cbIsSell").prop("checked")) {
+                    $("#sellprice").prop("disabled", false);
+                } else {
+                    $("#sellprice").val("");
+                    $("#sellprice").prop("disabled", true);
+                }
+            }
 
-</script>
+            function onSubmit() {
+
+                var name = $("#inputname").val();
+                var type = $("#inputtype").val();
+                var category = $("#category").val();
+                var minstock = $("#minstocklvl").val();
+                var openstock = $("#openstock").val();
+                var barcode = $("#barcode").val();
+                var cprice = $("#costprice").val();
+                var sprice = $("#sellprice").val();
+                var supplier = $("#supplier").val();
+
+
+                $.ajax({
+                    url: '/Item/AddItem',
+                    type: 'POST',
+                    data: {
+                        Name: name,
+                        Unit_Type_Id: type,
+                        Category_Id: category,
+                        Buying_Price: cprice,
+                        Selling_Price: sprice,
+                        Stock_Alert: minstock,
+                        Opening_Stock: openstock,
+                        Vendor_Id: supplier,
+                        Barcode: barcode,
+                    },
+                    success: function (data) {
+                        $("#myModal").modal("hide");
+                        location.reload();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log("AJAX error: " + textStatus + ", " + errorThrown);
+                        console.log("Response Text: " + jqXHR.responseText);
+                        console.log("Status Code: " + jqXHR.status);
+                        console.log("Status Text: " + jqXHR.statusText);
+                    }
+                });
+            }
+
+            function deleteItem(ItemId) {
+                if (confirm("Are you sure you want to delete this Item?")) {
+                    $.ajax({
+                        url: '/Item/ItemDelete',
+                        type: 'POST',
+                        data: { Id: ItemId },
+                        success: function (response) {
+                            location.reload();
+                        },
+                        error: function (error) {
+                            console.log("Error: " + error);
+                        }
+                    });
+                }
+            }
+
+            function openEditModal(Id) {
+                debugger;
+                $.ajax({
+                    url: '/Item/ItemGetById',
+                    type: 'GET',
+                    data: { Id: Id },
+                    success: function (response) {
+                        $('#editId').val(Id);
+                        $('#editInputName').val(response.name);
+                        $('#editinputtype').val(response.unit_Type_Id);
+                        $('#editInputCategory').val(response.category_Id);
+                        $('#editInputMinStock').val(response.stock_Alert);
+                        $('#editInputOpenStock').val(response.opening_Stock);
+                        $('#editInputBarcode').val(response.barcode);
+                        $('#editCbIsPurchase').prop('checked', response.isPurchase);
+                        $('#editInputCostPrice').val(response.buying_Price);
+                        $('#editCbIsSell').prop('checked', response.isSell);
+                        $('#editInputSellPrice').val(response.selling_Price);
+                        $('#editInputSupplier').val(response.vendor_Id);
+                        $('#editModal').modal('show');
+                    },
+                    error: function (error) {
+                        console.log("Error: " + error);
+                    }
+                });
+
+            }
+
+
+            function updateItem() {
+                $.ajax({
+                    url: '/Item/ItemUpdate',
+                    type: 'POST',
+                    data: {
+                        // Pass the updated values to the server
+                        Id: $('#editId').val(),
+                        Name: $('#editInputName').val(),
+                        Unit_Type_Id: $('#editinputtype').val(),
+                        Category_Id: $('#editInputCategory').val(),
+                        Stock_Alert: $('#editInputMinStock').val(),
+                        Opening_Stock: $('#editInputOpenStock').val(),
+                        Barcode: $('#editInputBarcode').val(),
+                        IsPurchase: $('#editCbIsPurchase').prop('checked'),
+                        Buying_Price: $('#editInputCostPrice').val(),
+                        IsSell: $('#editCbIsSell').prop('checked'),
+                        Selling_Price: $('#editInputSellPrice').val(),
+                        Vendor_Id: $('#editInputSupplier').val(),
+                        isActive: true,
+
+                    },
+                    success: function (data) {
+                        $('#editModal').modal('hide');
+                        location.reload();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Update failed:', errorThrown);
+                        // Handle error as needed
+                    }
+                });
+
+            }
+
+        </script>
 

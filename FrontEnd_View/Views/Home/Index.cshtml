@@ -2,24 +2,53 @@
     ViewData["Title"] = "Dashboard";
 }
 
+<style>
+    table {
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: none;
+    }
+</style>
 
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
                         Low Quantity
                     </div>
-                    <div class="card-body">                     
+                    <div class="card-body">
                         <div>
-                            <p>Pheniox Arizona</p>
-                            <a href="#">Go somewhere</a>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Item
+                                        </th>
+                                        <th>
+                                            Qty
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var vendor in ViewBag.VendorListData)
+                                    {
+                                        <tr class="table-danger">
+                                            <td>@vendor.name</td>
+                                            <td>@vendor.stock</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+
                 </div>
             </div>
-            <div class="col-md-2">
+            @* <div class="col-md-2">
                 <div class="card">
                     <div class="card-header">
                         Ted James
@@ -34,7 +63,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> *@
            
            
         </div>

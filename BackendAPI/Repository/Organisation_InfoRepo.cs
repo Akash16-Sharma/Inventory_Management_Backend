@@ -130,6 +130,7 @@ namespace BackendAPI.Repository
                 Exsistingdata.Address = Info.Address;
                 Exsistingdata.PinCode = Info.PinCode;
                 Exsistingdata.PhoneNo = Info.PhoneNo;
+                Exsistingdata.Type = Info.Type; //added by Prateek
                 Exsistingdata.IsActive = true;
                 Exsistingdata.InsertedOn = DateTime.Now;
                 _context.Organisation_Info.Update(Exsistingdata);

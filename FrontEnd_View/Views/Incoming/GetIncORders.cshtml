@@ -1,4 +1,9 @@
 ﻿@model List<dynamic>
+@{
+    // Assuming ItemListData is a List<SelectListItem> in your controller
+    var itemList = ViewBag.ItemListData as List<SelectListItem>;
+    var itemCount = itemList?.Count ?? 0;
+}
 
 <h2>Purchase</h2>
 
@@ -99,6 +104,16 @@
     </div>
 </div>
 <script>
+    var itemListData = @Html.Raw(Json.Serialize(itemList));
+
+        $(document).on('change', '.dd select', function () {
+        $(this).find('option').removeAttr('selected');
+
+        // Set 'selected' attribute for the chosen option
+        var selectedValue = $(this).val();
+        $(this).find('option[value="' + selectedValue + '"]').attr('selected', 'selected');
+            // Your additional logic here
+        });
 
     function OpenPurchaseInfo(purchase_Order_Id) {
 
@@ -120,7 +135,7 @@
     }
 
     function generateEditableTable(data) {
-    
+
         $("#date").datepicker();
         var orderDate = new Date(data[0].order_Date);
         $("#date").datepicker("setDate", orderDate);
@@ -131,10 +146,11 @@
         tableHtml += '<thead><tr><th>Item Name</th><th>Quantity</th><th>Item Price</th></tr></thead>';
         tableHtml += '<tbody>';
 
+        var itemListData = @Html.Raw(Json.Serialize(itemList));
         for (var i = 0; i < data.length; i++) {
             tableHtml += '<tr>';
             tableHtml += '<td contenteditable="true" style="display: none;">' + data[i].itemId + '</td>';
-            tableHtml += '<td contenteditable="true">' + data[i].itemName + '</td>';
+            tableHtml += '<td contenteditable="true" class="dd">' + generateDropdownHtml(data[i].itemId) + '</td>';
             tableHtml += '<td contenteditable="true">' + data[i].quantity + '</td>';
             tableHtml += '<td contenteditable="true">' + data[i].itemBuyingPrice + '</td>';
             tableHtml += '</tr>';
@@ -143,6 +159,17 @@
         tableHtml += '</tbody></table>';
 
         return tableHtml;
+    }
+
+    function generateDropdownHtml(selectedItemId) {
+        var dropdownHtml = '<select>';
+        for (var j = 0; j < itemListData.length; j++) {
+            var item = itemListData[j];
+            var selected = (item.value == selectedItemId) ? 'selected' : '';
+            dropdownHtml += '<option value="' + item.value + '" ' + selected + '>' + item.text + '</option>';
+        }
+        dropdownHtml += '</select>';
+        return dropdownHtml;
     }
 
     function updateItemList()
@@ -160,7 +187,7 @@
         // Loop through each row in the table
         $("#editableTableContainer tbody tr").each(function () {
             var itemData = {
-                Item_Id: $(this).find("td:nth-child(1)").text(),
+                Item_Id: $(this).find("td:nth-child(2) select").val(),
                 Quantity: $(this).find("td:nth-child(3)").text()
             };
             editedData.push(itemData);
@@ -175,6 +202,7 @@
                 console.log(response);
             },
             error: function (error) {
+                location.reload();
                 console.error(error);
             }
         });

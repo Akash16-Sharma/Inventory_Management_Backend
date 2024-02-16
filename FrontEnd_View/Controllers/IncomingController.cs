@@ -1,9 +1,11 @@
 ﻿using BackendAPI.Models;
 using FrontEnd_View.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Text;
 using System.Text.Json.Nodes;
+
 
 namespace FrontEnd_View.Controllers
 {
@@ -118,7 +120,7 @@ namespace FrontEnd_View.Controllers
             return View();
         }
 
-        public IActionResult AddIncOrders(OrderRequest ord)
+        public IActionResult AddIncOrders(IncOrderRequest ord)
         {
             
                 int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
@@ -151,7 +153,20 @@ namespace FrontEnd_View.Controllers
                 ViewBag.VendorListData = vendorlist;
             }
 
+            List<dynamic> items = new List<dynamic>();
+            HttpResponseMessage itemresponseMessage = _client.GetAsync(_client.BaseAddress +
+                "/Item/GetItemInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
 
+            if (itemresponseMessage.IsSuccessStatusCode)
+            {
+                string data = itemresponseMessage.Content.ReadAsStringAsync().Result;
+                items = JsonConvert.DeserializeObject<List<dynamic>>(data);
+                var itemlist = items.Select(s => new SelectListItem { Text = s.name, Value = s.id.ToString() }).ToList();
+                ViewBag.ItemListData = itemlist;
+
+            }
+
+        
             List<dynamic> incord = new List<dynamic>();
             HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
                 "/Inc_Order/GetOrderInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
@@ -161,6 +176,8 @@ namespace FrontEnd_View.Controllers
                 string data = responseMessage.Content.ReadAsStringAsync().Result;
                 incord = JsonConvert.DeserializeObject<List<dynamic>>(data);
             }
+
+
 
             return View(incord);
 
@@ -183,7 +200,7 @@ namespace FrontEnd_View.Controllers
 
         }  //side view order
 
-        public IActionResult UpdateIncOrders(OrderRequest ord)
+        public IActionResult UpdateIncOrders(IncOrderRequest ord)
         {
 
             int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;

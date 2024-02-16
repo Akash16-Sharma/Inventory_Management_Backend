@@ -141,6 +141,11 @@
         });
     }
 
+    $('.modal .close').on('click', function () {
+        // Trigger the close event for the modal that contains the clicked close button
+        $(this).closest('.modal').modal('hide');
+    });
+
     function editCategoryModals(id,name,phone,email) {
         $('#editId').val(id);
         $('#editname').val(name);
