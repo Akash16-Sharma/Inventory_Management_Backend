@@ -349,9 +349,9 @@ namespace BackendAPI.Models.Class
 
 
 
-        public string GenerateHtmlInvoice(Organisation_Info info, List<object> orderData)
+        public string GenerateHtmlInvoice(Organisation_Info info, List<object> orderData,Customer cust,Billing bill)
         {
-            var currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            var currentDate = DateTime.Now.ToString("MM/dd/yyyy");
 
             var htmlContent = $@"
 <!DOCTYPE html>
@@ -409,29 +409,77 @@ namespace BackendAPI.Models.Class
 </head>
 <body>
     <div class='invoice'>
-        <div class='header'>
-            <p>{info.Name}</p>
-            <p>Email: {info.Email}</p>
-            <p>Phone: {info.PhoneNo}</p>
-            <p>{currentDate}</p>
-        </div>
-        <h2>Invoice</h2>
+        <header>
+            <h1>Invoice</h1>
+            <div class='company-info'>
+                <img src='your_logo.png' alt='Your Logo'>
+                <p>{info.Name}</p>
+                <p>{info.Email}</p>
+                <p>{info.PhoneNo}</p>
+            </div>
+        </header>
+        <main>
+            <div class='bill-to'>
+                <h2>BILLED TO</h2>
+                <p>{cust.Name}</p>
+                <p>{cust.Email}</p>
+                <p>{cust.Phone}</p>
+                <p>{bill.BillingAddress}</p>
+               
+               
+            </div>
+            <div class='invoice-info'>
+                <p><b>Invoice Number:</b> {bill.Invoice_No}</p>
+                <p><b>Date of Issue:</b> {currentDate}</p>
+            </div>
+            <table class='items'>
+                <thead>
+                    <tr>
+                        <th>Description</th>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Quantity</th>
-                    <th>Unit Price</th>
-                    <th>Total Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                {GenerateOrderItemsHtml(orderData)}
-            </tbody>
-        </table>
-
-        <p class='total'>Total Amount: ${CalculateTotalAmount(orderData)}</p>
+                        <th>Qty</th>
+                        <th>Unit Cost</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {GenerateOrderItemsHtml(orderData)}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan='2'>Subtotal</td>
+                        <td></td>
+                        <td>$0.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>Discount</td>
+                        <td></td>
+                        <td>$0.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>Tax rate</td>
+                        <td></td>
+                        <td>%</td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>Tax</td>
+                        <td></td>
+                        <td>$0.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'><b>INVOICE TOTAL</b></td>
+                        <td></td>
+                        <td><b>${CalculateTotalAmount(orderData)}</b></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div class='payment-terms'>
+                <h4>TERMS</h4>
+                <p>Please pay Invoice by MM/DD/YYYY</p>
+                <p>Send money abroad with TransferWise.</p>
+                <img src='transferwise_logo.png' alt='TransferWise'>
+            </div>
+        </main>
     </div>
 </body>
 </html>";
@@ -439,6 +487,9 @@ namespace BackendAPI.Models.Class
             return htmlContent;
         }
 
+
+
+      
         private string GenerateOrderItemsHtml(List<object> orderData)
         {
             StringBuilder itemsHtml = new StringBuilder();

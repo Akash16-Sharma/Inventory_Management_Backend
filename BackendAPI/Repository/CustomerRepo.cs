@@ -13,14 +13,14 @@ namespace BackendAPI.Repository
 
         public bool AddCustomer(Customer customer)
         {
-           customer.InsertedOn=DateTime.Now;
+           customer.Inserted_On=DateTime.Now;
             customer.IsActive=true;
 
             var data = _context.Customer.Where(x => x.Id == customer.Id && x.OrgId == customer.OrgId).FirstOrDefault();
             if(data != null)
             {
                 data.IsActive = true;
-                data.InsertedOn = DateTime.Now;
+                data.Inserted_On = DateTime.Now;
                 _context.Customer.Update(data);
                 _context.SaveChanges();
                 return true;
@@ -44,6 +44,7 @@ namespace BackendAPI.Repository
             var data = _context.Customer.Where(x => x.Id == id).FirstOrDefault();
             if (data != null)
             {
+                data.Inserted_On = DateTime.Now;
                 data.IsActive = false;
                 data.Updated_By = StaffId;
                 _context.Customer.Update(data);
@@ -70,6 +71,7 @@ namespace BackendAPI.Repository
             var data = _context.Customer.Where(x => x.Id == customer.Id).FirstOrDefault();
             if (data != null)
             {
+                data.Inserted_On = DateTime.Now;
                 data.Name = customer.Name;
                 data.Email = customer.Email;
                 data.Phone = customer.Phone;

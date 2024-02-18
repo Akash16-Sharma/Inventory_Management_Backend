@@ -7,7 +7,7 @@
         public string Phone { get; set; }
         public string Email { get; set; }
         public bool IsActive { get; set; }
-        public DateTime InsertedOn { get; set; }
+        public DateTime Inserted_On { get; set; }
         public int Updated_By { get; set; }
         public int OrgId { get; set; }
     }

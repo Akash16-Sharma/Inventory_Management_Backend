@@ -4,6 +4,6 @@ namespace BackendAPI.IRepository.Invoice
 {
     public interface IInvoice
     {
-        public bool AddBillingDetails(Billing bill);
+        public Billing AddBillingDetails(Billing bill);
     }
 }

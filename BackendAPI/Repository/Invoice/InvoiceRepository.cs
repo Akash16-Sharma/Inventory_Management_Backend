@@ -12,16 +12,18 @@ namespace BackendAPI.Repository.Invoice
             _context = context;
         }
 
-        public bool AddBillingDetails(Billing bill)
+        public Billing AddBillingDetails(Billing bill)
         {
+            Random r= new Random();
+            bill.Invoice_No= r.Next();
            bill.Inserted_On=DateTime.Now;
             _context.Billing.Add(bill);
             int i=_context.SaveChanges();
             if(i>0)
             {
-                return true;
+                return bill;
             }
-            return false;
+            return null;
         }
     }
 }

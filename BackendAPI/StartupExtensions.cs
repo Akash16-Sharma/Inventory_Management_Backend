@@ -9,6 +9,8 @@ using DinkToPdf.Contracts;
 using DinkToPdf;
 using Microsoft.Extensions.DependencyInjection;
 using BackendAPI.Models.Invoice;
+using BackendAPI.IRepository.Invoice;
+using BackendAPI.Repository.Invoice;
 
 namespace BackendAPI
 {
@@ -27,6 +29,7 @@ namespace BackendAPI
             services.AddScoped<IInc_Orders,Inc_OrderRepo>();
             services.AddScoped<IOut_Order,Out_OrderRepo>();
             services.AddScoped<ICustomer,CustomerRepo>();
+            services.AddScoped<IInvoice,InvoiceRepository>();
             services.AddScoped<AppSettings>();
             services.AddScoped<User_Info>();
             services.AddScoped<EncDycPassword>();
@@ -46,6 +49,7 @@ namespace BackendAPI
             services.AddScoped<Out_Order>();
             services.AddScoped<Customer>();
             services.AddScoped<InvoiceRequest>();
+            services.AddScoped<Billing>();
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
 
