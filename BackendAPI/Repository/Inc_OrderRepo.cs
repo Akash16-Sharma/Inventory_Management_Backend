@@ -15,13 +15,10 @@ namespace BackendAPI.Repository
         {
             order.Id = 0;
 
-           // var item_Data = _Context.Items.Where(x => x.Id == order.Item_Id).FirstOrDefault();
-
-            //order.PurchaseAmount = item_Data.Buying_Price * order.Quantity;
-           // item_Data.Id = 0;
+          
             order.Inserted_On = DateTime.Now;
             order.Actual_Date = DateTime.Now; //testing purpose
-            //order.Expected_Date = DateTime.Now;
+           
             order.IsActive = true;
             _Context.Inc_Order.Add(order);
            int i= _Context.SaveChanges();
@@ -31,7 +28,10 @@ namespace BackendAPI.Repository
             }
             return false;
         }
+        // var item_Data = _Context.Items.Where(x => x.Id == order.Item_Id).FirstOrDefault();
 
+        //order.PurchaseAmount = item_Data.Buying_Price * order.Quantity;
+        // item_Data.Id = 0;
         public bool DeleteOrder(string purchaseorderid,int StaffId)
         {
             var i = 0;
@@ -128,6 +128,7 @@ namespace BackendAPI.Repository
                     data.Item_Id = order.Item_Id;
                     data.Quantity = order.Quantity;
                     data.Expected_Date = order.Expected_Date;
+                    data.Order_Date = order.Order_Date;
                     _Context.Inc_Order.Update(data);
                     _Context.SaveChanges();
                     return true;

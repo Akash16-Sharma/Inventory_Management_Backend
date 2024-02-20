@@ -6,6 +6,9 @@ namespace BackendAPI.Models
     {
         public List<OutOrderItem>OrderItems { get; set; }
         public Out_Order order { get; set; }
+        // Additional properties for frontend-provided dates as strings
+        public string OrderDate { get; set; }
+        public string ExpectedDate { get; set; }
     }
     public class Out_Order
     {
@@ -13,11 +16,11 @@ namespace BackendAPI.Models
         public int Customer_Id { get; set; }
         public int Item_Id { get; set; }
         public int Quantity { get; set; }
-        public DateTime Expected_Date { get; set; }
+        public DateOnly Expected_Date { get; set; }
         public DateTime Actual_Date { get; set; }
         public int Updated_By { get; set; }
         public DateTime Inserted_On { get; set; }
-        public DateTime Order_Date { get; set; }
+        public DateOnly Order_Date { get; set; }
         public int OrgId { get; set; }
         public bool IsActive { get; set; }
         public string Sales_Order_Id { get; set; }
