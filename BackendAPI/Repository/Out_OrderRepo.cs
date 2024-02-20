@@ -22,8 +22,11 @@ namespace BackendAPI.Repository
            else
             {
                 order.Id = 0;
-                //order.SellAmount=ItemData.Selling_Price*order.Quantity;
-               // ItemData.Id = 0;
+                ItemData.Opening_Stock=ItemData.Opening_Stock - order.Quantity;
+                ItemData.Updated_By=order.Updated_By;
+                ItemData.InsertedOn = DateTime.Now;
+                _context.Items.Update(ItemData);
+                _context.SaveChanges(); 
                 order.Inserted_On = DateTime.Now;
                 order.IsActive = true;
                 _context.Out_Order.Add(order);
