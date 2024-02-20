@@ -2,6 +2,7 @@
 @{
     // Assuming ItemListData is a List<SelectListItem> in your controller
     var itemList = ViewBag.ItemListData as List<SelectListItem>;
+    var isMob = Context.Request.HttpContext.Session.GetInt32("Ismobile");
     var itemCount = itemList?.Count ?? 0;
 }
 
@@ -25,6 +26,47 @@
 
     }
 </style>
+@if(isMob == 1)
+{
+    <div class="col-md-6 hide" id="po">
+        <h4>Purchase Order</h4>
+        <form style="padding:10px">
+
+            <div class="form-group row" style="flex-wrap:nowrap">
+                <label for="" class="col-sm-3 col-form-label">Purchase ID</label>
+                <label id="purId" class="col-sm-4 col-form-label"></label>
+            </div>
+
+            <div class="form-group row" style="flex-wrap:nowrap">
+                <label for="inputEmail3" class="col-sm-3 col-form-label">Date</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="date" aria-describedby="emailHelp">
+                </div>
+            </div>
+
+            <div class="form-group row" style="flex-wrap:nowrap">
+                <label for="vendorDropdown" class="col-sm-3 col-form-label">Vendor</label>
+                <div class="col-sm-4">
+                    <select class="form-control" id="vendorDropdown">
+                        <option value="">Select Vendor</option>
+                        @foreach (var vendor in ViewBag.VendorListData)
+                        {
+                            <option value="@vendor.id">@vendor.name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <label style="display:none" id="ID"></label>
+
+            <div id="editableTableContainer">
+            </div>
+
+        </form>
+        <button type="button" style="margin-bottom:10px" onclick="updateItemList()" class="btn btn-primary">Update</button>
+    </div>
+
+}
 
 <div class="container">
     <div class="row">
@@ -62,33 +104,35 @@
                 </tbody>
             </table>
         </div>
-        <div class="vertical-line"></div>
-        <div class="col-md-6 hide" id="po">
-            <h4>Purchase Order</h4>
-            <form style="padding:10px">
+        @if (isMob == 0)
+        {
+            <div class="vertical-line"></div>
+            <div class="col-md-6 hide" id="po">
+                <h4>Purchase Order</h4>
+                <form style="padding:10px">
 
-                <div class="form-group row">
-                    <label for="" class="col-sm-3 col-form-label">Purchase ID</label>
-                    <label id="purId" class="col-sm-4 col-form-label"></label>
-                </div>
-
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-3 col-form-label">Date</label>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="date" aria-describedby="emailHelp">
+                    <div class="form-group row">
+                        <label for="" class="col-sm-3 col-form-label">Purchase ID</label>
+                        <label id="purId" class="col-sm-4 col-form-label"></label>
                     </div>
-                </div>
-                
-                <div class="form-group row">
-                    <label for="vendorDropdown" class="col-sm-3 col-form-label">Vendor</label>
-                    <div class="col-sm-4">
-                        <select class="form-control" id="vendorDropdown">
-                            <option value="">Select Vendor</option>
-                            @foreach (var vendor in ViewBag.VendorListData)
-                            {
-                                <option value="@vendor.id">@vendor.name</option>
-                            }
-                        </select>
+
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">Date</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="date" aria-describedby="emailHelp">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="vendorDropdown" class="col-sm-3 col-form-label">Vendor</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="vendorDropdown">
+                                <option value="">Select Vendor</option>
+                                @foreach (var vendor in ViewBag.VendorListData)
+                                {
+                                    <option value="@vendor.id">@vendor.name</option>
+                                }
+                            </select>
                     </div>
                 </div>
 
@@ -101,6 +145,7 @@
             </form>
             <button type="button" onclick="updateItemList()" class="btn btn-primary">Update</button>
         </div>
+        }
     </div>
 </div>
 <script>
