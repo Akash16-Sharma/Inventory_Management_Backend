@@ -100,8 +100,8 @@ namespace BackendAPI.Controllers
         [Route("AddOrder")]
         public IActionResult AddOrder([FromBody] Out_OrderRequest order, int StaffId)
         {
-            order.order.Order_Date=DateOnly.Parse(order.OrderDate);
-            order.order.Expected_Date=DateOnly.Parse(order.ExpectedDate);
+            //order.order.Order_Date=DateOnly.Parse(order.OrderDate);
+            //order.order.Expected_Date=DateOnly.Parse(order.ExpectedDate);
             order.order.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
@@ -153,8 +153,8 @@ namespace BackendAPI.Controllers
         public IActionResult UpdateOrder([FromBody] Out_OrderRequest order, int StaffId,string SellOrderId)
         {
             int Count = 0;
-            order.order.Order_Date = DateOnly.Parse(order.OrderDate);
-            order.order.Expected_Date = DateOnly.Parse(order.ExpectedDate);
+            //order.order.Order_Date = DateOnly.Parse(order.OrderDate);
+            //order.order.Expected_Date = DateOnly.Parse(order.ExpectedDate);
             order.order.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")

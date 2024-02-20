@@ -67,7 +67,7 @@ namespace BackendAPI.Repository
                             incOrder.Vendor_Id,
                             incOrder.Quantity,
                             incOrder.Actual_Date,
-                            incOrder.Expected_Date,
+                           // incOrder.Expected_Date,
                             incOrder.Order_Date,
                             VendorName = vendor.Name,
                             ItemName = item.Name,
@@ -127,7 +127,7 @@ namespace BackendAPI.Repository
                     data.Vendor_Id = order.Vendor_Id;
                     data.Item_Id = order.Item_Id;
                     data.Quantity = order.Quantity;
-                    data.Expected_Date = order.Expected_Date;
+                   // data.Expected_Date = order.Expected_Date;
                     data.Order_Date = order.Order_Date;
                     _Context.Inc_Order.Update(data);
                     _Context.SaveChanges();

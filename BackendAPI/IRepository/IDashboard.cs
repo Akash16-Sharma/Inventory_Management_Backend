@@ -10,6 +10,8 @@ namespace BackendAPI.IRepository
         List<Inc_Order> HighestPurchasingItem(int orgid);
         List<Item> TotalItems(int orgid);
         List<Item> LowStockItem(int orgid);
+
+       // List<Out_Order>GetOutOrderList
         
     }
 }

@@ -11,5 +11,7 @@ namespace BackendAPI.IRepository
         bool AddItem(Item Items);
         bool UpdateItem(Item Items);
         bool DeleteItem(int id,int staffid);
+
+       // string GenreateBarcode(string Barcode);
     }
 }

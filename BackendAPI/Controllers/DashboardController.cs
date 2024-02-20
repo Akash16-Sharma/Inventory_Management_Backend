@@ -155,5 +155,81 @@ namespace BackendAPI.Controllers
                 return BadRequest("Access denied. Insufficient privileges.");
             }
         }
+
+
+        //public IActionResult GetOutOrderChart(int orgId, int staffId) 
+        //{
+        //    var jan = 0;
+        //    var feb = 0;
+        //    var march = 0;
+        //    var april = 0;
+        //    var may = 0;
+        //    var jun = 0;
+        //    var july = 0;
+        //    var aug = 0;
+        //    var sep = 0;
+        //    var oct = 0;
+        //    var nov = 0;
+        //    var dec = 0;
+
+        //   var OutOrderList= _dashboardRepository.TotalOut_Order(orgId);
+
+        //    for(var i = 0; i < OutOrderList.Count; i++)
+        //    {
+        //       var Month= OutOrderList[i].Order_Date.ToString("MMMM");
+
+        //        if(Month == "1")
+        //        {
+        //            jan++;
+        //        }
+        //        if (Month == "2")
+        //        {
+        //            feb++;
+        //        }
+        //        if (Month == "3")
+        //        {
+        //            march++;
+        //        }
+        //        if (Month == "4")
+        //        {
+        //            april++;
+        //        }
+        //        if (Month == "5")
+        //        {
+        //            may++;
+        //        }
+        //        if (Month == "6")
+        //        {
+        //            jun++;
+        //        }
+        //        if (Month == "7")
+        //        {
+        //            july++;
+        //        }
+        //        if (Month == "8")
+        //        {
+        //            aug++;
+        //        }
+        //        if (Month == "9")
+        //        {
+        //            sep++;
+        //        }
+        //        if (Month == "10")
+        //        {
+        //            oct++;
+        //        }
+        //        if (Month == "11")
+        //        {
+        //            nov++;
+        //        }
+        //        if (Month == "12")
+        //        {
+        //            dec++;
+        //        }
+
+        //    }
+
+            
+        //}
     }
 }

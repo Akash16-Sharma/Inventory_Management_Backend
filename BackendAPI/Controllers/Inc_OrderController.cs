@@ -104,8 +104,8 @@ namespace BackendAPI.Controllers
         public IActionResult AddOrder([FromBody]IncOrderRequest ord, int StaffId)
         {
             ord.Inc_Orders.Updated_By = StaffId;
-            ord.Inc_Orders.Order_Date = DateOnly.Parse(ord.OrderDate);
-            ord.Inc_Orders.Expected_Date=DateOnly.Parse(ord.ExpectedDate);
+            //ord.Inc_Orders.Order_Date = DateOnly.Parse(ord.OrderDate);
+            //ord.Inc_Orders.Expected_Date=DateOnly.Parse(ord.ExpectedDate);
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
             {
@@ -156,8 +156,8 @@ namespace BackendAPI.Controllers
         public IActionResult UpdateOrder([FromBody] IncOrderRequest ord, int StaffId)
         {
             ord.Inc_Orders.Updated_By = StaffId;
-            ord.Inc_Orders.Order_Date = DateOnly.Parse(ord.OrderDate);
-            ord.Inc_Orders.Expected_Date = DateOnly.Parse(ord.ExpectedDate);//Converting String To DateOnly
+            //ord.Inc_Orders.Order_Date = DateOnly.Parse(ord.OrderDate);
+            //ord.Inc_Orders.Expected_Date = DateOnly.Parse(ord.ExpectedDate);//Converting String To DateOnly
             int count = 0;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
             if (CheckRoleTypeData.RoleType == "Admin")
