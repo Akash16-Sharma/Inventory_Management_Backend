@@ -1,0 +1,221 @@
+﻿using BackendAPI.Models;
+using FrontEnd_View.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using System.Text;
+using System.Text.Json.Nodes;
+
+namespace FrontEnd_View.Controllers
+{
+    public class OutgoingController : Controller
+    {
+        //this cntroler is for incoming order and vendor details 
+        Uri baseAddress = new Uri("http://localhost:39496/api");
+        private readonly HttpClient _client;
+
+        public OutgoingController()
+        {
+            _client = new HttpClient();
+            _client.BaseAddress = baseAddress;
+        }
+
+        public IActionResult Index() //for showing customer list 
+        {
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            List<Customer> customer = new List<Customer>();
+            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                "/Customer/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string data = responseMessage.Content.ReadAsStringAsync().Result;
+                customer = JsonConvert.DeserializeObject<List<Customer>>(data);
+            }
+
+            return View(customer);
+
+        }
+
+        public IActionResult CustomerAdd(Customer cust) //customer add
+        {
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            cust.OrgId = OrgId;
+            string data = JsonConvert.SerializeObject(cust);
+            StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage responseMessage = _client.PostAsync(_client.BaseAddress +
+                "/Customer/AddCustomer?StaffId=" + StaffId, con).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View();
+        }
+
+        public IActionResult CustomerEdit(Customer cust) //customer edit
+        {
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            cust.OrgId = OrgId;
+            string data = JsonConvert.SerializeObject(cust);
+            StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage responseMessage = _client.PutAsync(_client.BaseAddress +
+                "/Customer/UpdateCustomer?StaffId=" + StaffId, con).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View();
+        }
+
+        public IActionResult CustomerDelete(int Id)  //customer delete
+        {
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            HttpResponseMessage responseMessage = _client.DeleteAsync(_client.BaseAddress +
+               "/Customer/DeleteCustomer?id=" + Id + "&StaffId=" + StaffId).Result;
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
+
+        }
+
+
+
+        public IActionResult OutOrders()  //show orders
+        {
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            List<Vendor> vendor = new List<Vendor>();
+            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                "/Vendor/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string data = responseMessage.Content.ReadAsStringAsync().Result;
+                vendor = JsonConvert.DeserializeObject<List<Vendor>>(data);
+                var vendorlist = vendor.Select(s => new { name = s.Name, id = s.Id }).ToList();
+                ViewBag.VendorListData = vendorlist;
+            }
+
+            List<dynamic> items = new List<dynamic>();
+            HttpResponseMessage responseMessage2 = _client.GetAsync(_client.BaseAddress +
+                "/Item/GetItemInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+            if (responseMessage2.IsSuccessStatusCode)
+            {
+                string data = responseMessage2.Content.ReadAsStringAsync().Result;
+                items = JsonConvert.DeserializeObject<List<dynamic>>(data);
+                //  var itemlist = items.Select(s => new { name = s.name, id = s.id, opening_Stock = s.opening_Stock }).ToList();
+                var itemlists = items.Select(s => new { name = s.name, id = s.id, opening_Stock = s.opening_Stock }).ToList();
+
+                ViewBag.ItemLists = itemlists;
+            }
+
+            return View();
+        }
+
+        public IActionResult AddOutOrders(IncOrderRequest ord)
+        {
+
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            ord.Inc_Orders.OrgId = OrgId;
+            string data = JsonConvert.SerializeObject(ord);
+            StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage responseMessage = _client.PostAsync(_client.BaseAddress +
+                "/Inc_Order/AddOrder?StaffId=" + StaffId, con).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("GetIncORders");
+            }
+            return View();
+        }
+
+        public IActionResult GetOutORders()
+        {
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            List<Vendor> vendor = new List<Vendor>();
+            HttpResponseMessage responseMessage2 = _client.GetAsync(_client.BaseAddress +
+                "/Vendor/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+            if (responseMessage2.IsSuccessStatusCode)
+            {
+                string data = responseMessage2.Content.ReadAsStringAsync().Result;
+                vendor = JsonConvert.DeserializeObject<List<Vendor>>(data);
+                var vendorlist = vendor.Select(s => new { name = s.Name, id = s.Id }).ToList();
+                ViewBag.VendorListData = vendorlist;
+            }
+
+            List<dynamic> items = new List<dynamic>();
+            HttpResponseMessage itemresponseMessage = _client.GetAsync(_client.BaseAddress +
+                "/Item/GetItemInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+            if (itemresponseMessage.IsSuccessStatusCode)
+            {
+                string data = itemresponseMessage.Content.ReadAsStringAsync().Result;
+                items = JsonConvert.DeserializeObject<List<dynamic>>(data);
+                var itemlist = items.Select(s => new SelectListItem { Text = s.name, Value = s.id.ToString() }).ToList();
+                ViewBag.ItemListData = itemlist;
+
+            }
+
+
+            List<dynamic> incord = new List<dynamic>();
+            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                "/Inc_Order/GetOrderInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string data = responseMessage.Content.ReadAsStringAsync().Result;
+                incord = JsonConvert.DeserializeObject<List<dynamic>>(data);
+            }
+
+
+
+            return View(incord);
+
+        }
+
+        public object GetOrderInfoByPurchaseOrderId(string Id)
+        {
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            List<PurchaseInfoById> incord = new List<PurchaseInfoById>();
+            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                "/Inc_Order/GetOrderInfoByPurchaseOrderId?PurchaseOrderId=" + Id + "&StaffId=" + StaffId).Result;
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string data = responseMessage.Content.ReadAsStringAsync().Result;
+                incord = JsonConvert.DeserializeObject<List<PurchaseInfoById>>(data);
+            }
+
+            return incord;
+
+        }  //side view order
+
+        public IActionResult UpdateOutOrders(IncOrderRequest ord)
+        {
+
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            ord.Inc_Orders.OrgId = OrgId;
+            string data = JsonConvert.SerializeObject(ord);
+            StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage responseMessage = _client.PutAsync(_client.BaseAddress +
+                "/Inc_Order/UpdateOrder?StaffId=" + StaffId, con).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("GetIncORders");
+            }
+            return View();
+        }   //update orders
+
+    }
+}
