@@ -13,4 +13,10 @@
         public DateTime InsertedOn {  get; set; }
 
     }
+    public class StaffRoleRequest
+    {
+        public Staff Staff { get; set; }
+        public List<Access> StaffAccess { get; set; }
+    }
+
 }
