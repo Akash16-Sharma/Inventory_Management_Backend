@@ -15,7 +15,6 @@ namespace BackendAPI.Models
         public int Customer_Id { get; set; }
         public int Item_Id { get; set; }
         public int Quantity { get; set; }
-        public string Expected_Date { get; set; }
         public DateTime Actual_Date { get; set; }
         public int Updated_By { get; set; }
         public DateTime Inserted_On { get; set; }

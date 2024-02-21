@@ -96,7 +96,7 @@ namespace BackendAPI.Repository
                             outOrder.Id,
                             outOrder.Quantity,
                             outOrder.Actual_Date,
-                            outOrder.Expected_Date,
+                            //outOrder.Expected_Date,
                             CustomerName = customer.Name,
                             ItemName = item.Name,
                             ItemSellingPrice = item.Selling_Price,
@@ -120,7 +120,7 @@ namespace BackendAPI.Repository
                     data.Customer_Id = order.Customer_Id;
                     data.Updated_By = order.Updated_By;
                     data.Item_Id = order.Item_Id;
-                    data.Expected_Date = order.Expected_Date;
+                   // data.Expected_Date = order.Expected_Date;
                     data.Actual_Date = order.Actual_Date;
                     data.Quantity = order.Quantity;
                     data.Inserted_On = DateTime.Now;
