@@ -13,21 +13,8 @@ namespace BackendAPI.Repository
 
         public bool AddCustomer(Customer customer)
         {
-           customer.InsertedOn=DateTime.Now;
+           customer.Inserted_On=DateTime.Now;
             customer.IsActive=true;
-
-            var data = _context.Customer.Where(x => x.Id == customer.Id && x.OrgId == customer.OrgId).FirstOrDefault();
-            if(data != null)
-            {
-                data.IsActive = true;
-                data.InsertedOn = DateTime.Now;
-                _context.Customer.Update(data);
-                _context.SaveChanges();
-                return true;
-            }
-            
-           else
-            {
                 _context.Customer.Add(customer);
                 int i = _context.SaveChanges();
                 if (i > 0)
@@ -36,7 +23,7 @@ namespace BackendAPI.Repository
                 }
                 else
                     return false;
-            }
+            
         }
 
         public bool DeleteCustomer(int id, int StaffId)
@@ -46,6 +33,7 @@ namespace BackendAPI.Repository
             {
                 data.IsActive = false;
                 data.Updated_By = StaffId;
+                data.Inserted_On = DateTime.Now;
                 _context.Customer.Update(data);
                 _context.SaveChanges();
                 return true;
@@ -55,7 +43,7 @@ namespace BackendAPI.Repository
 
         public List<Customer> GetCustomer(int orgid)
         {
-            var data = _context.Customer.Where(x => x.Id == orgid).ToList();
+            var data = _context.Customer.Where(x => x.OrgId == orgid&&x.IsActive==true).ToList();
             return data;
         }
 
@@ -70,6 +58,7 @@ namespace BackendAPI.Repository
             var data = _context.Customer.Where(x => x.Id == customer.Id).FirstOrDefault();
             if (data != null)
             {
+                data.Inserted_On= DateTime.Now;
                 data.Name = customer.Name;
                 data.Email = customer.Email;
                 data.Phone = customer.Phone;

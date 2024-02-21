@@ -5,16 +5,18 @@ namespace BackendAPI.IRepository.Roles
     public interface IRoles
     {
         List<Staff> GetStaff(int OrgId);
-      bool AddStaff(Staff staff);
+      int AddStaff(Staff staff);
         bool DeleteStaff(Staff staff);
         bool UpdateStaff(Staff staff);
 
         Staff CheckStaffType(int StaffId);
 
-       
 
+        public Staff GetStaffById(int id);
         bool AddAccess(Access access);
         bool UpdateAccess(Access access);
        List <Access> CheckAccess(int StaffId);
+
+        List<Access> GetAccess(int StaffId);
     }
 }

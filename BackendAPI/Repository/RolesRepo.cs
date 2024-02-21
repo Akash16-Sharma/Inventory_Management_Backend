@@ -23,7 +23,7 @@ namespace BackendAPI.Repository
             return data;
         }
 
-        public bool AddStaff(Staff staff)
+        public int AddStaff(Staff staff)
         {
             string PassSecret = "b14ca5898a4e4133bbce2ea2315a1916";
             string password = _encDycPassword.EncryptPassword(PassSecret, staff.Password);
@@ -32,9 +32,9 @@ namespace BackendAPI.Repository
            int i= _datacontext.SaveChanges();
             if(i>0)
             {
-                return true;
+                return staff.Id;
             }
-            else { return false; }
+            else { return 0; }
 
         }
 
@@ -98,14 +98,45 @@ namespace BackendAPI.Repository
 
         public bool UpdateAccess(Access access)
         {
-            var Update_Data=_datacontext.StaffAccess.Where(x=>x.StaffId==access.StaffId).ToList();
-            return true;
+            var UpdateData=_datacontext.StaffAccess.Where(x=>x.StaffId==access.StaffId).ToList();
+            for(var i= 0; i < UpdateData.Count;i++)
+            {
+                _datacontext.StaffAccess.Remove(UpdateData[i]);
+                _datacontext.SaveChanges();
+                continue;
+            }
+            access.IsActive = true;
+            access.InsertedOn = DateTime.Now;
+            _datacontext.StaffAccess.Add(access);
+           int a= _datacontext.SaveChanges();
+
+            if( a > 0)
+            {
+                return true;
+            }
+            return false;
         }
 
         public Staff CheckStaffType(int StaffId)
         {
             
             var data=_datacontext.Staff.Where(x=>x.Id==StaffId).FirstOrDefault();
+            return data;
+        }
+
+        public Staff GetStaffById(int id)
+        {
+            var data=_datacontext.Staff.Where(x=>x.Id==id).FirstOrDefault();
+            if(data!=null)
+            {
+                return data;
+            }
+            return null;
+        }
+
+        public List<Access> GetAccess(int StaffId)
+        {
+            var data=_datacontext.StaffAccess.Where(x=>x.StaffId==StaffId).ToList();
             return data;
         }
     }

@@ -255,11 +255,11 @@ namespace BackendAPI.Models.Class
         //Function to get the id of unit type
         public int UnitTypeId(string UnitTypeName,int StaffId,int OrgId)
         {
-            var UnitData = _dataContext.Unit_Type.Where(x => x.Name == UnitTypeName&&x.OrgId==OrgId).FirstOrDefault();
+            var UnitData = _dataContext.Unit_Type.Where(x => x.Name == UnitTypeName).FirstOrDefault();
             if (UnitData != null)
             {
                 UnitData.IsActive = true;
-                UnitData.UpdatedBy = StaffId;
+                
                 UnitData.InsertedOn = DateTime.Now;
                 _dataContext.Unit_Type.Update(UnitData);
                 _dataContext.SaveChanges();
@@ -270,9 +270,9 @@ namespace BackendAPI.Models.Class
                 UnitType unit=new UnitType();
                 unit.Name = UnitTypeName;
                 unit.IsActive = true;
-                unit.UpdatedBy = StaffId;
+               
                 unit.InsertedOn = DateTime.Now;
-                unit.OrgId=OrgId;
+               
                 _dataContext.Unit_Type.Add(unit);
                 _dataContext.SaveChanges();
                 return unit.Id;

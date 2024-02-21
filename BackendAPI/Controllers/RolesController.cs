@@ -28,25 +28,56 @@ namespace BackendAPI.Controllers
 
         [HttpPost]
         [Route("AddStaff")]
-        public IActionResult AddStaff([FromBody]Staff staff)
+        public IActionResult AddStaff([FromBody] StaffRoleRequest Staff)
         {
-           bool IsSaved= _Roles.AddStaff(staff);
-            if(IsSaved)
+            
+            int StaffId = _Roles.AddStaff(Staff.Staff);
+            if(StaffId>0)
             {
+                for (var i = 0; i < Staff.StaffAccess.Count; i++)
+                {
+                    Staff.StaffAccess[i].StaffId = StaffId;
+                    bool IsAdded = _Roles.AddAccess(Staff.StaffAccess[i]);
+                    if(IsAdded&&i==Staff.StaffAccess.Count)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        
+                        continue;
+                    }
+                }
                 return Ok();
             }
             else
+            {
                 return BadRequest();
+            }
+
+            
         }
 
         [HttpPut]
         [Route("UpdateStaff")]
-        public IActionResult UpdateStaff([FromBody]Staff staff)
+        public IActionResult UpdateStaff([FromBody] StaffRoleRequest staff)
         {
-            bool IsUpdated=_Roles.UpdateStaff(staff);
+            bool IsUpdated=_Roles.UpdateStaff(staff.Staff);
             if(IsUpdated)
             {
-                return Ok();
+               for(var i = 0;i<staff.StaffAccess.Count;i++)
+                {
+                    staff.StaffAccess[i].StaffId = staff.Staff.Id;
+                    bool IsAccessUpdate = _Roles.UpdateAccess(staff.StaffAccess[i]);
+                    if (IsAccessUpdate && i == staff.StaffAccess.Count)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
             }
             return BadRequest();
         }
@@ -73,6 +104,21 @@ namespace BackendAPI.Controllers
                 return Ok();
             }
             return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("GetAccessById")]
+        public IActionResult GetAccessByid(int Staffid)
+        {
+            var data = _Roles.GetAccess(Staffid);
+            if(data == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(data);
+            }
         }
     }
 }
