@@ -6,6 +6,7 @@ using BackendAPI.Models.Roles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Drawing;
 
 namespace BackendAPI.Controllers
 {
@@ -65,45 +66,57 @@ namespace BackendAPI.Controllers
         [Route("AddItem")]
         public IActionResult AddItem([FromBody] Item item, int StaffId)
         {
-            if(item.Unit_Type_Id==0||item.Category_Id==0||item.Vendor_Id==0)
+            if (item.Unit_Type_Id == 0 || item.Category_Id == 0 || item.Vendor_Id == 0)
             {
                 return BadRequest();
             }
+
             item.Updated_By = StaffId;
-            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
-            if (CheckRoleTypeData.RoleType == "Admin")
-            {
-                bool IsSaved = _itemRepo.AddItem(item);
-                if (IsSaved)
+
+            // Generate and save the barcode
+           // string generatedBarcode = item.GenerateAndSaveBarcode();
+           // byte[] ImageBytes = Convert.FromBase64String(generatedBarcode);
+           
+                var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+                if (CheckRoleTypeData.RoleType == "Admin")
                 {
-                    return Ok(new { Message = "Item added successfully." });
+                    bool IsSaved = _itemRepo.AddItem(item);
+
+                    if (IsSaved)
+                    {
+                        return Ok(new { Message = "Item added successfully." });
+                    }
+                    else
+                    {
+                        return BadRequest(new { Message = "Failed to add the item." });
+                    }
                 }
                 else
                 {
-                    return BadRequest(new { Message = "Failed to add the item." });
-                }
-            }
-            else
-            {
-                var AccessData = _roles.CheckAccess(StaffId);
-                for (int i = 0; i < AccessData.Count; i++)
-                {
-                    if (AccessData[i].SideBarName == "Item" && AccessData[i].IsCreate == true)
+                    var AccessData = _roles.CheckAccess(StaffId);
+                    for (int i = 0; i < AccessData.Count; i++)
                     {
-                        bool IsSaved = _itemRepo.AddItem(item);
-                        if (IsSaved)
+                        if (AccessData[i].SideBarName == "Item" && AccessData[i].IsCreate == true)
                         {
-                            return Ok(new { Message = "Item added successfully." });
-                        }
-                        else
-                        {
-                            return BadRequest(new { Message = "Failed to add the item." });
+
+                            // Save the updated item to the repository
+                            bool IsSaved = _itemRepo.AddItem(item);
+
+                            if (IsSaved)
+                            {
+                                return Ok(new { Status = 200, Message = "Item added successfully." });
+                            }
+                            else
+                            {
+                                return BadRequest(new { Status = 400, Message = "Failed to add the item." });
+                            }
                         }
                     }
                 }
-            }
+            
             return BadRequest(new { Message = "Invalid request parameters." });
         }
+        
 
         [HttpPut]
         [Route("UpdateItem")]
@@ -111,6 +124,7 @@ namespace BackendAPI.Controllers
         {
             item.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
+            string generatedBarcode = item.GenerateAndSaveBarcode();
             if (CheckRoleTypeData.RoleType == "Admin")
             {
                
