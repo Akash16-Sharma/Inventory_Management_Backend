@@ -66,10 +66,7 @@ namespace BackendAPI.Controllers
         [Route("AddItem")]
         public IActionResult AddItem([FromBody] Item item, int StaffId)
         {
-            if (item.Unit_Type_Id == 0 || item.Category_Id == 0 || item.Vendor_Id == 0)
-            {
-                return BadRequest();
-            }
+            
 
             item.Updated_By = StaffId;
 
@@ -124,7 +121,7 @@ namespace BackendAPI.Controllers
         {
             item.Updated_By = StaffId;
             var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
-            string generatedBarcode = item.GenerateAndSaveBarcode();
+            //string generatedBarcode = item.GenerateAndSaveBarcode();
             if (CheckRoleTypeData.RoleType == "Admin")
             {
                

@@ -149,7 +149,7 @@ namespace BackendAPI.Models.Class
                         item.Name = Cat_Name;
                         item.Unit_Type_Id = UnitId;
                         item.Category_Id = CatId;
-                        item.Vendor_Id = VendId;
+                      //  item.Vendor_Id = VendId;
                         item.Org_Id = OrgId;
                         item.Selling_Price = SellingPrice;
                         item.Buying_Price = buyingPrice;
@@ -211,7 +211,7 @@ namespace BackendAPI.Models.Class
                                 item.Name = Cat_Name;
                                 item.Unit_Type_Id = UnitId;
                                 item.Category_Id = CatId;
-                                item.Vendor_Id = VendId;
+                               // item.Vendor_Id = VendId;
                                 item.Org_Id = OrgId;
                                 item.Selling_Price = SellingPrice;
                                 item.Buying_Price = buyingPrice;

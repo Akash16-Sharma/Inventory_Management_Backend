@@ -72,8 +72,8 @@ namespace BackendAPI.Repository
                 existingItem.Selling_Price = Item.Selling_Price;
                 existingItem.Buying_Price = Item.Buying_Price;
                 existingItem.Opening_Stock = Item.Opening_Stock;
-                existingItem.Barcode = Item.Barcode;
-                existingItem.Vendor_Id = Item.Vendor_Id;
+               // existingItem.Barcode = Item.Barcode;
+               // existingItem.Vendor_Id = Item.Vendor_Id;
                 existingItem.Unit_Type_Id = Item.Unit_Type_Id;
                 existingItem.Category_Id = Item.Category_Id;
                 existingItem.InsertedOn = DateTime.Now;
@@ -99,7 +99,7 @@ namespace BackendAPI.Repository
         {
             var data = (from category in _Item.Category
                         join Item in _Item.Items on category.Id equals Item.Category_Id
-                        join vendor in _Item.Vendor on Item.Vendor_Id equals vendor.Id
+                        //join vendor in _Item.Vendor on Item.Vendor_Id equals vendor.Id
                         join unitType in _Item.Unit_Type on Item.Unit_Type_Id equals unitType.Id
                         where Item.Org_Id == orgid && Item.IsActive == true
                         select new
@@ -110,7 +110,7 @@ namespace BackendAPI.Repository
                             Item.Opening_Stock,
                             Item.Id,
                             CategoryName = category.Name,  
-                            VendorName = vendor.Name,      
+                           // VendorName = vendor.Name,      
                             UnitTypeName = unitType.Name,  
                         }).ToList<object>();
 

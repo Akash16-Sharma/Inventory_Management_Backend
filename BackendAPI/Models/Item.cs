@@ -20,50 +20,49 @@ namespace BackendAPI.Models
         public decimal Selling_Price { get; set; }
         public int Stock_Alert { get; set; }
         public int Opening_Stock { get; set; }
-        public int Vendor_Id { get; set; }
-        public string Barcode { get; set; }
+       
         public int Updated_By { get; set; }
         public bool IsActive { get; set; }
         public DateTime InsertedOn { get; set; }
 
-        public string GenerateAndSaveBarcode()
-        {
+        //public string GenerateAndSaveBarcode()
+        //{
            
-            // Generate barcode and save it to the Barcode property
-            Barcode = GenerateBarcode(Name);
+        //    // Generate barcode and save it to the Barcode property
+        //    Barcode = GenerateBarcode(Name);
 
-            // Return the generated barcode
-            return Barcode;
-        }
+        //    // Return the generated barcode
+        //    return Barcode;
+        //}
 
-        private string GenerateBarcode(string content, BarcodeFormat format = BarcodeFormat.QR_CODE, int width = 300, int height = 300)
-        {
-            BarcodeWriter<Bitmap> barcodeWriter = new BarcodeWriter<Bitmap>();
-            barcodeWriter.Format = format;
-            barcodeWriter.Options = new QrCodeEncodingOptions
-            {
-                Width = width,
-                Height = height
-            };
+        //private string GenerateBarcode(string content, BarcodeFormat format = BarcodeFormat.QR_CODE, int width = 300, int height = 300)
+        //{
+        //    BarcodeWriter<Bitmap> barcodeWriter = new BarcodeWriter<Bitmap>();
+        //    barcodeWriter.Format = format;
+        //    barcodeWriter.Options = new QrCodeEncodingOptions
+        //    {
+        //        Width = width,
+        //        Height = height
+        //    };
 
-            // Set a renderer here (using the default renderer for now)
-            //barcodeWriter.Renderer = new ZXing.Rendering.BitmapRenderer();
-            barcodeWriter.Renderer = new BitmapRenderer();
-            using (Bitmap barcodeBitmap = barcodeWriter.Write(content))
-            {
-                // Convert the barcode bitmap to base64 string and return
-               return Convert.ToBase64String(BitmapToBytes(barcodeBitmap));
+        //    // Set a renderer here (using the default renderer for now)
+        //    //barcodeWriter.Renderer = new ZXing.Rendering.BitmapRenderer();
+        //    barcodeWriter.Renderer = new BitmapRenderer();
+        //    using (Bitmap barcodeBitmap = barcodeWriter.Write(content))
+        //    {
+        //        // Convert the barcode bitmap to base64 string and return
+        //       return Convert.ToBase64String(BitmapToBytes(barcodeBitmap));
                
-            }
-        }
+        //    }
+        //}
 
-        private byte[] BitmapToBytes(Bitmap bitmap)
-        {
-            using (var stream = new System.IO.MemoryStream())
-            {
-                bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                return stream.ToArray();
-            }
-        }
+        //private byte[] BitmapToBytes(Bitmap bitmap)
+        //{
+        //    using (var stream = new System.IO.MemoryStream())
+        //    {
+        //        bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+        //        return stream.ToArray();
+        //    }
+        //}
     }
 }
