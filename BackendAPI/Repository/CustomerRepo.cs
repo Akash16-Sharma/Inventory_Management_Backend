@@ -55,7 +55,7 @@ namespace BackendAPI.Repository
 
         public List<Customer> GetCustomer(int orgid)
         {
-            var data = _context.Customer.Where(x => x.Id == orgid).ToList();
+            var data = _context.Customer.Where(x => x.OrgId == orgid).ToList();
             return data;
         }
 
