@@ -1,6 +1,7 @@
 ﻿using BackendAPI.IRepository;
 using BackendAPI.IRepository.Roles;
 using BackendAPI.Models;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -111,39 +112,34 @@ namespace BackendAPI.Controllers
                     order.order.Item_Id = order.OrderItems[i].Item_Id;
                     order.order.Quantity= order.OrderItems[i].Quantity;
                     bool IsAdd = _OutOrder.AddOrder(order.order);
-                    if (IsAdd&&i==order.OrderItems.Count)
-                    {
-                        return Ok("Order added successfully.");
-                    }
-                    else
-                    {
+                    
                         continue;
-                    }
+                    
                 }
+                return Ok("Order added successfully.");
             }
             else
             {
+                var a=0;
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsCreate == true)
                     {
-                        for (var a = 0; a < order.OrderItems.Count; a++)
+                        for (a = 0; a < order.OrderItems.Count; a++)
                         {
                             order.order.Item_Id = order.OrderItems[a].Item_Id;
                             order.order.Quantity = order.OrderItems[a].Quantity;
                             bool IsAdd = _OutOrder.AddOrder(order.order);
-                            if (IsAdd&&a==order.OrderItems.Count)
-                            {
-                                return Ok("Order added successfully.");
-                            }
-                            else
-                            {
                                 continue;
-                            }
+                        }
+                        if(a>0)
+                        {
+                            return Ok("Order added successfully.");
                         }
                     }
                 }
+                
             }
             return BadRequest("Access denied.");
         }
@@ -166,7 +162,7 @@ namespace BackendAPI.Controllers
                     bool IsUpdate = _OutOrder.UpdateOrder(order.order,SellOrderId,Count);
                     if (IsUpdate&&i==order.OrderItems.Count)
                     {
-                        return Ok("Order updated successfully.");
+                        
                     }
                     else
                     {
@@ -174,30 +170,29 @@ namespace BackendAPI.Controllers
                         continue;
                     }
                 }
+                return Ok("Order updated successfully.");
             }
             else
             {
+                var j = 0;
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsModify == true)
                     {
-                        for (var j = 0; j < order.OrderItems.Count; j++)
+                        for ( j = 0; j < order.OrderItems.Count; j++)
                         {
                             order.order.Item_Id = order.OrderItems[j].Item_Id;
                             order.order.Quantity = order.OrderItems[j].Quantity;
-                            bool IsUpdate = _OutOrder.UpdateOrder(order.order,SellOrderId,Count);
-                            if (IsUpdate&&j==order.OrderItems.Count)
-                            {
-                                return Ok("Order updated successfully.");
-                            }
-                            else
-                            {
+                          _OutOrder.UpdateOrder(order.order, SellOrderId, Count);
                                 Count++;
                                 continue;
-                            }
+                            
                         }
-                        return Ok("Order updated successfully.");
+                        if(j>0)
+                        {
+                            return Ok("Order updated successfully.");
+                        }
                     }
                 }
             }

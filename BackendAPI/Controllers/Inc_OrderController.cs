@@ -123,27 +123,26 @@ namespace BackendAPI.Controllers
                         continue;
                     }
                 }
+                return Ok("Order added successfully.");
             }
             else
             {
+                var a = 0;
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
                     if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsCreate == true)
                     {
-                        for (var a = 0; a < ord.OrderItems.Count; a++)
+                        for ( a = 0; a < ord.OrderItems.Count; a++)
                         {
                             ord.Inc_Orders.Item_Id = ord.OrderItems[a].Item_Id;
                             ord.Inc_Orders.Quantity = ord.OrderItems[a].Quantity;
                             bool IsAdd = _incord.AddOrder(ord.Inc_Orders);
-                            if (IsAdd&&a==ord.OrderItems.Count)
-                            {
-                                return Ok("Order added successfully.");
-                            }
-                            else
-                            {
-                                continue;
-                            }
+                            continue;
+                        }
+                        if ( a>0)
+                        {
+                            return Ok("Order added successfully.");
                         }
                     }
                 }
@@ -167,39 +166,32 @@ namespace BackendAPI.Controllers
                     ord.Inc_Orders.Item_Id = ord.OrderItems[i].Item_Id;
                     ord.Inc_Orders.Quantity = ord.OrderItems[i].Quantity;
                     
-                    bool IsUpdate = _incord.UpdateOrder(ord.Inc_Orders, ord.Inc_Orders.Purchase_Order_Id,count);
-                    if (IsUpdate&&i==ord.OrderItems.Count)
-                    {
-                        return Ok("Order updated successfully.");
-                    }
-                    else
-                    {
+                    _incord.UpdateOrder(ord.Inc_Orders, ord.Inc_Orders.Purchase_Order_Id,count);
                         count++;
                         continue;
-                    }
                 }
+                return Ok("Order updated successfully.");
             }
             else
             {
+                var a = 0;
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsModify == true)
+                    if (Accessdata[i].SideBarName == "IncOrder" && Accessdata[i].IsModify == true)
                     {
                         for (var a = 0; a < ord.OrderItems.Count; a++)
                         {
                             ord.Inc_Orders.Item_Id = ord.OrderItems[a].Item_Id;
                             ord.Inc_Orders.Quantity = ord.OrderItems[a].Quantity;
                             bool IsUpdate = _incord.UpdateOrder(ord.Inc_Orders, ord.Inc_Orders.Purchase_Order_Id, count);
-                            if (IsUpdate&&a==ord.OrderItems.Count)
-                            {
-                                return Ok("Order updated successfully.");
-                            }
-                            else
-                            {
                                 count++;
                                 continue;
-                            }
+                            
+                        }
+                        if(a>0)
+                        {
+                            return Ok("Order updated successfully.");
                         }
                     }
                 }

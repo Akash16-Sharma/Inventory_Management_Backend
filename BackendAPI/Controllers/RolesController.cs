@@ -38,17 +38,10 @@ namespace BackendAPI.Controllers
                 {
                     Staff.StaffAccess[i].StaffId = StaffId;
                     bool IsAdded = _Roles.AddAccess(Staff.StaffAccess[i]);
-                    if(IsAdded&&i==Staff.StaffAccess.Count)
-                    {
-                        return Ok();
-                    }
-                    else
-                    {
-                        
                         continue;
-                    }
+                    
                 }
-                return Ok();
+                return Ok("Roles Added successfully.");
             }
             else
             {
@@ -69,15 +62,9 @@ namespace BackendAPI.Controllers
                 {
                     staff.StaffAccess[i].StaffId = staff.Staff.Id;
                     bool IsAccessUpdate = _Roles.UpdateAccess(staff.StaffAccess[i]);
-                    if (IsAccessUpdate && i == staff.StaffAccess.Count)
-                    {
-                        return Ok();
-                    }
-                    else
-                    {
                         continue;
-                    }
                 }
+                return Ok("Roles updated successfully.");
             }
             return BadRequest();
         }
