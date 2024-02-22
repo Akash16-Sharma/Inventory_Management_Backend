@@ -180,7 +180,7 @@ namespace BackendAPI.Controllers
                 {
                     if (Accessdata[i].SideBarName == "IncOrder" && Accessdata[i].IsModify == true)
                     {
-                        for (var a = 0; a < ord.OrderItems.Count; a++)
+                        for ( a = 0; a < ord.OrderItems.Count; a++)
                         {
                             ord.Inc_Orders.Item_Id = ord.OrderItems[a].Item_Id;
                             ord.Inc_Orders.Quantity = ord.OrderItems[a].Quantity;

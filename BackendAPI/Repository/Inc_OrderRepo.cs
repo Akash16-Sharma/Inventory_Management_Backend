@@ -20,8 +20,16 @@ namespace BackendAPI.Repository
             order.Actual_Date = DateTime.Now; //testing purpose
            
             order.IsActive = true;
+          
+
+            var data=_Context.Items.Where(x=>x.Id==order.Item_Id).FirstOrDefault();
+            data.Opening_Stock += order.Quantity;
+            data.InsertedOn=DateTime.Now;
+            data.Updated_By = order.Updated_By;
+            _Context.Items.Update(data);
+            _Context.SaveChanges();
             _Context.Inc_Order.Add(order);
-           int i= _Context.SaveChanges();
+            int i= _Context.SaveChanges();
             if(i>0)
             {
                 return true;
