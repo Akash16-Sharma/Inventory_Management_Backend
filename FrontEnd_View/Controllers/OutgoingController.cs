@@ -87,21 +87,20 @@ namespace FrontEnd_View.Controllers
         }
 
 
-
-        public IActionResult OutOrders()  //show orders
+        public IActionResult OutOrder()  //show orders
         {
             int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
             int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
-            List<Vendor> vendor = new List<Vendor>();
+            List<Customer> customer = new List<Customer>();
             HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
-                "/Vendor/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+                "/Customer/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
 
             if (responseMessage.IsSuccessStatusCode)
             {
                 string data = responseMessage.Content.ReadAsStringAsync().Result;
-                vendor = JsonConvert.DeserializeObject<List<Vendor>>(data);
-                var vendorlist = vendor.Select(s => new { name = s.Name, id = s.Id }).ToList();
-                ViewBag.VendorListData = vendorlist;
+                customer = JsonConvert.DeserializeObject<List<Customer>>(data);
+                var customerlist = customer.Select(s => new { name = s.Name, id = s.Id }).ToList();
+                ViewBag.customerListData = customerlist;
             }
 
             List<dynamic> items = new List<dynamic>();
@@ -120,37 +119,37 @@ namespace FrontEnd_View.Controllers
             return View();
         }
 
-        public IActionResult AddOutOrders(IncOrderRequest ord)
+        public IActionResult AddOutOrders(Out_OrderRequest ord)
         {
 
             int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
             int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
-            ord.Inc_Orders.OrgId = OrgId;
+            ord.order.OrgId = OrgId;
             string data = JsonConvert.SerializeObject(ord);
             StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage responseMessage = _client.PostAsync(_client.BaseAddress +
-                "/Inc_Order/AddOrder?StaffId=" + StaffId, con).Result;
+                "/Out_Order/AddOrder?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("GetIncORders");
+                return RedirectToAction("GetOutOrders");
             }
             return View();
         }
 
-        public IActionResult GetOutORders()
+        public IActionResult GetOutOrders()
         {
             int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
             int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
-            List<Vendor> vendor = new List<Vendor>();
-            HttpResponseMessage responseMessage2 = _client.GetAsync(_client.BaseAddress +
-                "/Vendor/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+            List<Customer> customer = new List<Customer>();
+            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                "/Customer/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
 
-            if (responseMessage2.IsSuccessStatusCode)
+            if (responseMessage.IsSuccessStatusCode)
             {
-                string data = responseMessage2.Content.ReadAsStringAsync().Result;
-                vendor = JsonConvert.DeserializeObject<List<Vendor>>(data);
-                var vendorlist = vendor.Select(s => new { name = s.Name, id = s.Id }).ToList();
-                ViewBag.VendorListData = vendorlist;
+                string data = responseMessage.Content.ReadAsStringAsync().Result;
+                customer = JsonConvert.DeserializeObject<List<Customer>>(data);
+                var customerlist = customer.Select(s => new { name = s.Name, id = s.Id }).ToList();
+                ViewBag.customerListData = customerlist;
             }
 
             List<dynamic> items = new List<dynamic>();
@@ -168,12 +167,12 @@ namespace FrontEnd_View.Controllers
 
 
             List<dynamic> incord = new List<dynamic>();
-            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
-                "/Inc_Order/GetOrderInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+            HttpResponseMessage responseMessage2 = _client.GetAsync(_client.BaseAddress +
+                "/Out_Order/GetOrderInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
 
-            if (responseMessage.IsSuccessStatusCode)
+            if (responseMessage2.IsSuccessStatusCode)
             {
-                string data = responseMessage.Content.ReadAsStringAsync().Result;
+                string data = responseMessage2.Content.ReadAsStringAsync().Result;
                 incord = JsonConvert.DeserializeObject<List<dynamic>>(data);
             }
 
@@ -183,17 +182,17 @@ namespace FrontEnd_View.Controllers
 
         }
 
-        public object GetOrderInfoByPurchaseOrderId(string Id)
+        public object GetOrderInfoBySellOrderId(string Id)
         {
             int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
-            List<PurchaseInfoById> incord = new List<PurchaseInfoById>();
+            List<SellInfoById> incord = new List<SellInfoById>();
             HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
-                "/Inc_Order/GetOrderInfoByPurchaseOrderId?PurchaseOrderId=" + Id + "&StaffId=" + StaffId).Result;
+                "/Out_Order/GetOrderInfoBySalesOrderId?SalesOrderID=" + Id + "&StaffId=" + StaffId).Result;
 
             if (responseMessage.IsSuccessStatusCode)
             {
                 string data = responseMessage.Content.ReadAsStringAsync().Result;
-                incord = JsonConvert.DeserializeObject<List<PurchaseInfoById>>(data);
+                incord = JsonConvert.DeserializeObject<List<SellInfoById>>(data);
             }
 
             return incord;
@@ -209,7 +208,7 @@ namespace FrontEnd_View.Controllers
             string data = JsonConvert.SerializeObject(ord);
             StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage responseMessage = _client.PutAsync(_client.BaseAddress +
-                "/Inc_Order/UpdateOrder?StaffId=" + StaffId, con).Result;
+                "/Out_Order/UpdateOrder?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("GetIncORders");

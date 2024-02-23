@@ -1,25 +1,25 @@
 ﻿@{
-    ViewData["Title"] = "IncOrders";
+    ViewData["Title"] = "OutOrders";
 }
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
-<a href="/Incoming/GetIncOrders" style="float: right;" class="btn btn-link">Back to List</a>
+<a href="/Outgoing/GetOutOrders" style="float: right;" class="btn btn-link">Back to List</a>
 
 <h1>Orders</h1>
 <form style="padding:10px">
 
     <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Vendor</label>
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Customer</label>
         <div class="col-sm-4">
             @Html.DropDownList("SelectedState",
-            new SelectList(ViewBag.VendorListData, "id", "name"),
-            "Select Vendor",
+            new SelectList(ViewBag.customerListData, "id", "name"),
+            "Select Customer",
             new { @class = "form-control", @id = "inputVend"})
         </div>
     </div>
-    
+
     <div class="form-group row">
         <label for="inputEmail3" class="col-sm-2 col-form-label">Date</label>
         <div class="col-sm-4">
@@ -28,34 +28,34 @@
     </div>
 
     <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Purchase Order</label>
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Sell Order</label>
         <div class="col-sm-4">
             <input type="text" class="form-control" id="purOrd" aria-describedby="emailHelp" placeholder="PO-00001">
         </div>
     </div>
 
-	<div class="container">
-		<div class="row clearfix">
-			<div class="col-md-10 table-responsive">
-				<table class="table table-bordered table-hover table-sortable" id="tab_logic">
-					<thead>
-						<tr>
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-10 table-responsive">
+                <table class="table table-bordered table-hover table-sortable" id="tab_logic">
+                    <thead>
+                        <tr>
                             <th class="text-left">
-								Item
-							</th>
-							<th class="text-center col-sm-2">
-								Available Qty
-							</th>
+                                Item
+                            </th>
+                            <th class="text-center col-sm-2">
+                                Available Qty
+                            </th>
                             <th class="text-center col-sm-2">
                                 Quantity
                             </th>
-							<th class="text-center col-sm-1" >
-								Option
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr id='addr0' data-id="0" class="hidden">
+                            <th class="text-center col-sm-1">
+                                Option
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id='addr0' data-id="0" class="hidden">
                             <td data-name="name">
                                 <select name='name' class="form-control item-select">
                                     <option value="">Select Item</option>
@@ -71,26 +71,26 @@
                             <td data-name="avqty">
                                 <input type="number" name='avqty' placeholder='Quantity' class="form-control avqty-input" />
                             </td>
-							@* <td data-name="sel" >
-                                <select name="sel0" class="form-control">
-									<option value="">Select Option</option>
-									<option value="1">Option 1</option>
-									<option value="2">Option 2</option>
-									<option value="3">Option 3</option>
-								</select>
-							</td> *@
-							<td data-name="del">
-								<button name="del0" class='btn btn-danger glyphicon glyphicon-remove row-remove'><span aria-hidden="true">×</span></button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-        <button id="add_row" type="button" class="btn btn-success float-right">+</button>
-			</div>
-		</div>
-		
-    <button type="button" class="btn btn-primary float-left" onclick="OnSubmit()">Submit</button>
-	</div>
+                            @* <td data-name="sel" >
+                            <select name="sel0" class="form-control">
+                            <option value="">Select Option</option>
+                            <option value="1">Option 1</option>
+                            <option value="2">Option 2</option>
+                            <option value="3">Option 3</option>
+                            </select>
+                            </td> *@
+                            <td data-name="del">
+                                <button name="del0" class='btn btn-danger glyphicon glyphicon-remove row-remove'><span aria-hidden="true">×</span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button id="add_row" type="button" class="btn btn-success float-right">+</button>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary float-left" onclick="OnSubmit()">Submit</button>
+    </div>
 
 </form>
 
@@ -210,10 +210,9 @@
         debugger;
 
         var inc_Orders = {
-            Purchase_Order_Id:$("#purOrd").val(),
-            Vendor_Id: $("#inputVend").val(),
+            Sales_Order_Id: $("#purOrd").val(),
+            Customer_Id: $("#inputVend").val(),
             Order_Date: $("#datepicker").val(),
-            Actual_Date: $("#datepicker").val(),
         };
 
         // Collect data from each row
@@ -230,9 +229,9 @@
         });
 
         $.ajax({
-            url: '/Incoming/AddIncOrders',
+            url: '/Outgoing/AddOutOrders',
             type: 'POST',
-            data: { Inc_Orders: inc_Orders, OrderItems: orderItems },
+            data: { order: inc_Orders, OrderItems: orderItems },
             success: function (response) {
                 location.reload();
                 console.log(response);

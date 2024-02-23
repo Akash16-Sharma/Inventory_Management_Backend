@@ -19,10 +19,7 @@ namespace BackendAPI.Models
         public int Item_Id { get; set; }
         public int Quantity { get; set; }
         public string Order_Date { get; set; }
-       
-       
-       
-        public DateTime Actual_Date { get; set; }
+        public string Actual_Date { get; set; }
         public int Updated_By { get; set; }
         public DateTime Inserted_On { get; set; }
         public int OrgId { get; set; }

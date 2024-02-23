@@ -6,11 +6,11 @@
     var itemCount = itemList?.Count ?? 0;
 }
 
-<h2>Purchase</h2>
+<h2>Selling</h2>
 
 <div style="display:flex;flex-direction: row-reverse;margin-top:-30px;margin-bottom:15px">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <a href="@Url.Action("IncOrders", "Incoming")" class="btn btn-primary">ADD</a>
+    <a href="@Url.Action("OutOrder", "Outgoing")" class="btn btn-primary">ADD</a>
 
 </div>
 
@@ -21,19 +21,18 @@
         height: 400px; /* Adjust the height as needed */
     }
 
-    .hide{
-        display:none;
-
+    .hide {
+        display: none;
     }
 </style>
-@if(isMob == 1)
+@if (isMob == 1)
 {
     <div class="col-md-6 hide" id="po">
-        <h4>Purchase Order</h4>
+        <h4>Selling Order</h4>
         <form style="padding:10px">
 
             <div class="form-group row" style="flex-wrap:nowrap">
-                <label for="" class="col-sm-3 col-form-label">Purchase ID</label>
+                <label for="" class="col-sm-3 col-form-label">Selling ID</label>
                 <label id="purId" class="col-sm-4 col-form-label"></label>
             </div>
 
@@ -49,7 +48,7 @@
                 <div class="col-sm-4">
                     <select class="form-control" id="vendorDropdown">
                         <option value="">Select Vendor</option>
-                        @foreach (var vendor in ViewBag.VendorListData)
+                        @foreach (var vendor in ViewBag.customerListData)
                         {
                             <option value="@vendor.id">@vendor.name</option>
                         }
@@ -76,10 +75,10 @@
                 <thead>
                     <tr>
                         <th>
-                            Vendor Name
+                            Customer Name
                         </th>
                         <th>
-                            Purchase ID
+                            Selling ID
                         </th>
                         <th>
                             Order Date
@@ -89,12 +88,12 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr class="clickable-row" data-id="@item.purchase_Order_Id" onclick="OpenPurchaseInfo('@item.purchase_Order_Id')">
+                        <tr class="clickable-row" data-id="@item.purchase_Order_Id" onclick="OpenPurchaseInfo('@item.sales_Order_Id')">
                             <td>
-                                @item.vendorName
+                                @item.customerName
                             </td>
                             <td>
-                                @item.purchase_Order_Id
+                                @item.sales_Order_Id
                             </td>
                             <td>
                                 @item.order_Date
@@ -128,45 +127,44 @@
                         <div class="col-sm-4">
                             <select class="form-control" id="vendorDropdown">
                                 <option value="">Select Vendor</option>
-                                @foreach (var vendor in ViewBag.VendorListData)
+                                @foreach (var vendor in ViewBag.customerListData)
                                 {
                                     <option value="@vendor.id">@vendor.name</option>
                                 }
                             </select>
+                        </div>
                     </div>
-                </div>
 
-                <label style="display:none" id="ID"></label>
+                    <label style="display:none" id="ID"></label>
 
-                <div id="editableTableContainer">
-                   
-                </div>
+                    <div id="editableTableContainer">
+                    </div>
 
-            </form>
-            <button type="button" onclick="updateItemList()" class="btn btn-primary">Update</button>
-        </div>
+                </form>
+                <button type="button" onclick="updateItemList()" class="btn btn-primary">Update</button>
+            </div>
         }
     </div>
 </div>
 <script>
     var itemListData = @Html.Raw(Json.Serialize(itemList));
 
-        $(document).on('change', '.dd select', function () {
+    $(document).on('change', '.dd select', function () {
         $(this).find('option').removeAttr('selected');
 
         // Set 'selected' attribute for the chosen option
         var selectedValue = $(this).val();
         $(this).find('option[value="' + selectedValue + '"]').attr('selected', 'selected');
-            // Your additional logic here
-        });
+        // Your additional logic here
+    });
 
     function OpenPurchaseInfo(purchase_Order_Id) {
 
         $.ajax({
-            url: '/Incoming/GetOrderInfoByPurchaseOrderId',
+            url: '/Outgoing/GetOrderInfoBySellOrderId',
             type: 'GET',
             data: { Id: purchase_Order_Id },
-            dataType: 'json', 
+            dataType: 'json',
             success: function (response) {
                 $('#editableTableContainer').html(generateEditableTable(response));
                 $("#po").removeClass("hide");
@@ -217,8 +215,7 @@
         return dropdownHtml;
     }
 
-    function updateItemList()
-    {
+    function updateItemList() {
 
         var inc_Orders = {
             Purchase_Order_Id: $("#purId").text(),
@@ -240,7 +237,7 @@
         });
 
         $.ajax({
-            url: '/Incoming/UpdateIncOrders',
+            url: '/Outgoing/UpdateOutOrders',
             type: 'POST',
             data: { Inc_Orders: inc_Orders, OrderItems: editedData },
             success: function (response) {

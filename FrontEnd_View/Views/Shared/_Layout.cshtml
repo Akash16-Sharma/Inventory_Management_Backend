@@ -15,9 +15,9 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
-@{
+  @{  var roletype = Context.Request.HttpContext.Session.GetString("roletype");
     var orgname = Context.Request.HttpContext.Session.GetString("orgname");
- 
+
 }
 <body>
 <style>
@@ -164,27 +164,27 @@
                 </a>
                 <!-- Submenu content -->
                 <div id='submenu4' class="collapse sidebar-submenu">
-                        <a href="#" class="list-group-item list-group-item-action bg-dark text-white">
+                        <a href="/Outgoing/GetOutORders" class="list-group-item list-group-item-action bg-dark text-white">
                         <span class="menu-collapsed">Orders</span>
                     </a>
                         <a href="/Outgoing/Index" class="list-group-item list-group-item-action bg-dark text-white">
                         <span class="menu-collapsed">Add Customers</span>
                     </a>
                 </div>
-
+                @if(roletype == "Admin"){
                 <a href="/Roles/Index" class="bg-dark list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-users fa-fw mr-3"></span>
                         <span class="menu-collapsed">Roles</span>
                     </div>
                 </a>
-
                 <a href="/Setting/Index" class="bg-dark list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fa fa-cog fa-fw mr-3"></span>
                         <span class="menu-collapsed">Setting</span>
                     </div>
                 </a>
+                }
                
             </ul>
         </div>
