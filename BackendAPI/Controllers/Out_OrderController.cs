@@ -180,24 +180,17 @@ namespace BackendAPI.Controllers
                 {
                     if (Accessdata[i].SideBarName == "Outgoing Orders" && Accessdata[i].IsModify == true)
                     {
-                        for ( j = 0; j < order.OrderItems.Count; j++)
+                        for (j = 0; j < order.OrderItems.Count; j++)
                         {
                             order.order.Item_Id = order.OrderItems[j].Item_Id;
                             order.order.Quantity = order.OrderItems[j].Quantity;
                             bool IsUpdate = _OutOrder.UpdateOrder(order.order, order.order.Sales_Order_Id, Count);
-                            if (IsUpdate&&j==order.OrderItems.Count)
+                                Count++;
+                                continue;                          
+                            if (j > 0)
                             {
                                 return Ok("Order updated successfully.");
                             }
-                            else
-                            {
-                                Count++;
-                                continue;
-                            
-                        }
-                        if(j>0)
-                        {
-                            return Ok("Order updated successfully.");
                         }
                     }
                 }
