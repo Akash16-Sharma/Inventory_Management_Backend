@@ -41,12 +41,19 @@ namespace BackendAPI.Repository
         public bool DeleteStaff(Staff staff)
         {
             var DelData=_datacontext.Staff.Where(x=>x.Id== staff.Id).FirstOrDefault();
+            var AccessData=_datacontext.StaffAccess.Where(x=>x.StaffId==staff.Id).ToList();
             if(DelData!=null)
             {
                 DelData.IsActive = false;
                 DelData.InsertedOn=DateTime.Now;
                 _datacontext.Staff.Update(staff);
                 _datacontext.SaveChanges();
+                
+                for(var i=0;i<AccessData.Count;i++)
+                {
+                    _datacontext.StaffAccess.Remove(AccessData[i]);
+                    _datacontext.SaveChanges();
+                }
                 return true;
             }
             else 
@@ -80,6 +87,7 @@ namespace BackendAPI.Repository
         {
             access.IsActive = true;
             access.InsertedOn = DateTime.Now;
+            access.IsShow=true;
            _datacontext.StaffAccess.Add(access);
           int i=  _datacontext.SaveChanges();
             if(i > 0)
@@ -137,6 +145,16 @@ namespace BackendAPI.Repository
         public List<Access> GetAccess(int StaffId)
         {
             var data=_datacontext.StaffAccess.Where(x=>x.StaffId==StaffId).ToList();
+            return data;
+        }
+
+        public List<string> GetAccessNames(int StaffId)
+        {
+            var data = _datacontext.StaffAccess
+                         .Where(x => x.StaffId == StaffId)
+                         .Select(x => x.SideBarName)
+                         .ToList();
+
             return data;
         }
     }

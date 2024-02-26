@@ -1,5 +1,6 @@
 ﻿using BackendAPI.AuthServices;
 using BackendAPI.IRepository;
+using BackendAPI.IRepository.Roles;
 using BackendAPI.Models;
 using BackendAPI.Models.Class;
 using Microsoft.AspNetCore.Authorization;
@@ -19,9 +20,10 @@ namespace BackendAPI.Controllers
         private readonly AppSettings _appSettings;
         private readonly IOrganisation_Info _organisation_info;
         private readonly ICity_State _city_state;
+        private readonly IRoles _roles;
 
         private IAuthenticateService _authenticateService;
-        public AccountController(IUser_Login User_Login, IOptions<AppSettings> appSettings, IAuthenticateService authenticateService, IOrganisation_Info organisation_info, ICity_State city_state)
+        public AccountController(IUser_Login User_Login, IOptions<AppSettings> appSettings, IAuthenticateService authenticateService, IOrganisation_Info organisation_info, ICity_State city_state,IRoles roles)
         {
 
             _User_Login = User_Login;
@@ -29,6 +31,7 @@ namespace BackendAPI.Controllers
             _authenticateService = authenticateService;
             _organisation_info = organisation_info;
             _city_state = city_state;
+            _roles = roles;
         }
 
      
@@ -66,6 +69,7 @@ namespace BackendAPI.Controllers
             //var data = _User_Login.Is_Login(loginData.Email, loginData.Password);
 
             var authUser = _authenticateService.Authenticate(loginData.Email, loginData.Password);
+            var DashAceess = _roles.GetAccessNames(authUser.StaffId);
             if (authUser != null)
             {
                 if (authUser == null)
@@ -74,7 +78,7 @@ namespace BackendAPI.Controllers
                 }
                 else
                 {
-                    return Ok(new { status = 200, value = authUser });
+                    return Ok(new { status = 200, value = authUser ,Value1=DashAceess});
                 }
             }
             else

@@ -160,15 +160,10 @@ namespace BackendAPI.Controllers
                     order.order.Item_Id = order.OrderItems[i].Item_Id;
                     order.order.Quantity = order.OrderItems[i].Quantity;
                     bool IsUpdate = _OutOrder.UpdateOrder(order.order,SellOrderId,Count);
-                    if (IsUpdate&&i==order.OrderItems.Count)
-                    {
-                        
-                    }
-                    else
-                    {
+                    
                         Count++;
                         continue;
-                    }
+                    
                 }
                 return Ok("Order updated successfully.");
             }
