@@ -46,17 +46,17 @@ namespace FrontEnd_View.Controllers
                 ViewBag.Unit = stateListData;
             }
 
-            //vendorassign to Viewbag 
-            List<Category> vendorLists = new List<Category>();
-            HttpResponseMessage responseMessage3 = _client.GetAsync(_client.BaseAddress +
-                "/Vendor/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
-            if (responseMessage1.IsSuccessStatusCode)
-            {
-                string data = responseMessage3.Content.ReadAsStringAsync().Result;
-                vendorLists = JsonConvert.DeserializeObject<List<Category>>(data);
-                var vendorListData = vendorLists.Select(s => new { name = s.Name, id = s.Id }).ToList();
-                ViewBag.Vendor = vendorListData;
-            }
+            ////vendorassign to Viewbag 
+            //List<Category> vendorLists = new List<Category>();
+            //HttpResponseMessage responseMessage3 = _client.GetAsync(_client.BaseAddress +
+            //    "/Vendor/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+            //if (responseMessage1.IsSuccessStatusCode)
+            //{
+            //    string data = responseMessage3.Content.ReadAsStringAsync().Result;
+            //    vendorLists = JsonConvert.DeserializeObject<List<Category>>(data);
+            //    var vendorListData = vendorLists.Select(s => new { name = s.Name, id = s.Id }).ToList();
+            //    ViewBag.Vendor = vendorListData;
+            //}
 
 
             //return item list 
