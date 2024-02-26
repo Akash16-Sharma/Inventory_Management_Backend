@@ -32,7 +32,11 @@ namespace BackendAPI.Controllers
         {
             
             int StaffId = _Roles.AddStaff(Staff.Staff);
-            if(StaffId>0)
+            if (StaffId>0 && Staff.Staff.RoleType == "Admin")
+            {
+                return Ok("Roles Added successfully.");
+            }
+                if (StaffId>0)
             {
                 for (var i = 0; i < Staff.StaffAccess.Count; i++)
                 {
@@ -56,6 +60,7 @@ namespace BackendAPI.Controllers
         public IActionResult UpdateStaff([FromBody] StaffRoleRequest staff)
         {
             bool IsUpdated=_Roles.UpdateStaff(staff.Staff);
+           
             if(IsUpdated)
             {
                for(var i = 0;i<staff.StaffAccess.Count;i++)
