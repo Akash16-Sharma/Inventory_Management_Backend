@@ -19,79 +19,93 @@
             -webkit-writing-mode: vertical-lr;
         }
 
-        .rowPm .endb {
+        .rowPm .endb-checkbox {
             pointer-events: auto;
             background-color: transparent;
         }
 
         .disabled-row {
             pointer-events: none;
-            opacity:0.4;
+            opacity: 0.4;
         }
     </style>
 
 </head>
 
-<div class="container">
-    <div class="row" style="padding-bottom:10px">
-        <div class="col-md-4">
-            <label for="inputname" class="form-label">Name</label>
-            <input type="text" class="form-control" id="inputname">
+<a href="/Roles/List" style="float: right;" class="btn btn-link">Show List</a>
+
+<body>
+    <div class="container">
+        <div class="row" style="padding-bottom:10px">
+            <div class="col-md-3">
+                <label for="inputname" class="form-label">Name</label>
+                <input type="text" class="form-control" id="stname">
+            </div>
+
+            <div class="col-md-3">
+                <label for="inputEmail4" class="form-label">Email</label>
+                <input type="text" class="form-control" id="stemail">
+            </div>
+
+            <div class="col-md-2">
+                <label for="sttype" class="form-label">Type</label>
+                <select id="sttype" class="form-control" name="Type" required>
+                    <option value="">Select Type</option>
+                    <option value="Admin">Admin</option>
+                    <option value="User">User</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="inputEmail4" class="form-label">Password</label>
+                <input type="password" class="form-control" id="stpassword">
+            </div>
+
+            @* roles persmisson code *@
+        </div>
+        <div class="alert alert-info alert-dismissible fade show col-sm-4" style="display:none" id="warning" role="alert">
+            Admin has all the rights
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
 
-        <div class="col-md-4">
-            <label for="inputEmail4" class="form-label">Email</label>
-            <input type="text" class="form-control" id="minstocklvl">
-        </div>
-
-        <div class="col-md-4">
-            <label for="inputEmail4" class="form-label">Phone </label>
-            <input type="number" class="form-control" id="openstock">
-        </div>
-
-        <div class="col-md-4">
-            <label for="inputEmail4" class="form-label">Password</label>
-            <input type="password" class="form-control" id="barcode">
-        </div>
-
-        @* roles persmisson code *@
-    </div>
-    <body>
+    <div id="rolesUI">
         <div class="row rowPms align-items-center">
             <div class="col-sm-2"><h6>Show/Hide</h6></div>
             <div class="col-sm-3"><h6></h6></div>
             <div class="col-sm-3 col-5 "><h6>Create</h6></div>
             <div class="col-sm-3"><h6>Modify</h6></div>
         </div>
-
+        
         <div class="row rowPm">
             <div class="col-sm-2 cbalign">
                 <label class="checkbox">
-                    <input type="checkbox" class="larger endb">&nbsp;
+                    <input type="checkbox" class="larger endb-checkbox">&nbsp;
                 </label>
             </div>
             <div class="col-sm-3"><h6>Dashboard</h6></div>
-            
+
         </div>
 
         <div class="row rowPm">
             <div class="col-sm-2 cbalign">
                 <label class="checkbox">
-                    <input type="checkbox" class="larger endb">&nbsp;
+                    <input type="checkbox" class="larger endb-checkbox">&nbsp;
                 </label>
             </div>
             <div class="col-sm-3"><h6>Items</h6></div>
             <div class="col-sm-3 col-5 cbalign">
                 <h6>
                     <label class="checkbox">
-                        <input type="checkbox" class="larger">&nbsp;<br>
+                        <input type="checkbox" class="larger create-checkbox">&nbsp;<br>
                     </label>
                 </h6>
             </div>
             <div class="col-sm-3 cbalign">
                 <h6>
                     <label class="checkbox">
-                        <input type="checkbox" class="larger">&nbsp;
+                        <input type="checkbox" class="larger modify-checkbox">&nbsp;
                     </label>
                 </h6>
             </div>
@@ -100,21 +114,21 @@
         <div class="row rowPm">
             <div class="col-sm-2 cbalign">
                 <label class="checkbox">
-                    <input type="checkbox" class="larger endb">&nbsp;
+                    <input type="checkbox" class="larger endb-checkbox">&nbsp;
                 </label>
             </div>
             <div class="col-sm-3"><h6>Category</h6></div>
             <div class="col-sm-3 col-5 cbalign">
                 <h6>
                     <label class="checkbox">
-                        <input type="checkbox" class="larger">&nbsp;<br>
+                        <input type="checkbox" class="larger create-checkbox">&nbsp;<br>
                     </label>
                 </h6>
             </div>
             <div class="col-sm-3 cbalign">
                 <h6>
                     <label class="checkbox">
-                        <input type="checkbox" class="larger">&nbsp;
+                        <input type="checkbox" class="larger modify-checkbox">&nbsp;
                     </label>
                 </h6>
             </div>
@@ -123,21 +137,21 @@
         <div class="row rowPm">
             <div class="col-sm-2 cbalign">
                 <label class="checkbox">
-                    <input type="checkbox" class="larger endb">&nbsp;
+                    <input type="checkbox" class="larger endb-checkbox">&nbsp;
                 </label>
             </div>
             <div class="col-sm-3"><h6>Incoming Orders</h6></div>
             <div class="col-sm-3 col-5 cbalign">
                 <h6>
                     <label class="checkbox">
-                        <input type="checkbox" class="larger">&nbsp;<br>
+                        <input type="checkbox" class="larger create-checkbox">&nbsp;<br>
                     </label>
                 </h6>
             </div>
             <div class="col-sm-3 cbalign">
                 <h6>
                     <label class="checkbox">
-                        <input type="checkbox" class="larger">&nbsp;
+                        <input type="checkbox" class="larger modify-checkbox">&nbsp;
                     </label>
                 </h6>
             </div>
@@ -146,21 +160,21 @@
         <div class="row rowPm">
             <div class="col-sm-2 cbalign">
                 <label class="checkbox">
-                    <input type="checkbox" class="larger endb">&nbsp;
+                    <input type="checkbox" class="larger endb-checkbox">&nbsp;
                 </label>
             </div>
             <div class="col-sm-3"><h6>Vendor</h6></div>
             <div class="col-sm-3 col-5 cbalign">
                 <h6>
                     <label class="checkbox">
-                        <input type="checkbox" class="larger">&nbsp;<br>
+                        <input type="checkbox" class="larger create-checkbox">&nbsp;<br>
                     </label>
                 </h6>
             </div>
             <div class="col-sm-3 cbalign">
                 <h6>
                     <label class="checkbox">
-                        <input type="checkbox" class="larger">&nbsp;
+                        <input type="checkbox" class="larger modify-checkbox">&nbsp;
                     </label>
                 </h6>
             </div>
@@ -169,21 +183,21 @@
         <div class="row rowPm">
             <div class="col-sm-2 cbalign">
                 <label class="checkbox">
-                    <input type="checkbox" class="larger endb">&nbsp;
+                    <input type="checkbox" class="larger endb-checkbox">&nbsp;
                 </label>
             </div>
             <div class="col-sm-3"><h6>Outgoing Orders</h6></div>
             <div class="col-sm-3 col-5 cbalign">
                 <h6>
                     <label class="checkbox">
-                        <input type="checkbox" class="larger">&nbsp;<br>
+                        <input type="checkbox" class="larger create-checkbox">&nbsp;<br>
                     </label>
                 </h6>
             </div>
             <div class="col-sm-3 cbalign">
                 <h6>
                     <label class="checkbox">
-                        <input type="checkbox" class="larger">&nbsp;
+                        <input type="checkbox" class="larger modify-checkbox">&nbsp;
                     </label>
                 </h6>
             </div>
@@ -192,43 +206,43 @@
         <div class="row rowPm">
             <div class="col-sm-2 cbalign">
                 <label class="checkbox">
-                    <input type="checkbox" class="larger endb">&nbsp;
+                    <input type="checkbox" class="larger endb-checkbox">&nbsp;
                 </label>
             </div>
             <div class="col-sm-3"><h6>Customer</h6></div>
             <div class="col-sm-3 col-5 cbalign">
                 <h6>
                     <label class="checkbox">
-                        <input type="checkbox" class="larger">&nbsp;<br>
+                        <input type="checkbox" class="larger create-checkbox">&nbsp;<br>
                     </label>
                 </h6>
             </div>
             <div class="col-sm-3 cbalign">
                 <h6>
                     <label class="checkbox">
-                        <input type="checkbox" class="larger">&nbsp;
+                        <input type="checkbox" class="larger modify-checkbox">&nbsp;
                     </label>
                 </h6>
             </div>
         </div>
 
-       
+        </div>
+    </div>
 
 </body>
-</div>
 <div class="p-4">
-    <button type="button" class="btn btn-primary">Add User</button>
+    <button type="button" onclick="submitForm()" class="btn btn-primary">Add User</button>
 </div>
 
 </html>
 <script src="~/js/jquery-3.7.1.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Initially disable entire row
-        $('.rowPm:not(:has(.endb:checked))').addClass('disabled-row');
+        // Disable every row except the checkbox with class 'endb-checkbox' checked
+        $('.rowPm:not(:has(.endb-checkbox:checked))').addClass('disabled-row');
 
-        // Enable or disable row based on 'endb' checkbox
-        $('.endb').change(function () {
+        // Enable or disable row based on 'endb-checkbox' checkbox
+        $('.endb-checkbox').change(function () {
             var row = $(this).closest('.rowPm');
             if (this.checked) {
                 row.removeClass('disabled-row');
@@ -236,6 +250,63 @@
                 row.addClass('disabled-row');
             }
         });
+
+        $("#sttype").change(function () {
+            if ($(this).val() === "Admin") {
+                $("#rolesUI").hide();
+                $("#warning").show();
+            }else{
+                $("#rolesUI").show();
+                $("#warning").hide();
+            }
+        });
+
+
     });
+
+    function submitForm() {
+        //user info
+        var staffObject = {
+            Staff_Name: $('#stname').val(),
+            Email: $('#stemail').val(),
+            RoleType: $('#sttype').val(),
+            Password: $('#stpassword').val()
+        };
+
+
+        var data = [];
+
+        $(".rowPm").each(function () {
+            var row = $(this);
+            var sidename = row.find("h6").text().trim();
+            var createChecked = row.find(".create-checkbox").is(":checked") ? true : false;
+            var modifyChecked = row.find(".modify-checkbox").is(":checked") ? true : false;
+
+            if (row.find(".endb-checkbox").is(":checked")) {
+                data.push({
+                    SideBarName: sidename,
+                    IsCreate: createChecked,
+                    IsModify: modifyChecked
+                });
+            }
+        });
+
+        $.ajax({
+            url: '/Roles/AddStaff',
+            type: 'POST',
+            contentType: 'application/json', // Ensure correct Content-Type
+            dataType: 'json', // Expect JSON response
+            data: JSON.stringify({ staff: staffObject, staffAccess: data }),
+            success: function (response) {
+                location.reload();
+                console.log(response);
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
+
 
 </script>

@@ -43,7 +43,7 @@ namespace BackendAPI.Controllers
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsShow == true)
+                    if (Accessdata[i].SideBarName == "Incoming Orders" && Accessdata[i].IsShow == true)
                     {
                         var data = _incord.GetOrderInfo(orgid);
                         if (data == null)
@@ -131,7 +131,7 @@ namespace BackendAPI.Controllers
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsCreate == true)
+                    if (Accessdata[i].SideBarName == "Incoming Orders" && Accessdata[i].IsCreate == true)
                     {
                         for ( a = 0; a < ord.OrderItems.Count; a++)
                         {
@@ -178,7 +178,7 @@ namespace BackendAPI.Controllers
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-                    if (Accessdata[i].SideBarName == "IncOrder" && Accessdata[i].IsModify == true)
+                    if (Accessdata[i].SideBarName == "Incoming Orders" && Accessdata[i].IsModify == true)
                     {
                         for ( a = 0; a < ord.OrderItems.Count; a++)
                         {
@@ -221,7 +221,7 @@ namespace BackendAPI.Controllers
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsModify == true)
+                    if (Accessdata[i].SideBarName == "Incoming Orders" && Accessdata[i].IsModify == true)
                     {
                         bool IsDelete = _incord.DeleteOrder(PurchaseOrderId, StaffId);
                         if (IsDelete)
@@ -260,7 +260,7 @@ namespace BackendAPI.Controllers
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsShow == true)
+                    if (Accessdata[i].SideBarName == "Incoming Orders" && Accessdata[i].IsShow == true)
                     {
                         var data = _incord.GetOrderInfoById(id);
                         if (data != null)

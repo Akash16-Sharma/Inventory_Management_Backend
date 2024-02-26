@@ -33,7 +33,7 @@ namespace BackendAPI.Repository
             {
                 data.IsActive = false;
                 data.Updated_By = StaffId;
-                data.Inserted_On = DateTime.Now;
+                data.Inserted_On = DateTime.Now; 
                 _context.Customer.Update(data);
                 _context.SaveChanges();
                 return true;

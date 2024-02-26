@@ -80,7 +80,7 @@ namespace BackendAPI.Controllers
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsShow == true)
+                    if (Accessdata[i].SideBarName == "Outgoing Orders" && Accessdata[i].IsShow == true)
                     {
                         var data = _OutOrder.GetOutOrdersBySalesOrderID(SalesOrderID);
                         if (data == null)
@@ -124,7 +124,7 @@ namespace BackendAPI.Controllers
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsCreate == true)
+                    if (Accessdata[i].SideBarName == "Outgoing Orders" && Accessdata[i].IsCreate == true)
                     {
                         for (a = 0; a < order.OrderItems.Count; a++)
                         {
@@ -146,7 +146,7 @@ namespace BackendAPI.Controllers
 
         [HttpPut]
         [Route("UpdateOrder")]
-        public IActionResult UpdateOrder([FromBody] Out_OrderRequest order, int StaffId,string SellOrderId)
+        public IActionResult UpdateOrder([FromBody] Out_OrderRequest order, int StaffId)
         {
             int Count = 0;
             //order.order.Order_Date = DateOnly.Parse(order.OrderDate);
@@ -173,13 +173,19 @@ namespace BackendAPI.Controllers
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsModify == true)
+                    if (Accessdata[i].SideBarName == "Outgoing Orders" && Accessdata[i].IsModify == true)
                     {
                         for ( j = 0; j < order.OrderItems.Count; j++)
                         {
                             order.order.Item_Id = order.OrderItems[j].Item_Id;
                             order.order.Quantity = order.OrderItems[j].Quantity;
-                          _OutOrder.UpdateOrder(order.order, SellOrderId, Count);
+                            bool IsUpdate = _OutOrder.UpdateOrder(order.order, order.order.Sales_Order_Id, Count);
+                            if (IsUpdate&&j==order.OrderItems.Count)
+                            {
+                                return Ok("Order updated successfully.");
+                            }
+                            else
+                            {
                                 Count++;
                                 continue;
                             
@@ -216,7 +222,7 @@ namespace BackendAPI.Controllers
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsModify == true)
+                    if (Accessdata[i].SideBarName == "Outgoing Orders" && Accessdata[i].IsModify == true)
                     {
                         bool IsDelete = _OutOrder.DeleteOrder(SellOrderId, StaffId);
                         if (IsDelete)
@@ -255,7 +261,7 @@ namespace BackendAPI.Controllers
                 var Accessdata = _roles.CheckAccess(StaffId);
                 for (var i = 0; i < Accessdata.Count; i++)
                 {
-                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsShow == true)
+                    if (Accessdata[i].SideBarName == "Outgoing Orders" && Accessdata[i].IsShow == true)
                     {
                         var data = _OutOrder.GetOrderById(id);
                         if (data != null)

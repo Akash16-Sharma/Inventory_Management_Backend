@@ -98,7 +98,7 @@ namespace BackendAPI.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetAccessById")]
         public IActionResult GetAccessByid(int Staffid)
         {

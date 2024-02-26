@@ -78,9 +78,11 @@ namespace FrontEnd_View.Controllers
                     int orgId = responseObject.value.orgId;
                     int staffId = responseObject.value.staffId;
                     string orgname=  responseObject.value.orgName;
+                    string type = responseObject.value.roleType;
                     HttpContext.Session.SetInt32("orgId", orgId);
                     HttpContext.Session.SetInt32("staffId", staffId);
                     HttpContext.Session.SetString("orgname", orgname);
+                    HttpContext.Session.SetString("roletype", type);
                     return Json(new { success = true, redirectUrl = Url.Action("ItemCategory", "Item") });
                 }
             }

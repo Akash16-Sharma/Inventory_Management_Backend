@@ -17,7 +17,7 @@ namespace BackendAPI.Repository
 
           
             order.Inserted_On = DateTime.Now;
-            order.Actual_Date = DateTime.Now; //testing purpose
+           // order.Actual_Date = DateTime.Now; //testing purpose
            
             order.IsActive = true;
           
