@@ -159,7 +159,7 @@ namespace BackendAPI.Controllers
                 {
                     order.order.Item_Id = order.OrderItems[i].Item_Id;
                     order.order.Quantity = order.OrderItems[i].Quantity;
-                    bool IsUpdate = _OutOrder.UpdateOrder(order.order,SellOrderId,Count);
+                    bool IsUpdate = _OutOrder.UpdateOrder(order.order, order.order.Sales_Order_Id, Count);
                     
                         Count++;
                         continue;
