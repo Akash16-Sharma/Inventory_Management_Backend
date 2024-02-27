@@ -159,11 +159,11 @@ namespace BackendAPI.Controllers
                 {
                     order.order.Item_Id = order.OrderItems[i].Item_Id;
                     order.order.Quantity = order.OrderItems[i].Quantity;
-                    bool IsUpdate = _OutOrder.UpdateOrder(order.order,SellOrderId,Count);
-                    
-                        Count++;
-                        continue;
-                    
+                    bool IsUpdate = _OutOrder.UpdateOrder(order.order, order.order.Sales_Order_Id, Count);
+
+                    Count++;
+                    continue;
+
                 }
                 return Ok("Order updated successfully.");
             }
@@ -175,12 +175,12 @@ namespace BackendAPI.Controllers
                 {
                     if (Accessdata[i].SideBarName == "Outgoing Orders" && Accessdata[i].IsModify == true)
                     {
-                        for ( j = 0; j < order.OrderItems.Count; j++)
+                        for (j = 0; j < order.OrderItems.Count; j++)
                         {
                             order.order.Item_Id = order.OrderItems[j].Item_Id;
                             order.order.Quantity = order.OrderItems[j].Quantity;
                             bool IsUpdate = _OutOrder.UpdateOrder(order.order, order.order.Sales_Order_Id, Count);
-                            if (IsUpdate&&j==order.OrderItems.Count)
+                            if (IsUpdate && j == order.OrderItems.Count)
                             {
                                 return Ok("Order updated successfully.");
                             }
@@ -188,16 +188,17 @@ namespace BackendAPI.Controllers
                             {
                                 Count++;
                                 continue;
-                            
-                        }
-                        if(j>0)
-                        {
-                            return Ok("Order updated successfully.");
+
+                            }
+                            if (j > 0)
+                            {
+                                return Ok("Order updated successfully.");
+                            }
                         }
                     }
                 }
+                return BadRequest("Access denied.");
             }
-            return BadRequest("Access denied.");
         }
 
         [HttpDelete]
