@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BackendAPI.Models;
 using System.Security;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using System.Text;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
 using FrontEnd_View.Models;
 
+
 namespace FrontEnd_View.Controllers
 {
+    
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
@@ -24,7 +25,7 @@ namespace FrontEnd_View.Controllers
             _client.BaseAddress = baseAddress;
         }
 
-        public void  CheckMObile()  //check whetherusing mobile or not 
+        public void  CheckMObile()  //check whether using mobile or not 
         {
             var browserinfo = new Browser()
             {
@@ -79,10 +80,13 @@ namespace FrontEnd_View.Controllers
                     int staffId = responseObject.value.staffId;
                     string orgname=  responseObject.value.orgName;
                     string type = responseObject.value.roleType;
+                    List<string> sideBarName = responseObject.value1.ToObject<List<string>>();
+                    string sideBarNameJson = JsonConvert.SerializeObject(sideBarName);
                     HttpContext.Session.SetInt32("orgId", orgId);
                     HttpContext.Session.SetInt32("staffId", staffId);
                     HttpContext.Session.SetString("orgname", orgname);
                     HttpContext.Session.SetString("roletype", type);
+                    HttpContext.Session.SetString("SideBarNameList", sideBarNameJson);
                     return Json(new { success = true, redirectUrl = Url.Action("ItemCategory", "Item") });
                 }
             }

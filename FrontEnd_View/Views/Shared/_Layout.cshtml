@@ -7,7 +7,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    
+
     <script src="~/js/jquery-3.7.1.min.js"></script>
     @* added 4 dattable *@
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
@@ -15,12 +15,21 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
-  @{  var roletype = Context.Request.HttpContext.Session.GetString("roletype");
-    var orgname = Context.Request.HttpContext.Session.GetString("orgname");
+@{
+    var roletype = Context.Request.HttpContext.Session.GetString("roletype");
+    List<string> sideBarNameList = null;
 
+    var sideBarNameJson = Context.Request.HttpContext.Session.GetString("SideBarNameList");
+
+    if (!string.IsNullOrEmpty(sideBarNameJson))
+    {
+        sideBarNameList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(sideBarNameJson);
+    }
+
+    var orgname = Context.Request.HttpContext.Session.GetString("orgname");
 }
 <body>
-<style>
+    <style>
         #sidebar-container {
             min-height: 100vh;
             background-color: #343a40;
@@ -85,7 +94,7 @@
             padding-left: 10px;
         }
 
-</style>
+    </style>
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,92 +117,221 @@
     <!-- NavBar END -->
     @if (orgname != null)
     {
-    <div class="row" id="body-row">
-        <!-- Sidebar -->
-        <div id="sidebar-container" class="sidebar-expanded d-none d-md-block">
+        @if (@roletype == "Admin") //if admin get all the access 
+        {
+            <div class="row" id="body-row">
+                <!-- Sidebar -->
+                <div id="sidebar-container" class="sidebar-expanded d-none d-md-block">
 
-            <ul class="list-group">
+                    <ul class="list-group">
 
-                <a href="/Home/Index" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-dashboard fa-fw mr-3"></span>
-                        <span class="menu-collapsed">Dashboard</span>
-                    </div>
-                </a>
+                        <a href="/Home/Index" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-start align-items-center">
+                                <span class="fa fa-dashboard fa-fw mr-3"></span>
+                                <span class="menu-collapsed">Dashboard</span>
+                            </div>
+                        </a>
+                      
+                            <a href="#submenu2" data-toggle="collapse" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-start align-items-center">
+                                    <span class="fa fa-cart-plus fa-fw mr-3"></span>
+                                    <span class="menu-collapsed">Item</span>
+                                    <span class="submenu-icon ml-auto"></span>
+                                </div>
+                            </a>
+                            <!-- Submenu content -->
+                            <div id='submenu2' class="collapse sidebar-submenu">
+                                <a href="/Item/Index" class="list-group-item list-group-item-action bg-dark text-white">
+                                    <span class="menu-collapsed">Add Item</span>
+                                </a>
 
-                <a href="#submenu2" data-toggle="collapse" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-cart-plus fa-fw mr-3"></span>
-                        <span class="menu-collapsed">Item</span>
-                        <span class="submenu-icon ml-auto"></span>
-                    </div>
-                </a>
-                <!-- Submenu content -->
-                <div id='submenu2' class="collapse sidebar-submenu">
-                    <a href="/Item/Index" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Add Item</span>
-                    </a>
-                    <a href="/Item/ItemCategory" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Add Type/category</span>
-                    </a>
+                               
+                                    <a href="/Item/ItemCategory" class="list-group-item list-group-item-action bg-dark text-white">
+                                        <span class="menu-collapsed">Add Type/category</span>
+                                    </a>
+                                
+
+                            </div>
+                        
+                       
+                            <a href="#submenu3" data-toggle="collapse" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-start align-items-center">
+                                    <span class="fa fa-arrow-circle-left fa-fw mr-3"></span>
+                                    <span class="menu-collapsed">Incoming</span>
+                                    <span class="submenu-icon ml-auto"></span>
+                                </div>
+                            </a>
+
+                            <!-- Submenu content -->
+                            <div id='submenu3' class="collapse sidebar-submenu">
+                                <a href="/Incoming/GetIncORders" class="list-group-item list-group-item-action bg-dark text-white">
+                                    <span class="menu-collapsed">Orders</span>
+                                </a>
+
+                                    <a href="/Incoming/Index" class="list-group-item list-group-item-action bg-dark text-white">
+                                        <span class="menu-collapsed">Add Vendor</span>
+                                    </a>
+
+                                
+                            </div>
+                        
+
+                       
+                            <a href="#submenu4" data-toggle="collapse" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-start align-items-center">
+                                    <span class="fa fa-arrow-circle-right fa-fw mr-3"></span>
+                                    <span class="menu-collapsed">Outgoing</span>
+                                    <span class="submenu-icon ml-auto"></span>
+                                </div>
+                            </a>
+                            <!-- Submenu content -->
+                            <div id='submenu4' class="collapse sidebar-submenu">
+                                <a href="/Outgoing/GetOutORders" class="list-group-item list-group-item-action bg-dark text-white">
+                                    <span class="menu-collapsed">Orders</span>
+                                </a>
+                                    <a href="/Outgoing/Index" class="list-group-item list-group-item-action bg-dark text-white">
+                                        <span class="menu-collapsed">Add Customers</span>
+                                    </a>
+                                
+
+                            </div>
+                        
+                    
+                            <a href="/Roles/Index" class="bg-dark list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-start align-items-center">
+                                    <span class="fa fa-users fa-fw mr-3"></span>
+                                    <span class="menu-collapsed">Roles</span>
+                                </div>
+                            </a>
+                            <a href="/Setting/Index" class="bg-dark list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-start align-items-center">
+                                    <span class="fa fa-cog fa-fw mr-3"></span>
+                                    <span class="menu-collapsed">Setting</span>
+                                </div>
+                            </a>
+                        
+
+                    </ul>
                 </div>
-
-                <a href="#submenu3" data-toggle="collapse" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-arrow-circle-left fa-fw mr-3"></span>
-                        <span class="menu-collapsed">Incoming</span>
-                        <span class="submenu-icon ml-auto"></span>
-                    </div>
-                </a>
-                <!-- Submenu content -->
-                <div id='submenu3' class="collapse sidebar-submenu">
-                        <a href="/Incoming/GetIncORders" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Orders</span>
-                    </a>
-                    <a href="/Incoming/Index" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Add Vendor</span>
-                    </a>
+                <!-- MAIN body-->
+                <div class="col p-4">
+                    @RenderBody()
                 </div>
+            </div>
+            
+        }else{
+        <div class="row" id="body-row">
+            <!-- Sidebar -->
+            <div id="sidebar-container" class="sidebar-expanded d-none d-md-block">
 
-                <a href="#submenu4" data-toggle="collapse" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-arrow-circle-right fa-fw mr-3"></span>
-                        <span class="menu-collapsed">Outgoing</span>
-                        <span class="submenu-icon ml-auto"></span>
-                    </div>
-                </a>
-                <!-- Submenu content -->
-                <div id='submenu4' class="collapse sidebar-submenu">
-                        <a href="/Outgoing/GetOutORders" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Orders</span>
+                <ul class="list-group">
+
+                    <a href="/Home/Index" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-start align-items-center">
+                            <span class="fa fa-dashboard fa-fw mr-3"></span>
+                            <span class="menu-collapsed">Dashboard</span>
+                        </div>
                     </a>
-                        <a href="/Outgoing/Index" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Add Customers</span>
-                    </a>
-                </div>
-                @if(roletype == "Admin"){
-                <a href="/Roles/Index" class="bg-dark list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-users fa-fw mr-3"></span>
-                        <span class="menu-collapsed">Roles</span>
-                    </div>
-                </a>
-                <a href="/Setting/Index" class="bg-dark list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-cog fa-fw mr-3"></span>
-                        <span class="menu-collapsed">Setting</span>
-                    </div>
-                </a>
-                }
-               
-            </ul>
+                    @if (sideBarNameList != null && sideBarNameList.Contains("Items"))
+                    {
+                        <a href="#submenu2" data-toggle="collapse" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-start align-items-center">
+                                <span class="fa fa-cart-plus fa-fw mr-3"></span>
+                                <span class="menu-collapsed">Item</span>
+                                <span class="submenu-icon ml-auto"></span>
+                            </div>
+                        </a>
+                        <!-- Submenu content -->
+                        <div id='submenu2' class="collapse sidebar-submenu">
+                            <a href="/Item/Index" class="list-group-item list-group-item-action bg-dark text-white">
+                                <span class="menu-collapsed">Add Item</span>
+                            </a>
+
+                            @if (sideBarNameList != null && sideBarNameList.Contains("Category"))
+                            {
+                                <a href="/Item/ItemCategory" class="list-group-item list-group-item-action bg-dark text-white">
+                                    <span class="menu-collapsed">Add Type/category</span>
+                                </a>
+                            }
+
+                        </div>
+                    }
+                    @if (sideBarNameList != null && sideBarNameList.Contains("Incoming Orders"))
+                    {
+                        <a href="#submenu3" data-toggle="collapse" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-start align-items-center">
+                                <span class="fa fa-arrow-circle-left fa-fw mr-3"></span>
+                                <span class="menu-collapsed">Incoming</span>
+                                <span class="submenu-icon ml-auto"></span>
+                            </div>
+                        </a>
+
+                        <!-- Submenu content -->
+                        <div id='submenu3' class="collapse sidebar-submenu">
+                            <a href="/Incoming/GetIncORders" class="list-group-item list-group-item-action bg-dark text-white">
+                                <span class="menu-collapsed">Orders</span>
+                            </a>
+
+                            @if (sideBarNameList != null && sideBarNameList.Contains("Vendor"))
+                            {
+                                <a href="/Incoming/Index" class="list-group-item list-group-item-action bg-dark text-white">
+                                    <span class="menu-collapsed">Add Vendor</span>
+                                </a>
+
+                            }
+                        </div>
+                    }
+
+                    @if (sideBarNameList != null && sideBarNameList.Contains("Outgoing Orders"))
+                    {
+                        <a href="#submenu4" data-toggle="collapse" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-start align-items-center">
+                                <span class="fa fa-arrow-circle-right fa-fw mr-3"></span>
+                                <span class="menu-collapsed">Outgoing</span>
+                                <span class="submenu-icon ml-auto"></span>
+                            </div>
+                        </a>
+                        <!-- Submenu content -->
+                        <div id='submenu4' class="collapse sidebar-submenu">
+                            <a href="/Outgoing/GetOutORders" class="list-group-item list-group-item-action bg-dark text-white">
+                                <span class="menu-collapsed">Orders</span>
+                            </a>
+                            @if (sideBarNameList != null && sideBarNameList.Contains("Customer"))
+                            {
+
+                                <a href="/Outgoing/Index" class="list-group-item list-group-item-action bg-dark text-white">
+                                    <span class="menu-collapsed">Add Customers</span>
+                                </a>
+                            }
+
+                        </div>
+                    }
+                    @if (roletype == "Admin")
+                    {
+                        <a href="/Roles/Index" class="bg-dark list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-start align-items-center">
+                                <span class="fa fa-users fa-fw mr-3"></span>
+                                <span class="menu-collapsed">Roles</span>
+                            </div>
+                        </a>
+                        <a href="/Setting/Index" class="bg-dark list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-start align-items-center">
+                                <span class="fa fa-cog fa-fw mr-3"></span>
+                                <span class="menu-collapsed">Setting</span>
+                            </div>
+                        </a>
+                    }
+
+                </ul>
+            </div>
+            <!-- MAIN body-->
+            <div class="col p-4">
+                @RenderBody()
+            </div>
         </div>
-        <!-- MAIN body-->
-        <div class="col p-4">
-            @RenderBody()
-        </div>
-        </div>
-    }else
+        }
+    }
+    else
     {
         <div class="container">
             <div id="body-row">

@@ -160,10 +160,10 @@ namespace BackendAPI.Controllers
                     order.order.Item_Id = order.OrderItems[i].Item_Id;
                     order.order.Quantity = order.OrderItems[i].Quantity;
                     bool IsUpdate = _OutOrder.UpdateOrder(order.order, order.order.Sales_Order_Id, Count);
-
-                    Count++;
-                    continue;
-
+                    
+                        Count++;
+                        continue;
+                    
                 }
                 return Ok("Order updated successfully.");
             }
@@ -180,16 +180,8 @@ namespace BackendAPI.Controllers
                             order.order.Item_Id = order.OrderItems[j].Item_Id;
                             order.order.Quantity = order.OrderItems[j].Quantity;
                             bool IsUpdate = _OutOrder.UpdateOrder(order.order, order.order.Sales_Order_Id, Count);
-                            if (IsUpdate && j == order.OrderItems.Count)
-                            {
-                                return Ok("Order updated successfully.");
-                            }
-                            else
-                            {
                                 Count++;
-                                continue;
-
-                            }
+                                continue;                          
                             if (j > 0)
                             {
                                 return Ok("Order updated successfully.");
@@ -197,8 +189,8 @@ namespace BackendAPI.Controllers
                         }
                     }
                 }
-                return BadRequest("Access denied.");
             }
+            return BadRequest("Access denied.");
         }
 
         [HttpDelete]
