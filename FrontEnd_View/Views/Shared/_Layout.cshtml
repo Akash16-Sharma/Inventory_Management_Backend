@@ -1,201 +1,245 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- ==== Document Meta ==== -->
+    <meta name="author" content="">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <!-- ==== Favicon ==== -->
+    <link rel="icon" href="favicon.png" type="image/png">
+
+    <!-- ==== Google Font ==== -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700%7CMontserrat:400,500">
+
+
     <title>@ViewData["Title"] Inventory Management</title>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    
-    <script src="~/js/jquery-3.7.1.min.js"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="~/assets/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="~/assets/css/perfect-scrollbar.min.css">
+    <link rel="stylesheet" href="~/assets/css/morris.min.css">
+    <link rel="stylesheet" href="~/assets/css/select2.min.css">
+    <link rel="stylesheet" href="~/assets/css/jquery-jvectormap.min.css">
+    <link rel="stylesheet" href="~/assets/css/horizontal-timeline.min.css">
+    <link rel="stylesheet" href="~/assets/css/weather-icons.min.css">
+    <link rel="stylesheet" href="~/assets/css/dropzone.min.css">
+    <link rel="stylesheet" href="~/assets/css/ion.rangeSlider.min.css">
+    <link rel="stylesheet" href="~/assets/css/ion.rangeSlider.skinFlat.min.css">
+    <link rel="stylesheet" href="~/assets/css/datatables.min.css">
+    <link rel="stylesheet" href="~/assets/css/fullcalendar.min.css">
+    <link rel="stylesheet" href="~/assets/css/style.css">
+
     @* added 4 dattable *@
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    @*     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    *@
 </head>
-  @{  var roletype = Context.Request.HttpContext.Session.GetString("roletype");
+@{
+    var roletype = Context.Request.HttpContext.Session.GetString("roletype");
     var orgname = Context.Request.HttpContext.Session.GetString("orgname");
-
 }
+
 <body>
-<style>
-        #sidebar-container {
-            min-height: 100vh;
-            background-color: #343a40;
-            padding: 0;
+    <style>
+        body {
+            color: #0c0c0c !important;
         }
 
-        /* Sidebar sizes when expanded and expanded */
-        .sidebar-expanded {
-            width: 230px;
+        .sidebar {
+            color: #999 !important;
         }
 
-        .sidebar-collapsed {
-            width: 60px;
+        .sidebar--nav ul ul a {
+            color: #cfcfcf !important;
         }
 
-        /* Menu item*/
-        #sidebar-container .list-group a {
-            height: 50px;
-            color: white;
+        .inverted-logo {
+            filter: invert(1);
+            background-color: #1c2324; /* Your desired color */
         }
 
-        /* Submenu item*/
-        #sidebar-container .list-group .sidebar-submenu a {
-            height: 45px;
-            padding-left: 30px;
-        }
+    </style>
 
-        .sidebar-submenu {
-            font-size: 0.9rem;
-        }
-
-        /* Separators */
-        .sidebar-separator-title {
-            background-color: #333;
-            height: 35px;
-        }
-
-        .sidebar-separator {
-            background-color: #333;
-            height: 25px;
-        }
-
-        .logo-separator {
-            background-color: #333;
-            height: 60px;
-        }
-
-        /* Closed submenu icon */
-        #sidebar-container .list-group .list-group-item[aria-expanded="false"] .submenu-icon::after {
-            content: " \f0d7";
-            font-family: FontAwesome;
-            display: inline;
-            text-align: right;
-            padding-left: 10px;
-        }
-        /* Opened submenu icon */
-        #sidebar-container .list-group .list-group-item[aria-expanded="true"] .submenu-icon::after {
-            content: " \f0da";
-            font-family: FontAwesome;
-            display: inline;
-            text-align: right;
-            padding-left: 10px;
-        }
-
-</style>
-
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="#">
-            <span class="menu-collapsed">Inventory Management</span>
-        </a>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#top">@orgname<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("Logout", "Account")">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <!-- NavBar END -->
     @if (orgname != null)
     {
-    <div class="row" id="body-row">
-        <!-- Sidebar -->
-        <div id="sidebar-container" class="sidebar-expanded d-none d-md-block">
-
-            <ul class="list-group">
-
-                <a href="/Home/Index" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-dashboard fa-fw mr-3"></span>
-                        <span class="menu-collapsed">Dashboard</span>
-                    </div>
-                </a>
-
-                <a href="#submenu2" data-toggle="collapse" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-cart-plus fa-fw mr-3"></span>
-                        <span class="menu-collapsed">Item</span>
-                        <span class="submenu-icon ml-auto"></span>
-                    </div>
-                </a>
-                <!-- Submenu content -->
-                <div id='submenu2' class="collapse sidebar-submenu">
-                    <a href="/Item/Index" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Add Item</span>
+        <div class="wrapper">
+            <header class="navbar navbar-fixed">
+                <!-- Navbar Header Start -->
+                <div class="navbar--header">
+                    <!-- Logo Start -->
+                    <a href="/Home/Index" class="logo">
+                        <img src="~/images/whitelogo.png" alt="" class="inverted-logo"> Ninja Inventory
                     </a>
-                    <a href="/Item/ItemCategory" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Add Type/category</span>
+
+                    <a href="#" class="navbar--btn" data-toggle="sidebar" title="Toggle Sidebar">
+                        <i class="fa fa-bars"></i>
                     </a>
+                    <!-- Sidebar Toggle Button End -->
                 </div>
 
-                <a href="#submenu3" data-toggle="collapse" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-arrow-circle-left fa-fw mr-3"></span>
-                        <span class="menu-collapsed">Incoming</span>
-                        <span class="submenu-icon ml-auto"></span>
-                    </div>
+                <a href="#" class="navbar--btn" data-toggle="sidebar" title="Toggle Sidebar">
+                    <i class="fa fa-bars"></i>
                 </a>
-                <!-- Submenu content -->
-                <div id='submenu3' class="collapse sidebar-submenu">
-                        <a href="/Incoming/GetIncORders" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Orders</span>
-                    </a>
-                    <a href="/Incoming/Index" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Add Vendor</span>
-                    </a>
-                </div>
+                <!-- Sidebar Toggle Button End -->
 
-                <a href="#submenu4" data-toggle="collapse" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-arrow-circle-right fa-fw mr-3"></span>
-                        <span class="menu-collapsed">Outgoing</span>
-                        <span class="submenu-icon ml-auto"></span>
-                    </div>
-                </a>
-                <!-- Submenu content -->
-                <div id='submenu4' class="collapse sidebar-submenu">
-                        <a href="/Outgoing/GetOutORders" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Orders</span>
-                    </a>
-                        <a href="/Outgoing/Index" class="list-group-item list-group-item-action bg-dark text-white">
-                        <span class="menu-collapsed">Add Customers</span>
-                    </a>
+                <div class="navbar--nav ml-auto">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fa fa-bell"></i>
+                                <span class="badge text-white bg-blue">7</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Logout", "Account")">Logout</a>
+                        </li>
+
+                    </ul>
                 </div>
-                @if(roletype == "Admin"){
-                <a href="/Roles/Index" class="bg-dark list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-users fa-fw mr-3"></span>
-                        <span class="menu-collapsed">Roles</span>
+            </header>
+            <!-- NavBar END -->
+            <!-- Sidebar Start -->
+            <div class="row" id="body-row" style="margin-left:20px">
+                <aside class="sidebar" data-trigger="scrollbar">
+
+                    <!-- Sidebar Profile Start -->
+                    <div class="sidebar--profile">
+
+                        <div class="profile--name">
+                            <a class="nav-link" href="#top">@orgname<span class="sr-only">(current)</span></a>
+                        </div>
+
+                        <div class="profile--nav">
+                            <ul class="nav">
+
+                                <li class="nav-item">
+                                    <a href="/Account/Logout" class="nav-link" title="Logout">
+                                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </a>
-                <a href="/Setting/Index" class="bg-dark list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-cog fa-fw mr-3"></span>
-                        <span class="menu-collapsed">Setting</span>
+                    <!-- Sidebar Profile End -->
+                    <!-- Sidebar Navigation Start -->
+                    <div class="sidebar--nav">
+                        <ul>
+                            <li>
+                                <ul>
+                                    <li class="active">
+                                        <a href="/Home/Index">
+                                            <i class="fa fa-home"></i>
+                                            <span>Dashboard</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="#">Items</a>
+
+                                <ul>
+                                    <li>
+                                        <a href="/Item/Index">
+                                            <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                                            <span>Add Items</span>
+                                        </a>
+
+                                    </li>
+                                    <li>
+                                        <a href="/Item/ItemCategory">
+                                            <i class="fa fa-th-list"></i>
+                                            <span>Category</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="#">Incoming Order</a>
+                                <ul>
+                                    <li>
+                                        <a href="/Incoming/GetIncORders">
+                                            <i class="far fa-newspaper"></i>
+                                            <span>Order</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/Incoming/Index">
+                                            <i class="fab fa-wpforms"></i>
+                                            <span>Vendor</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="#">Outgoing Order</a>
+                                <ul>
+                                    <li>
+                                        <a href="/Outgoing/GetOutORders">
+                                            <i class="far fa-newspaper"></i>
+                                            <span>Order</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/Outgoing/Index">
+                                            <i class="fab fa-wpforms"></i>
+                                            <span>Customer</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <ul>
+                                    <li class="active">
+                                        <a href="/Roles/Index">
+                                            <i class="fa fa-home"></i>
+                                            <span>Roles</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+
+                            <li>
+                                <ul>
+                                    <li class="active">
+                                        <a href="/Setting/Index">
+                                            <i class="fa fa-home"></i>
+                                            <span>Setting</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
-                </a>
-                }
-               
-            </ul>
+                    <!-- Sidebar Navigation End -->
+
+                </aside>
+                <!-- MAIN body-->
+                <main class="main--container">
+                    <div class="col p-4 ">
+                        @RenderBody()
+                    </div>
+                </main>
+            </div>
         </div>
-        <!-- MAIN body-->
-        <div class="col p-4">
-            @RenderBody()
-        </div>
-        </div>
-    }else
+    }
+    else
     {
-        <div class="container">
+        <div class="container main--container">
             <div id="body-row">
                 <div class="col p-4">
                     @RenderBody()
@@ -203,8 +247,24 @@
             </div>
         </div>
     }
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="~/assets/js/jquery-ui.min.js"></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/perfect-scrollbar.min.js"></script>
+    <script src="~/assets/js/jquery.sparkline.min.js"></script>
+    <script src="~/assets/js/raphael.min.js"></script>
+    <script src="~/assets/js/morris.min.js"></script>
+    <script src="~/assets/js/select2.min.js"></script>
+    <script src="~/assets/js/jquery-jvectormap.min.js"></script>
+    <script src="~/assets/js/jquery-jvectormap-world-mill.min.js"></script>
+    <script src="~/assets/js/horizontal-timeline.min.js"></script>
+    <script src="~/assets/js/jquery.validate.min.js"></script>
+    <script src="~/assets/js/jquery.steps.min.js"></script>
+    <script src="~/assets/js/dropzone.min.js"></script>
+    <script src="~/assets/js/ion.rangeSlider.min.js"></script>
+    <script src="~/assets/js/datatables.min.js"></script>
+    <script src="~/assets/js/main.js"></script>
 
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/sidebars.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
