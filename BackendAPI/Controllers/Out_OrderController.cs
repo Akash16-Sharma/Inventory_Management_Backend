@@ -21,11 +21,9 @@ namespace BackendAPI.Controllers
 
         [HttpGet]
         [Route("GetOrderInfo")]
-        public IActionResult GetOrderInfo(int orgid, int StaffId)
+        public IActionResult GetOrderInfo(int orgid)
         {
-            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
-            if (CheckRoleTypeData.RoleType == "Admin")
-            {
+           
                 var data = _OutOrder.GetOutOrderInfo(orgid);
                 if (data == null)
                 {
@@ -35,27 +33,6 @@ namespace BackendAPI.Controllers
                 {
                     return Ok(data);
                 }
-            }
-            else
-            {
-                var Accessdata = _roles.CheckAccess(StaffId);
-                for (var i = 0; i < Accessdata.Count; i++)
-                {
-                    if (Accessdata[i].SideBarName == "Order" && Accessdata[i].IsShow == true)
-                    {
-                        var data = _OutOrder.GetOutOrderInfo(orgid);
-                        if (data == null)
-                        {
-                            return NotFound("No order information found.");
-                        }
-                        else
-                        {
-                            return Ok(data);
-                        }
-                    }
-                }
-            }
-            return BadRequest("Access denied.");
         }
 
         [HttpGet]
@@ -182,10 +159,11 @@ namespace BackendAPI.Controllers
                             bool IsUpdate = _OutOrder.UpdateOrder(order.order, order.order.Sales_Order_Id, Count);
                                 Count++;
                                 continue;                          
-                            if (j > 0)
-                            {
-                                return Ok("Order updated successfully.");
-                            }
+                           
+                        }
+                        if (j > 0)
+                        {
+                            return Ok("Order updated successfully.");
                         }
                     }
                 }

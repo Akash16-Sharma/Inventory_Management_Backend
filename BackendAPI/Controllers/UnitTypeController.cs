@@ -22,12 +22,11 @@ namespace BackendAPI.Controllers
 
         [HttpGet]
         [Route("GetAllUnitTypes")]
-        public IActionResult Get(int OrgId, int StaffId)
+        public IActionResult Get()
         {
-            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
-            if (CheckRoleTypeData.RoleType == "Admin")
-            {
-                var data = _UnitTypeRepo.GetAllUnitType(OrgId);
+            
+            
+                var data = _UnitTypeRepo.GetAllUnitType();
                 if (data == null)
                 {
                     return NotFound(new { Message = "No unit types found for the given organization." });
@@ -36,27 +35,10 @@ namespace BackendAPI.Controllers
                 {
                     return Ok(data);
                 }
-            }
-            else
-            {
-                var AccessData = _roles.CheckAccess(StaffId);
-                for (int i = 0; i < AccessData.Count; i++)
-                {
-                    if (AccessData[i].SideBarName == "UnitType" && AccessData[i].IsShow == true)
-                    {
-                        var data = _UnitTypeRepo.GetAllUnitType(OrgId);
-                        if (data == null)
-                        {
-                            return NotFound(new { Message = "No unit types found for the given organization and staff." });
-                        }
-                        else
-                        {
-                            return Ok(data);
-                        }
-                    }
-                }
-            }
-            return BadRequest(new { Message = "Invalid request parameters." });
+            
+           
+            
+           
         }
 
         //[HttpPost]

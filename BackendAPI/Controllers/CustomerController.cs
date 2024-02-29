@@ -11,7 +11,7 @@ namespace BackendAPI.Controllers
     {
         private readonly ICustomer _customer;
         private readonly IRoles _Roles;
-        public CustomerController(ICustomer customer,IRoles roles) 
+        public CustomerController(ICustomer customer, IRoles roles)
         {
             _customer = customer;
             _Roles = roles;
@@ -19,42 +19,20 @@ namespace BackendAPI.Controllers
 
         [HttpGet]
         [Route("Get")]
-        public IActionResult Get(int OrgId, int StaffId)
+        public IActionResult Get(int OrgId)
         {
-            var checkRoleTypeData = _Roles.CheckStaffType(StaffId);
-            if (checkRoleTypeData.RoleType == "Admin")
+            var customer = _customer.GetCustomer(OrgId);
+            if (customer == null)
             {
-                var customer = _customer.GetCustomer(OrgId);
-                if (customer == null)
-                {
-                    return NotFound("No customer found for the specified organization.");
-                }
-                else
-                {
-                    return Ok(customer);
-                }
+                return NotFound("No customer found for the specified organization.");
             }
             else
             {
-                var accessData = _Roles.CheckAccess(StaffId);
-                for (var i = 0; i < accessData.Count; i++)
-                {
-                    if (accessData[i].SideBarName == "Customer" && accessData[i].IsShow == true)
-                    {
-                        var customer = _customer.GetCustomer(OrgId);
-                        if (customer == null)
-                        {
-                            return NotFound("No customer found for the specified organization.");
-                        }
-                        else
-                        {
-                            return Ok(customer);
-                        }
-                    }
-                }
+                return Ok(customer);
             }
-            return BadRequest("Access denied.");
         }
+    
+        
 
         [HttpPost]
         [Route("AddCustomer")]

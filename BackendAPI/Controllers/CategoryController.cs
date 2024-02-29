@@ -23,11 +23,9 @@ namespace BackendAPI.Controllers
 
         [HttpGet]
         [Route("Get")]
-        public IActionResult Get(int OrgId, int StaffId)
+        public IActionResult Get(int OrgId)
         {
-            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
-            if (CheckRoleTypeData.RoleType == "Admin")
-            {
+           
                 var Catdata = _Category.GetAllCategory(OrgId);
                 if (Catdata == null)
                 {
@@ -37,32 +35,6 @@ namespace BackendAPI.Controllers
                 {
                     return Ok(Catdata);
                 }
-            }
-            else
-            {
-                var Accessdata = _roles.CheckAccess(StaffId);
-                for (var i = 0; i < Accessdata.Count; i++)
-                {
-
-                    if (Accessdata[i].SideBarName == "Category" && Accessdata[i].IsShow == true)
-                    {
-                        var data = _Category.GetAllCategory(OrgId);
-                        if (data == null)
-                        {
-                            return NotFound(new { Message = "No categories found for the given organization and staff." });
-                           
-                        }
-                        else
-                        {
-                            return Ok(data);
-                           
-                        }
-
-                    }
-                }
-            }
-            return BadRequest(new { Message = "Invalid request parameters." });
-
         }
     
 

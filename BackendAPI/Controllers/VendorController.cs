@@ -22,12 +22,9 @@ namespace BackendAPI.Controllers
 
         [HttpGet]
         [Route("Get")]
-        public IActionResult Get(int OrgId, int StaffId)
+        public IActionResult Get(int OrgId)
         {
-            var checkRoleTypeData = _Roles.CheckStaffType(StaffId);
-            if (checkRoleTypeData.RoleType == "Admin")
-            {
-                var vendor = _Vendor.GetVendor(OrgId);
+                 var vendor = _Vendor.GetVendor(OrgId);
                 if (vendor == null)
                 {
                     return NotFound("No vendor found for the specified organization.");
@@ -36,27 +33,7 @@ namespace BackendAPI.Controllers
                 {
                     return Ok(vendor);
                 }
-            }
-            else
-            {
-                var accessData = _Roles.CheckAccess(StaffId);
-                for (var i = 0; i < accessData.Count; i++)
-                {
-                    if (accessData[i].SideBarName == "Vendor" && accessData[i].IsShow == true)
-                    {
-                        var vendor = _Vendor.GetVendor(OrgId);
-                        if (vendor == null)
-                        {
-                            return NotFound("No vendor found for the specified organization.");
-                        }
-                        else
-                        {
-                            return Ok(vendor);
-                        }
-                    }
-                }
-            }
-            return BadRequest("Access denied.");
+           
         }
 
         [HttpPost]
