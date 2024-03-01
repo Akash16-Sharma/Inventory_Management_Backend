@@ -19,7 +19,7 @@ namespace FrontEnd_View.Controllers
 
         public IncomingController()
         {
-            _client =new HttpClient();
+            _client = new HttpClient();
             _client.BaseAddress = baseAddress;
         }
 
@@ -87,7 +87,7 @@ namespace FrontEnd_View.Controllers
             }
             return View();
 
-        } 
+        }
 
 
         public IActionResult IncOrders()  //show orders
@@ -113,7 +113,7 @@ namespace FrontEnd_View.Controllers
             {
                 string data = responseMessage2.Content.ReadAsStringAsync().Result;
                 items = JsonConvert.DeserializeObject<List<dynamic>>(data);
-              //  var itemlist = items.Select(s => new { name = s.name, id = s.id, opening_Stock = s.opening_Stock }).ToList();
+                //  var itemlist = items.Select(s => new { name = s.name, id = s.id, opening_Stock = s.opening_Stock }).ToList();
                 var itemlists = items.Select(s => new { name = s.name, id = s.id, opening_Stock = s.opening_Stock }).ToList();
 
                 ViewBag.ItemLists = itemlists;
@@ -124,20 +124,20 @@ namespace FrontEnd_View.Controllers
 
         public IActionResult AddIncOrders(IncOrderRequest ord)
         {
-            
-                int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
-                int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
-                ord.Inc_Orders.OrgId = OrgId;
-                string data = JsonConvert.SerializeObject(ord);
-                StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
-                HttpResponseMessage responseMessage = _client.PostAsync(_client.BaseAddress +
-                    "/Inc_Order/AddOrder?StaffId=" + StaffId, con).Result;
-                if (responseMessage.IsSuccessStatusCode)
-                {
-                    return RedirectToAction("GetIncORders");
-                }
+
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            ord.Inc_Orders.OrgId = OrgId;
+            string data = JsonConvert.SerializeObject(ord);
+            StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage responseMessage = _client.PostAsync(_client.BaseAddress +
+                "/Inc_Order/AddOrder?StaffId=" + StaffId, con).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("GetIncORders");
+            }
             return View();
-        } 
+        }
 
         public IActionResult GetIncORders()
         {
@@ -168,7 +168,7 @@ namespace FrontEnd_View.Controllers
 
             }
 
-        
+
             List<dynamic> incord = new List<dynamic>();
             HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
                 "/Inc_Order/GetOrderInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
