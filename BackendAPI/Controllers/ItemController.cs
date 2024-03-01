@@ -25,12 +25,9 @@ namespace BackendAPI.Controllers
 
         [HttpGet]
         [Route("GetItemInfo")]
-        public IActionResult GetItemInfo(int orgid, int StaffId)
+        public IActionResult GetItemInfo(int orgid)
         {
-            var CheckRoleTypeData = _roles.CheckStaffType(StaffId);
-            if (CheckRoleTypeData.RoleType == "Admin")
-            {
-                var data = _itemRepo.GetItemInfo(orgid);
+                 var data = _itemRepo.GetItemInfo(orgid);
                 if (data == null)
                 {
                     return NotFound(new { Message = "No items found for the given organization." });
@@ -39,27 +36,6 @@ namespace BackendAPI.Controllers
                 {
                     return Ok(data);
                 }
-            }
-            else
-            {
-                var AccessData = _roles.CheckAccess(StaffId);
-                for (int i = 0; i < AccessData.Count; i++)
-                {
-                    if (AccessData[i].SideBarName == "Item" && AccessData[i].IsShow == true)
-                    {
-                        var data = _itemRepo.GetItemInfo(orgid);
-                        if (data == null)
-                        {
-                            return NotFound(new { Message = "No items found for the given organization and staff." });
-                        }
-                        else
-                        {
-                            return Ok(data);
-                        }
-                    }
-                }
-            }
-            return BadRequest(new { Message = "Invalid request parameters." });
         }
 
         [HttpPost]
@@ -93,7 +69,7 @@ namespace BackendAPI.Controllers
                     var AccessData = _roles.CheckAccess(StaffId);
                     for (int i = 0; i < AccessData.Count; i++)
                     {
-                        if (AccessData[i].SideBarName == "Item" && AccessData[i].IsCreate == true)
+                        if (AccessData[i].SideBarName == "Items" && AccessData[i].IsCreate == true)
                         {
 
                             // Save the updated item to the repository
@@ -142,7 +118,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "Item" && AccessData[i].IsModify == true)
+                    if (AccessData[i].SideBarName == "Items" && AccessData[i].IsModify == true)
                     {
                         
                         // Save the updated item to the repository
@@ -184,7 +160,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "Item" && AccessData[i].IsModify == true)
+                    if (AccessData[i].SideBarName == "Items" && AccessData[i].IsModify == true)
                     {
                         bool IsDelete = _itemRepo.DeleteItem(id, StaffId);
                         if (IsDelete)
@@ -222,7 +198,7 @@ namespace BackendAPI.Controllers
                 var AccessData = _roles.CheckAccess(StaffId);
                 for (int i = 0; i < AccessData.Count; i++)
                 {
-                    if (AccessData[i].SideBarName == "Item" && AccessData[i].IsModify == true)
+                    if (AccessData[i].SideBarName == "Items" && AccessData[i].IsModify == true)
                     {
                         var ItemData = _itemRepo.GetItemById(id);
                         if (ItemData == null)

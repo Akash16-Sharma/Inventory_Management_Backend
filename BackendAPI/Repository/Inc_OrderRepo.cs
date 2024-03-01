@@ -120,8 +120,13 @@ namespace BackendAPI.Repository
         {
             var i = count;
             var Incdata = _Context.Inc_Order.Where(x => x.Purchase_Order_Id == PurchaseOrderId && x.IsActive == true).ToList();
-            
-            if(Incdata != null)
+
+            var Itemdata = _Context.Items.Where(x => x.Id == order.Item_Id).FirstOrDefault();
+            Itemdata.Opening_Stock += order.Quantity;
+            Itemdata.Updated_By = order.Updated_By;
+            Itemdata.InsertedOn = DateTime.Now;
+            _Context.SaveChanges();
+            if (Incdata != null)
             {
                 while (i < Incdata.Count)
                 {

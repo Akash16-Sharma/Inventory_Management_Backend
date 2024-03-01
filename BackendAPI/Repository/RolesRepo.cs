@@ -28,6 +28,8 @@ namespace BackendAPI.Repository
             string PassSecret = "b14ca5898a4e4133bbce2ea2315a1916";
             string password = _encDycPassword.EncryptPassword(PassSecret, staff.Password);
             staff.Password = password;
+            staff.IsActive = true;
+            staff.InsertedOn= DateTime.Now;
             _datacontext.Staff.Add(staff);
            int i= _datacontext.SaveChanges();
             if(i>0)

@@ -96,6 +96,7 @@ namespace BackendAPI.Repository
                             outOrder.Id,
                             outOrder.Quantity,
                             outOrder.Actual_Date,
+                            outOrder.Customer_Id,//returning customer id
                             //outOrder.Expected_Date,
                             CustomerName = customer.Name,
                             ItemName = item.Name,
@@ -109,8 +110,20 @@ namespace BackendAPI.Repository
         public bool UpdateOrder(Out_Order order, string SellOrderId, int Count)
         {
             var i = Count;
+            //Updating The Opening Stock Of Item
+            var ItemData = _context.Items.Where(x => x.Id == order.Item_Id).FirstOrDefault();
+            if (ItemData.Opening_Stock < order.Quantity)
+            {
+                return false;
+            }
+            ItemData.Opening_Stock -= order.Quantity;
+            ItemData.Updated_By = order.Updated_By;
+            ItemData.InsertedOn = DateTime.Now;
+            _context.Items.Update(ItemData);
+            _context.SaveChanges();
             var OutDataList=_context.Out_Order.Where(x=>x.Sales_Order_Id==SellOrderId&&x.IsActive==true).ToList();
-            while (i < OutDataList.Count)
+            
+                while (i < OutDataList.Count)
             {
                 order.Id = 0;
                 order.Id = OutDataList[i].Id;

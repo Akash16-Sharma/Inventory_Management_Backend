@@ -55,7 +55,7 @@ namespace BackendAPI.Repository
         //    else { return false; }
         //}
 
-        public List <UnitType> GetAllUnitType(int OrgId)
+        public List <UnitType> GetAllUnitType()
         {
             var UnitTypeData = _UnitType.Unit_Type.ToList(); //get all data
             return UnitTypeData;

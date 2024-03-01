@@ -29,7 +29,7 @@ namespace BackendAPI.Repository
         {
             string PassSecret = "b14ca5898a4e4133bbce2ea2315a1916";
             string EncPss = encypss.EncryptPassword(PassSecret, Password);
-            var data =_context.Staff.Where(x=>x.Email==Email&&x.Password==EncPss).FirstOrDefault();
+            var data =_context.Staff.Where(x=>x.Email==Email&&x.Password==EncPss&&x.IsActive==true).FirstOrDefault();
             if(data!=null)
             {
                 return data;
