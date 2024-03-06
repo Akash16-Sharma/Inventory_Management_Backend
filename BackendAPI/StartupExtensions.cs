@@ -5,6 +5,7 @@ using BackendAPI.Models;
 using BackendAPI.Models.Class;
 using BackendAPI.Models.Roles;
 using BackendAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BackendAPI
@@ -13,6 +14,7 @@ namespace BackendAPI
     {
         public static IServiceCollection AddInterfaceRepo(this IServiceCollection services)
         {
+            services.AddScoped<AuthorizeAttribute, AuthorizeAttribute>();
             services.AddScoped<IUser_Login, AccountRepo>();
             services.AddScoped<IOrganisation_Info, Organisation_InfoRepo>();
             services.AddScoped<IItemRepo, ItemRepo>();

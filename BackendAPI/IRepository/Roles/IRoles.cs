@@ -19,6 +19,6 @@ namespace BackendAPI.IRepository.Roles
 
         List<Access> GetAccess(int StaffId);
         List<string> GetAccessNames(int StaffId);
-       List <string> GetStaffByStaffId(int StaffId);
+       Staff  GetStaffByStaffId(int StaffId);
     }
 }
