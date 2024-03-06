@@ -10,13 +10,17 @@ namespace BackendAPI.Repository
     {
         public async Task<bool> SendEmailAsync(EmailModel emailModel)
         {
+            if(emailModel.From==null)
+            {
+                emailModel.From= "ninjainventory@gmail.com";
+            }
             try
             {
                 using (var client = new SmtpClient())
                 {
                     var credentials = new NetworkCredential("ninjainventory@gmail.com", "tdjelnusbtibtomj"); // Replace with your email credentials
                     client.Host = "smtp.gmail.com"; // Replace with your SMTP server host
-                    client.Port = 465; // Replace with your SMTP port
+                    client.Port = 587; // Replace with your SMTP port
                     client.EnableSsl = true; // Enable SSL if required
 
                     client.UseDefaultCredentials = false;
@@ -24,7 +28,7 @@ namespace BackendAPI.Repository
 
                     var message = new MailMessage
                     {
-                        From = new MailAddress("ninjainventory@gmail.com"), // Replace with your email address
+                        From = new MailAddress(emailModel.From), // Replace with your email address
                         Subject = emailModel.Subject,
                         Body = emailModel.Body,
                         IsBodyHtml = true
