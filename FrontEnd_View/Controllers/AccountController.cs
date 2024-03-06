@@ -80,6 +80,7 @@ namespace FrontEnd_View.Controllers
                     int staffId = responseObject.value.staffId;
                     string orgname=  responseObject.value.orgName;
                     string type = responseObject.value.roleType;
+                    string staffname= responseObject.value.staffName;
                     List<string> sideBarName = responseObject.value1.ToObject<List<string>>();
                     string sideBarNameJson = JsonConvert.SerializeObject(sideBarName);
                     HttpContext.Session.SetInt32("orgId", orgId);
@@ -87,6 +88,7 @@ namespace FrontEnd_View.Controllers
                     HttpContext.Session.SetString("orgname", orgname);
                     HttpContext.Session.SetString("roletype", type);
                     HttpContext.Session.SetString("SideBarNameList", sideBarNameJson);
+                    HttpContext.Session.SetString("staffName", staffname);
                     return Json(new { success = true, redirectUrl = Url.Action("ItemCategory", "Item") });
                 }
             }
