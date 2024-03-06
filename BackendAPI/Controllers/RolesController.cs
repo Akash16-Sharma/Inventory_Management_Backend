@@ -103,13 +103,14 @@ namespace BackendAPI.Controllers
         public IActionResult GetAccessByid(int Staffid)
         {
             var data = _Roles.GetAccess(Staffid);
-            if(data == null)
+            var Staffdata = _Roles.GetStaffByStaffId(Staffid);
+            if (data == null)
             {
                 return NotFound();
             }
             else
             {
-                return Ok(data);
+                return Ok(new {Staffvalue=Staffdata,AccessValue=data});
             }
         }
     }

@@ -58,6 +58,7 @@ namespace BackendAPI.AuthServices
                     StaffId=user.Id,
                     OrgName=Org.Name,
                     RoleType=user.RoleType,
+                    StaffName=user.Staff_Name,
                 };
             }
         }

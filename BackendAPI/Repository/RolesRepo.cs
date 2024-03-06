@@ -159,5 +159,16 @@ namespace BackendAPI.Repository
 
             return data;
         }
+
+        public List<string> GetStaffByStaffId(int StaffId)
+        {
+            var staffInfoList = _datacontext.Staff
+        .Where(x => x.Id == StaffId)
+        .Select(x => $"{x.Staff_Name} - {x.Email}")
+        .ToList();
+
+            return staffInfoList;
+        }
+
     }
 }
