@@ -5,6 +5,8 @@
     var isMob = Context.Request.HttpContext.Session.GetInt32("Ismobile");
     var itemCount = itemList?.Count ?? 0;
 }
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 
 <h2>Selling</h2>
 
@@ -44,10 +46,10 @@
             </div>
 
             <div class="form-group row" style="flex-wrap:nowrap">
-                <label for="vendorDropdown" class="col-sm-3 col-form-label">Vendor</label>
+                <label for="vendorDropdown" class="col-sm-3 col-form-label">Customer</label>
                 <div class="col-sm-4">
                     <select class="form-control" id="vendorDropdown">
-                        <option value="">Select Vendor</option>
+                       
                         @foreach (var vendor in ViewBag.customerListData)
                         {
                             <option value="@vendor.id">@vendor.name</option>
@@ -123,10 +125,10 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="vendorDropdown" class="col-sm-3 col-form-label">Vendor</label>
+                        <label for="vendorDropdown" class="col-sm-3 col-form-label">Customer</label>
                         <div class="col-sm-4">
                             <select class="form-control" id="vendorDropdown">
-                                <option value="">Select Vendor</option>
+                              
                                 @foreach (var vendor in ViewBag.customerListData)
                                 {
                                     <option value="@vendor.id">@vendor.name</option>
