@@ -35,7 +35,7 @@ namespace FrontEnd_View.Controllers
                 "/Roles/AddStaff", con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("GetOutOrders");
+                return RedirectToAction("List");
             }
             return View();
 
@@ -56,7 +56,7 @@ namespace FrontEnd_View.Controllers
             return View(stafflist);
         }
 
-        public IActionResult GetAccessById(int Id)
+        public object GetAccessById(int Id)
         {
             int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
 
@@ -68,8 +68,7 @@ namespace FrontEnd_View.Controllers
                 string data = responseMessage.Content.ReadAsStringAsync().Result;
                 stafflist = JsonConvert.DeserializeObject<List<Access>>(data);
             }
-            return View(stafflist);
-
+            return stafflist;
 
         }
 

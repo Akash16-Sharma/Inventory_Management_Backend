@@ -11,7 +11,7 @@
         public string CustomerName { get; set; }
         public string ItemName { get; set; }
         public decimal ItemSellingPrice { get; set; }
-        public string Sell_Order_Id { get; set; }
-        public int Vendor_Id { get; set; }
+        public string Sales_Order_Id { get; set; }
+        public int Customer_Id { get; set; }
     }
 }

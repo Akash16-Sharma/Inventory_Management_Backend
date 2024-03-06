@@ -37,7 +37,7 @@ namespace BackendAPI.Repository
                     return true;
                 }
             }
-            catch ( )
+            catch (Exception ex)
             {
                 return false;
             }

@@ -1,12 +1,12 @@
 ﻿<html>
 <head>
-    <meta charset="utf-8">
+   @*  <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
     <link href="../../css/editor.css" rel="stylesheet">
-    <link href="narrow-jumbotron.css" rel="stylesheet">
+    <link href="narrow-jumbotron.css" rel="stylesheet"> *@
 
     <script src="~/js/jquery-3.7.1.min.js"></script>
   
@@ -292,8 +292,8 @@
             dataType: 'json', // Expect JSON response
             data: JSON.stringify({ staff: staffObject, staffAccess: data }),
             success: function (response) {
-                location.reload();
-                console.log(response);
+            
+                console.log("added");
             },
             error: function (error) {
                 console.error(error);
