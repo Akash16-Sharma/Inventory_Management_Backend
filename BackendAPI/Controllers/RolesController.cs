@@ -1,5 +1,6 @@
 ﻿using BackendAPI.IRepository.Roles;
 using BackendAPI.Models.Roles;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -98,19 +99,21 @@ namespace BackendAPI.Controllers
             return BadRequest();
         }
 
+       
         [HttpGet]
         [Route("GetAccessById")]
         public IActionResult GetAccessByid(int Staffid)
         {
             var data = _Roles.GetAccess(Staffid);
             var Staffdata = _Roles.GetStaffByStaffId(Staffid);
+          
             if (data == null)
             {
                 return NotFound();
             }
             else
             {
-                return Ok(new {Staffvalue=Staffdata,AccessValue=data});
+                return Ok(new {StaffName=Staffdata.Staff_Name,StaffEamil=Staffdata.Email,StaffRoleTypr=Staffdata.RoleType,AccessValue=data});
             }
         }
     }
