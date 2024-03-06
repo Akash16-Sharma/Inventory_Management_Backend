@@ -7,5 +7,6 @@
         public string RoleType { get; set; }
         public string OrgName { get; set; }
         public string auth_token { get; set; }  
+        public string StaffName { get; set; }  
     }
 }
