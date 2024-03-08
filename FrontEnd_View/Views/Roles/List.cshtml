@@ -57,6 +57,8 @@
                     @foreach (var item in Model)
                     {
                         <tr class="clickable-row" data-id="@item.Id" onclick="StaffAccessInfo('@item.Id')">
+
+
                             <td>
                                 @Html.DisplayFor(modelItem => item.Staff_Name)
                             </td>
@@ -94,6 +96,13 @@
                         </select>
                     </div>
                 </div>
+            </div>
+
+            <div class="alert alert-info alert-dismissible fade show col-sm-12" style="display:none" id="warning" role="alert">
+                Admin has all the rights
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
 
 
@@ -246,13 +255,15 @@
 
 
             </div>
-                <button type="button" style="margin-bottom:10px" onclick="updateItemList()" class="btn btn-primary">Update</button>
+            <button type="button" style="margin-bottom:10px" onclick="submitForm()" class="btn btn-primary">Update</button>
         </div>
     </div>
 </div>
 <script>
 
     $(document).ready(function () {
+
+        var pubid;
         // Disable every row except the checkbox with class 'endb-checkbox' checked
        $('.rowPm:not(:has(.endb-checkbox:checked))').addClass('disabled-row');
 
@@ -264,10 +275,23 @@
             } else {
                 row.addClass('disabled-row');  // Disable the row if the checkbox is not checked
             }
-        });            
+        });
+
+        $("#sttype").change(function () {
+            if ($(this).val() === "Admin") {
+                $("#rolesUI").hide();
+                $("#warning").show();
+            } else {
+                $("#rolesUI").show();
+                $("#warning").hide();
+            }
+        });
+
     });
 
     function StaffAccessInfo(id) {
+
+        pubid = id;
 
         $.ajax({
             url: '/Roles/GetAccessById',
@@ -286,30 +310,44 @@
     function updateCheckboxes(datas) {
         $('.endb-checkbox, .create-checkbox, .modify-checkbox').prop('checked', false);
 
-        datas.forEach(function (data) {
-            // Find the row based on the sidebar name
-            var row = $(".rowPm:has(.head:contains('" + data.sideBarName+ "'))");
+        $("#stname").val(datas.staffName);
+        $("#stemail").val(datas.staffEamil);
+        $("#sttype").val(datas.staffRoleTypr);
 
-            // Find the checkboxes within the row
-            var endbCheckbox = row.find('.endb-checkbox');
-            var createCheckbox = row.find('.create-checkbox');
-            var modifyCheckbox = row.find('.modify-checkbox');
 
-            // Enable endb-checkbox if it exists in the row
-            if (endbCheckbox.length > 0) {
-                endbCheckbox.prop('checked', true);
-            }
+        if (datas.staffRoleTypr != "Admin") {
 
-            // Check create-checkbox if isCreate is true
-            if (data.isCreate) {
-                createCheckbox.prop('checked', true);
-            }
+            $("#rolesUI").show();
+            $("#warning").hide();
+            datas.accessValue.forEach(function (data) {
+                // Find the row based on the sidebar name
+                var row = $(".rowPm:has(.head:contains('" + data.sideBarName + "'))");
 
-            // Check modify-checkbox if isModify is true
-            if (data.isModify) {
-                modifyCheckbox.prop('checked', true);
-            }
-        });
+                // Find the checkboxes within the row
+                var endbCheckbox = row.find('.endb-checkbox');
+                var createCheckbox = row.find('.create-checkbox');
+                var modifyCheckbox = row.find('.modify-checkbox');
+
+                // Enable endb-checkbox if it exists in the row
+                if (endbCheckbox.length > 0) {
+                    endbCheckbox.prop('checked', true);
+                }
+
+                // Check create-checkbox if isCreate is true
+                if (data.isCreate) {
+                    createCheckbox.prop('checked', true);
+                }
+
+                // Check modify-checkbox if isModify is true
+                if (data.isModify) {
+                    modifyCheckbox.prop('checked', true);
+                }
+            });
+        }else
+        {
+            $("#rolesUI").hide();
+            $("#warning").show();
+        }
 
         $('.endb-checkbox').each(function () {
             var row = $(this).closest('.rowPm');
@@ -321,4 +359,52 @@
         });
         
     }
+
+    function submitForm() {
+        //user info
+        var staffObject = {
+            Id: pubid,
+            Staff_Name: $('#stname').val(),
+            Email: $('#stemail').val(),
+            RoleType: $('#sttype').val(),
+            Password: "string"
+        };
+
+
+        var data = [];
+
+        $(".rowPm").each(function () {
+            var row = $(this);
+            var sidename = row.find("h6").text().trim();
+            var createChecked = row.find(".create-checkbox").is(":checked") ? true : false;
+            var modifyChecked = row.find(".modify-checkbox").is(":checked") ? true : false;
+
+            if (row.find(".endb-checkbox").is(":checked")) {
+                data.push({
+                    SideBarName: sidename,
+                    IsCreate: createChecked,
+                    IsModify: modifyChecked
+                });
+            }
+        });
+
+        $.ajax({
+            url: '/Roles/UpdateStaff',
+            type: 'POST',
+            contentType: 'application/json', // Ensure correct Content-Type
+            dataType: 'json', // Expect JSON response
+            data: JSON.stringify({ staff: staffObject, staffAccess: data ,password:"string" }),
+            success: function (response) {
+                location.reload();
+                console.log("added");
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+        location.reload();
+    }
+
+
+
 </script>

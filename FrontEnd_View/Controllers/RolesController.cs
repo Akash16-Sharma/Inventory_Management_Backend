@@ -1,5 +1,6 @@
 ﻿using BackendAPI.Models;
 using BackendAPI.Models.Roles;
+using FrontEnd_View.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
@@ -60,17 +61,32 @@ namespace FrontEnd_View.Controllers
         {
             int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
 
-            List<Access> stafflist = new List<Access>();
+            RolesGet stafflist = new RolesGet();
             HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
                 "/Roles/GetAccessById?StaffId=" + Id).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
                 string data = responseMessage.Content.ReadAsStringAsync().Result;
-                stafflist = JsonConvert.DeserializeObject<List<Access>>(data);
+                stafflist = JsonConvert.DeserializeObject<RolesGet>(data);
             }
             return stafflist;
 
         }
 
+        public IActionResult UpdateStaff([FromBody] StaffRoleRequest staffRoleRequest)
+        {
+            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+            staffRoleRequest.Staff.OrgId = OrgId;
+            string data = JsonConvert.SerializeObject(staffRoleRequest);
+            StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage responseMessage = _client.PutAsync(_client.BaseAddress +
+                "/Roles/UpdateStaff", con).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("List");
+            }
+            return View();
+
+        }
     }
 }

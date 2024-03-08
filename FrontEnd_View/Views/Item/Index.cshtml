@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
     #addcat {
@@ -23,6 +23,12 @@
         display: block;
         width: 100%;
         text-align: left;
+    }
+
+    #itemUpdatedAlert,
+    #itemAddedAlert,
+    #itemDeletedAlert {
+        display: none; /* Hide all alerts initially */
     }
 
     .required:after {
@@ -39,6 +45,29 @@
     }
 
 </style>
+<div class="col-md-4">
+
+    <div id="itemUpdatedAlert" class="alert alert-primary alert-dismissible fade show" role="alert">
+        <strong>Item Updated!</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div id="itemAddedAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Item Added!</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div id="itemDeletedAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Item Deleted!</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
 
 <h2>Items</h2>
 
@@ -316,6 +345,7 @@
 
     $(document).ready(function () {
 
+
         $('#assignTable').DataTable();
 
         $("#save").click(function () {
@@ -400,17 +430,18 @@
                 Barcode: barcode,
             },
             success: function (data) {
-                $("#myModal").modal("hide");
-                 location.reload();
-          
+                Swal.fire({
+                    icon: "success",
+                    title: "Item Added",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log("AJAX error: " + textStatus + ", " + errorThrown);
-                console.log("Response Text: " + jqXHR.responseText);
-                console.log("Status Code: " + jqXHR.status);
-                console.log("Status Text: " + jqXHR.statusText);
+            error: function (error) {
+                console.log("Error: " + error);
             }
-        });
+        });      
+
     }
 
     function deleteItem(ItemId) {
@@ -419,8 +450,17 @@
                 url: '/Item/ItemDelete',
                 type: 'POST',
                 data: { Id: ItemId },
-                success: function (response) {
-                    location.reload();
+                success: function (data) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Item Deleted",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
                 },
                 error: function (error) {
                     console.log("Error: " + error);

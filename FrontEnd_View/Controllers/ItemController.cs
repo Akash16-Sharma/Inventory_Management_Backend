@@ -72,32 +72,24 @@ namespace FrontEnd_View.Controllers
             return View(items);
         }
 
-        [HttpPost]
         public IActionResult AddItem(Item item)
         {
             int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
             int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
             item.Org_Id = OrgId;
-           
-            try
-            {
-                string data = JsonConvert.SerializeObject(item);
-                StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
-                HttpResponseMessage responseMessage = _client.PostAsync(_client.BaseAddress +
-                    "/Item/AddItem?StaffId=" + StaffId, con).Result;
 
-                if (responseMessage.IsSuccessStatusCode)
-                {
-                    return RedirectToAction("Index");
-                }
+            string data = JsonConvert.SerializeObject(item);
+            StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage responseMessage = _client.PostAsync(_client.BaseAddress +
+                "/Item/AddItem?StaffId=" + StaffId, con).Result;
 
-                return View();
-            }
-            catch (Exception ex)
+            if (responseMessage.IsSuccessStatusCode)
             {
-                return View();
-                throw;
+                return RedirectToAction("Index");
             }
+
+            return View();
+
 
         }
 
