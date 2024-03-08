@@ -1,4 +1,6 @@
-﻿using BackendAPI.IRepository.Roles;
+﻿using BackendAPI.IRepository;
+using BackendAPI.IRepository.Roles;
+using BackendAPI.Models;
 using BackendAPI.Models.Roles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,9 +13,11 @@ namespace BackendAPI.Controllers
     public class RolesController : ControllerBase
     {
         private readonly IRoles _Roles;
-        public RolesController(IRoles roles)
+        private readonly IEmail _mail;
+        public RolesController(IRoles roles,IEmail mail)
         {
             _Roles = roles;
+            _mail = mail;
         }
         [HttpGet]
         [Route("GetStaff")]
@@ -29,12 +33,27 @@ namespace BackendAPI.Controllers
 
         [HttpPost]
         [Route("AddStaff")]
-        public IActionResult AddStaff([FromBody] StaffRoleRequest Staff)
+        public IActionResult AddStaff([FromBody] StaffRoleRequest Staff,string FromEmail)
         {
-            
+            string Password = Staff.Staff.Password;
+            EmailModel email = new EmailModel();
+            email.From = FromEmail;
             int StaffId = _Roles.AddStaff(Staff.Staff);
             if (StaffId>0 && Staff.Staff.RoleType == "Admin")
             {
+                email.To = Staff.Staff.Email;
+                email.Subject = "Credentials For Log In";
+                // Assuming you have a Staff class with properties like Staff_Name, Email, etc.
+                email.Body = $"Hello {Staff.Staff.Staff_Name},\n\n" +
+                              $"Your login credentials for Ninja Inventory are as follows:\n" +
+                              $"Username: {Staff.Staff.Email}\n" +
+                              $"Password: {Password}\n\n" +
+                              $"Please keep this information confidential and ensure that only authorized personnel have access to it.\n\n" +
+                              "If you have any questions or concerns, feel free to contact our support team.\n\n" +
+                              "Best regards,\n" +
+                              "Ninja Inventory Team";
+
+                _mail.SendEmailAsync(email);
                 return Ok("Roles Added successfully.");
             }
                 if (StaffId>0)
@@ -46,6 +65,10 @@ namespace BackendAPI.Controllers
                         continue;
                     
                 }
+                email.To = Staff.Staff.Email;
+                email.Subject = "Credentials For Log In";
+                email.Body = "Hello" + Staff.Staff.Staff_Name + "Your Credentials For Log In For Ninja Inventory Are Below" + Staff.Staff.Email + "And PassWord Is" + Staff.Staff.Password;
+                _mail.SendEmailAsync(email);
                 return Ok("Roles Added successfully.");
             }
             else

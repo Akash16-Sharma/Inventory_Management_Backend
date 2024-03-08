@@ -27,10 +27,11 @@ namespace BackendAPI
             services.AddScoped<IOut_Order,Out_OrderRepo>();
             services.AddScoped<ICustomer,CustomerRepo>();
             services.AddScoped<IDashboard,DashboardRepo>();
+            services.AddScoped<IEmail,EmailRepo>();
             services.AddScoped<AppSettings>();
             services.AddScoped<User_Info>();
             services.AddScoped<EncDycPassword>();
-
+            services.AddScoped<EmailModel>();
             services.AddScoped<ItemWithImage>();
             services.AddScoped<Item>();
             services.AddScoped<UnitType>();
