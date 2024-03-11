@@ -45,29 +45,6 @@
     }
 
 </style>
-<div class="col-md-4">
-
-    <div id="itemUpdatedAlert" class="alert alert-primary alert-dismissible fade show" role="alert">
-        <strong>Item Updated!</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-
-    <div id="itemAddedAlert" class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Item Added!</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-
-    <div id="itemDeletedAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Item Deleted!</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-</div>
 
 <h2>Items</h2>
 
@@ -435,6 +412,8 @@
                     title: "Item Added",
                     showConfirmButton: false,
                     timer: 1500
+                }).then(function () {
+                    location.reload();
                 });
             },
             error: function (error) {
