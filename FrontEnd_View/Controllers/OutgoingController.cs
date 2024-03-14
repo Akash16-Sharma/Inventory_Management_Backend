@@ -49,10 +49,10 @@ namespace FrontEnd_View.Controllers
                 "/Customer/AddCustomer?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                return Json(new { success = true });
             }
 
-            return View();
+            return Json(new { success = false });
         }
 
         public IActionResult CustomerEdit(Customer cust) //customer edit
@@ -66,10 +66,10 @@ namespace FrontEnd_View.Controllers
                 "/Customer/UpdateCustomer?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                return Json(new { success = true });
             }
 
-            return View();
+            return Json(new { success = false });
         }
 
         public IActionResult CustomerDelete(int Id)  //customer delete
@@ -80,9 +80,9 @@ namespace FrontEnd_View.Controllers
 
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                return Json(new { success = true });
             }
-            return View();
+            return Json(new { success = false });
 
         }
 
@@ -176,8 +176,6 @@ namespace FrontEnd_View.Controllers
                 incord = JsonConvert.DeserializeObject<List<dynamic>>(data);
             }
 
-
-
             return View(incord);
 
         }
@@ -211,9 +209,9 @@ namespace FrontEnd_View.Controllers
                 "/Out_Order/UpdateOrder?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("GetIncORders");
+                return Json(new { success = true });
             }
-            return View();
+            return Json(new { success = false });
         }   //update orders
 
     }

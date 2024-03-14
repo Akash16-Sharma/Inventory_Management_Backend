@@ -46,18 +46,6 @@ namespace FrontEnd_View.Controllers
                 ViewBag.Unit = stateListData;
             }
 
-            ////vendorassign to Viewbag 
-            //List<Category> vendorLists = new List<Category>();
-            //HttpResponseMessage responseMessage3 = _client.GetAsync(_client.BaseAddress +
-            //    "/Vendor/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
-            //if (responseMessage1.IsSuccessStatusCode)
-            //{
-            //    string data = responseMessage3.Content.ReadAsStringAsync().Result;
-            //    vendorLists = JsonConvert.DeserializeObject<List<Category>>(data);
-            //    var vendorListData = vendorLists.Select(s => new { name = s.Name, id = s.Id }).ToList();
-            //    ViewBag.Vendor = vendorListData;
-            //}
-
 
             //return item list 
             List<dynamic> items = new List<dynamic>();
@@ -85,10 +73,10 @@ namespace FrontEnd_View.Controllers
 
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                return Json(new { success = true });
             }
 
-            return View();
+            return Json(new { success = false });
 
 
         }
@@ -119,9 +107,9 @@ namespace FrontEnd_View.Controllers
 
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                return Json(new { success = true });
             }
-            return View();
+            return Json(new { success = false });
 
         } //item delete by Id
 
@@ -155,10 +143,10 @@ namespace FrontEnd_View.Controllers
                 "/Category/AddCategory?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("ItemCategory");
+                return Json(new { success = true });
             }
 
-            return View();
+            return Json(new { success = false });
         }
 
         public IActionResult ItemCategoryDelete(int Id)
@@ -170,9 +158,9 @@ namespace FrontEnd_View.Controllers
 
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("ItemCategory");
+                return Json(new { success = true });
             }
-            return View();
+            return Json(new { success = false }); ;
 
         } //category delete by Id
 
@@ -187,10 +175,10 @@ namespace FrontEnd_View.Controllers
                 "/Category/EditCategory?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("ItemCategory");
+                return Json(new { success = true });
             }
 
-            return View();
+            return Json(new { success = false });
         }
 
         public IActionResult ItemUpdate(Item item) //category add
@@ -204,10 +192,10 @@ namespace FrontEnd_View.Controllers
                 "/Item/UpdateItem?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("ItemCategory");
+                return Json(new { success = true });
             }
 
-            return View();
+            return Json(new { success = false });
         }
 
 

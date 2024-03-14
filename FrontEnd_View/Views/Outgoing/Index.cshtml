@@ -134,12 +134,24 @@
             url: '/Outgoing/CustomerAdd',
             type: 'POST',
             data: { Name: nameValue, Email: emailValue, Phone: phoneValue },
-            success: function (response) {
-                $("#myModal").modal("hide");
-                location.reload();
+            success: function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Customer Added",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
+                } else {
+                    alert("Failed to add customer. Please try again.");
+                }
             },
-            error: function (error) {
-                console.log("Error: " + error);
+            error: function () {
+                alert("Failed to add customer. Please try again.");
             }
         });
     }
@@ -167,12 +179,24 @@
             url: '/Outgoing/CustomerEdit',
             type: 'POST',
             data: { Id: idValue, Name: nameValue, Email: emailValue, Phone: phoneValue },
-            success: function (response) {
-                $('#editCategoryModal').modal('hide');
-                location.reload();
+            success: function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Customer Updated",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
+                } else {
+                    alert("Failed to update customer. Please try again.");
+                }
             },
-            error: function (error) {
-                console.log("Error: " + error);
+            error: function () {
+                alert("Failed to update customer. Please try again.");
             }
         });
     }
@@ -183,11 +207,24 @@
                 url: '/Outgoing/CustomerDelete',
                 type: 'POST',
                 data: { Id: id },
-                success: function (response) {
-                    location.reload();
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Customer Deleted",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+
+                    } else {
+                        alert("Failed to delete customer. Please try again.");
+                    }
                 },
-                error: function (error) {
-                    console.log("Error: " + error);
+                error: function () {
+                    alert("Failed to delete customer. Please try again.");
                 }
             });
         }

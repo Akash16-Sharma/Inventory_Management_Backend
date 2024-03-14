@@ -52,10 +52,10 @@ namespace FrontEnd_View.Controllers
                 "/Vendor/AddVendor?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                return Json(new { success = true });
             }
 
-            return View();
+            return Json(new { success = false });
         }
 
         public IActionResult VendorEdit(Vendor ven) //vendor edit
@@ -69,10 +69,10 @@ namespace FrontEnd_View.Controllers
                 "/Vendor/UpdateVendor?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                return Json(new { success = true });
             }
 
-            return View();
+            return Json(new { success = false });
         }
 
         public IActionResult VendorDelete(int Id)  //vendor delete
@@ -83,9 +83,10 @@ namespace FrontEnd_View.Controllers
 
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                return Json(new { success = true });
             }
-            return View();
+
+            return Json(new { success = false });
 
         }
 
@@ -134,9 +135,9 @@ namespace FrontEnd_View.Controllers
                 "/Inc_Order/AddOrder?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("GetIncORders");
+                return Json(new { success = true });
             }
-            return View();
+            return Json(new { success = false });
         }
 
         public IActionResult GetIncORders()
@@ -214,10 +215,22 @@ namespace FrontEnd_View.Controllers
                 "/Inc_Order/UpdateOrder?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("GetIncORders");
+                return Json(new { success = true });
             }
-            return View();
+            return Json(new { success = false });
         }   //update orders
 
+        public IActionResult DeleteIncOrders(int PurOrderid)
+        {
+
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            HttpResponseMessage responseMessage = _client.DeleteAsync(_client.BaseAddress +
+                "/Inc_Order/DeleteOrder?PurchaseOrderId=" + PurOrderid + "&StaffId=" + StaffId).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }   //update orders
     }
 }

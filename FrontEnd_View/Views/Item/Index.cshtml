@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <style>
     #addcat {
@@ -123,7 +123,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                
                 <div class="row" style="padding-bottom:10px">
                     <div class="col-md-4">
                         <label for="inputname" class="form-label required">Product Name</label>
@@ -207,10 +207,9 @@
 
                 <div class="modal-footer">
                     <div style="margin-top:20px">
-                        <button type="submit" onclick="onSubmit()" class="btn btn-primary">ADD ITEM</button>
+                        <button onclick="onSubmit()" class="btn btn-primary">ADD ITEM</button>
                     </div>
                 </div>
-                </form>
             </div>
         </div>
     </div>
@@ -292,10 +291,11 @@
                             <label for="editInputSellPrice">Selling Price</label>
                             <input type="number" class="form-control" id="editInputSellPrice">
 
-                            <div class="col-md-6">
+                           
+                        </label>
                             </div>
 
-                            @*    <div class="col-md-12">
+                           @*     <div class="col-md-12">
                             <label for="editInputSupplier" class="required">Supplier</label>
                             <select id="editInputSupplier" class="form-control">
                             <option selected>Select</option>
@@ -305,8 +305,7 @@
                             }
                             </select>
                             </div> *@
-                        </label>
-                    </div>
+                </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" onclick="updateItem()">Save Changes</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -386,10 +385,8 @@
         var category = $("#category").val();
         var minstock = $("#minstocklvl").val();
         var openstock = $("#openstock").val();
-        var barcode = $("#barcode").val();
         var cprice = $("#costprice").val();
         var sprice = $("#sellprice").val();
-        var supplier = $("#supplier").val();
 
 
         $.ajax({
@@ -403,23 +400,27 @@
                 Selling_Price: sprice,
                 Stock_Alert: minstock,
                 Opening_Stock: openstock,
-                Vendor_Id: supplier,
-                Barcode: barcode,
             },
             success: function (data) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Item Added",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(function () {
-                    location.reload();
-                });
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Item Added",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
+                } else {
+                    alert("Failed to add item. Please try again.");
+                }
             },
-            error: function (error) {
-                console.log("Error: " + error);
+            error: function () {
+                alert("Failed to add item. Please try again.");
             }
-        });      
+        });
 
     }
 
@@ -430,19 +431,23 @@
                 type: 'POST',
                 data: { Id: ItemId },
                 success: function (data) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Item Deleted",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1300);
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Item Added",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
 
+                    } else {
+                        alert("Failed to add item. Please try again.");
+                    }
                 },
-                error: function (error) {
-                    console.log("Error: " + error);
+                error: function () {
+                    alert("Failed to add item. Please try again.");
                 }
             });
         }
@@ -499,12 +504,23 @@
 
             },
             success: function (data) {
-                $('#editModal').modal('hide');
-                location.reload();
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Item Updated",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
+                } else {
+                    alert("Failed to update item. Please try again.");
+                }
             },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error('Update failed:', errorThrown);
-                // Handle error as needed
+            error: function () {
+                alert("Failed to update item. Please try again.");
             }
         });
 

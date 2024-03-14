@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="~/assets/css/datatables.min.css">
     <link rel="stylesheet" href="~/assets/css/fullcalendar.min.css">
     <link rel="stylesheet" href="~/assets/css/style.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 @{
     var roletype = Context.Request.HttpContext.Session.GetString("roletype");
@@ -199,7 +199,7 @@
                             <li>
                                 <ul>
                                     <li class="active">
-                                        <a href="/Roles/Index">
+                                        <a href="/Roles/List">
                                             <i class="fa fa-home"></i>
                                             <span>Roles</span>
                                         </a>

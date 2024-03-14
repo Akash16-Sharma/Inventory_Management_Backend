@@ -33,12 +33,12 @@ namespace FrontEnd_View.Controllers
             string data = JsonConvert.SerializeObject(staffRoleRequest);
             StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage responseMessage = _client.PostAsync(_client.BaseAddress +
-                "/Roles/AddStaff", con).Result;
+                "/Roles/AddStaff?FromEmail=" + staffRoleRequest.Staff.Email, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("List");
+                return Json(new { success = true });
             }
-            return View();
+            return Json(new { success = false });
 
         }
 
@@ -83,9 +83,9 @@ namespace FrontEnd_View.Controllers
                 "/Roles/UpdateStaff", con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("List");
+                return Json(new { success = true });
             }
-            return View();
+            return Json(new { success = false });
 
         }
     }

@@ -35,6 +35,9 @@
         display: none;
     }
 </style>
+<div class="row" style="justify-content:flex-end">
+<a href="/Roles/Index"  class="btn btn-link">Add Roles</a>
+</div>
 <div class="container">
     <div class="row">
         <!-- Left side with the table -->
@@ -75,7 +78,7 @@
         </div>
         <div class="vertical-line"></div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 hide" id="po">
             <div style="padding-bottom:10px">
 
                 <div class="form-row">
@@ -252,10 +255,11 @@
                         </h6>
                     </div>
                 </div>
-
-
             </div>
+
             <button type="button" style="margin-bottom:10px" onclick="submitForm()" class="btn btn-primary">Update</button>
+            <button type="button" style="margin-bottom:10px" onclick="deleteForm()" class="btn btn-warning">Delete</button>
+
         </div>
     </div>
 </div>
@@ -300,6 +304,7 @@
             dataType: 'json',
             success: function (response) {
                 updateCheckboxes(response);
+                $("#po").removeClass("hide");
             },
             error: function (error) {
                 console.error(error);
@@ -394,17 +399,31 @@
             contentType: 'application/json', // Ensure correct Content-Type
             dataType: 'json', // Expect JSON response
             data: JSON.stringify({ staff: staffObject, staffAccess: data ,password:"string" }),
-            success: function (response) {
-                location.reload();
-                console.log("added");
+            success: function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Staff Updated",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
+                } else {
+                    alert("Failed to update staff . Please try again.");
+                }
             },
-            error: function (error) {
-                console.error(error);
+            error: function () {
+                alert("Failed to update staff .Please try again.");
             }
         });
-        location.reload();
     }
 
+    function deleteForm()
+    {
 
+    }
 
 </script>

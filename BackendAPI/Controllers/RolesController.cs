@@ -82,6 +82,7 @@ namespace BackendAPI.Controllers
         [Route("UpdateStaff")]
         public IActionResult UpdateStaff([FromBody] StaffRoleRequest staff)
         {
+            int count = 0;
             bool IsUpdated=_Roles.UpdateStaff(staff.Staff);
            
             if(IsUpdated)
@@ -89,8 +90,9 @@ namespace BackendAPI.Controllers
                for(var i = 0;i<staff.StaffAccess.Count;i++)
                 {
                     staff.StaffAccess[i].StaffId = staff.Staff.Id;
-                    bool IsAccessUpdate = _Roles.UpdateAccess(staff.StaffAccess[i]);
-                        continue;
+                    _Roles.UpdateAccess(staff.StaffAccess[i],count);
+                    count++;
+                    continue;
                 }
                 return Ok("Roles updated successfully.");
             }
