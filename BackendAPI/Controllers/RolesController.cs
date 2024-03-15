@@ -100,9 +100,9 @@ namespace BackendAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteStaff")]
-        public IActionResult DeleteStaff([FromBody] Staff staff)
+        public IActionResult DeleteStaff(int DelId)
         {
-            bool IsDeleted= _Roles.DeleteStaff(staff);
+            bool IsDeleted= _Roles.DeleteStaff(DelId);
             if(IsDeleted)
             {
                 return Ok();

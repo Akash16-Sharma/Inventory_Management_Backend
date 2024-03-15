@@ -6,7 +6,7 @@ namespace BackendAPI.IRepository.Roles
     {
         List<Staff> GetStaff(int OrgId);
       int AddStaff(Staff staff);
-        bool DeleteStaff(Staff staff);
+        bool DeleteStaff(int id);
         bool UpdateStaff(Staff staff);
 
         Staff CheckStaffType(int StaffId);
