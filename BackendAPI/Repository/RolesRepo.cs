@@ -40,15 +40,15 @@ namespace BackendAPI.Repository
 
         }
 
-        public bool DeleteStaff(Staff staff)
+        public bool DeleteStaff(int id)
         {
-            var DelData=_datacontext.Staff.Where(x=>x.Id== staff.Id).FirstOrDefault();
-            var AccessData=_datacontext.StaffAccess.Where(x=>x.StaffId==staff.Id).ToList();
+            var DelData=_datacontext.Staff.Where(x=>x.Id== id).FirstOrDefault();
+            var AccessData=_datacontext.StaffAccess.Where(x=>x.StaffId==id).ToList();
             if(DelData!=null)
             {
                 DelData.IsActive = false;
                 DelData.InsertedOn=DateTime.Now;
-                _datacontext.Staff.Update(staff);
+                _datacontext.Staff.Update(DelData);
                 _datacontext.SaveChanges();
                 
                 for(var i=0;i<AccessData.Count;i++)
