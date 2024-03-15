@@ -220,12 +220,12 @@ namespace FrontEnd_View.Controllers
             return Json(new { success = false });
         }   //update orders
 
-        public IActionResult DeleteIncOrders(int PurOrderid)
+        public IActionResult DeleteIncOrders(string PurID)
         {
-
-            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+         
+           int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
             HttpResponseMessage responseMessage = _client.DeleteAsync(_client.BaseAddress +
-                "/Inc_Order/DeleteOrder?PurchaseOrderId=" + PurOrderid + "&StaffId=" + StaffId).Result;
+                "/Inc_Order/DeleteOrder?PurchaseOrderId=" + PurID + "&StaffId=" + StaffId).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
                 return Json(new { success = true });

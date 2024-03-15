@@ -148,7 +148,7 @@
 
             </form>
             <button type="button" onclick="updateItemList()" class="btn btn-primary">Update</button>
-                <button type="button" onclick="deleteItemList()" class="btn btn-primary">Delete</button>
+                <button type="button" onclick="deleteItemList()" class="btn btn-warning">Delete</button>
         </div>
         }
     </div>
@@ -273,12 +273,12 @@
 
     function deleteItemList()
     {
-        var Purchase_Order_Id =  $("#purId").text()
+        var Purchase_Order_Id = $("#purId").text();
 
         $.ajax({
             url: '/Incoming/DeleteIncOrders',
             type: 'POST',
-            data: { PurOrderid: Purchase_Order_Id },
+            data: { PurID: Purchase_Order_Id },
             success: function (data) {
                 if (data.success) {
                     Swal.fire({
