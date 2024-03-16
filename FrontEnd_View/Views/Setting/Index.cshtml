@@ -239,13 +239,26 @@
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function (data) {
-                    console.log("Updated Successfully");
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Info Updated",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+
+                    } else {
+                        alert("Failed to update info. Please try again.");
+                    }
                 },
-                error: function (jXhr) {
-                    console.log("AJAX error");
+                error: function () {
+                    alert("Failed to update info. Please try again.");
                 }
             });
-            location.reload();
+         
 
         }else //add code
         {
@@ -263,14 +276,26 @@
             }),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
-            success: function (data) {
-                console.log("Data Added");
-            },
-            error: function (jXhr) {
-                console.log("AJAX error");
-            }
-        });
-            location.reload();
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Info Added",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+
+                    } else {
+                        alert("Failed to add info. Please try again.");
+                    }
+                },
+                error: function () {
+                    alert("Failed to add info. Please try again.");
+                }
+            });
     }
 
     }

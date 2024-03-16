@@ -121,12 +121,24 @@
             url: '/Item/ItemCategoryAdd',
             type: 'POST',
             data: { Name: nameValue },
-            success: function (response) {
-                $('#myModal').modal('hide');              
-                location.reload();
+            success: function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Category Added",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
+                } else {
+                    alert("Failed to add category. Please try again.");
+                }
             },
-            error: function (error) {
-                console.log("Error: " + error);
+            error: function () {
+                alert("Failed to add category. Please try again.");
             }
         });
     }
@@ -137,11 +149,24 @@
                 url: '/Item/ItemCategoryDelete',
                 type: 'POST',
                 data: { Id: categoryId },
-                success: function (response) {
-                    location.reload();
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Category Deleted",
+                            showConfirmButton: false,
+                            timer: 1000
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+
+                    } else {
+                        alert("Failed to delete category. Please try again.");
+                    }
                 },
-                error: function (error) {
-                    console.log("Error: " + error);
+                error: function () {
+                    alert("Failed to delete category. Please try again.");
                 }
             });
         }
@@ -164,14 +189,26 @@
             url: '/Item/ItemCategoryEdit',
             type: 'POST',
             data: { Name: nameValue, Id: catId },
-            success: function (response) {
-                $('#editCategoryModal').modal('hide');
+           success: function (data) {
+        if (data.success) {
+            Swal.fire({
+                icon: "success",
+                title: "Category Updated",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            setTimeout(() => {
                 location.reload();
-            },
-            error: function (error) {
-                console.log("Error: " + error);
-            }
-        });
+            }, 1300);
+
+        } else {
+            alert("Failed to update category. Please try again.");
+        }
+    },
+    error: function () {
+                alert("Failed to update category. Please try again.");
+    }
+});
     }
     
 

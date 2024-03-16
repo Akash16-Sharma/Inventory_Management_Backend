@@ -16,7 +16,6 @@
     <!-- ==== Google Font ==== -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700%7CMontserrat:400,500">
 
-
     <title>@ViewData["Title"] Inventory Management</title>
 
     <!-- Stylesheets -->
@@ -35,17 +34,12 @@
     <link rel="stylesheet" href="~/assets/css/datatables.min.css">
     <link rel="stylesheet" href="~/assets/css/fullcalendar.min.css">
     <link rel="stylesheet" href="~/assets/css/style.css">
-
-    @* added 4 dattable *@
-    @*     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    *@
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 @{
     var roletype = Context.Request.HttpContext.Session.GetString("roletype");
     var orgname = Context.Request.HttpContext.Session.GetString("orgname");
+    var staffN = Context.Request.HttpContext.Session.GetString("staffName");
 }
 
 <body>
@@ -62,9 +56,9 @@
             color: #cfcfcf !important;
         }
 
-        .inverted-logo {
-            filter: invert(1);
-            background-color: #1c2324; /* Your desired color */
+        .sidebar--profile {
+            padding-top: 10px;
+            padding-bottom: 20px;
         }
 
     </style>
@@ -77,7 +71,7 @@
                 <div class="navbar--header">
                     <!-- Logo Start -->
                     <a href="/Home/Index" class="logo">
-                        <img src="~/images/whitelogo.png" alt="" class="inverted-logo"> Ninja Inventory
+                        <img src="~/images/log clean bg.png"> Ninja Inventory
                     </a>
 
                     <a href="#" class="navbar--btn" data-toggle="sidebar" title="Toggle Sidebar">
@@ -116,7 +110,8 @@
                     <div class="sidebar--profile">
 
                         <div class="profile--name">
-                            <a class="nav-link" href="#top">@orgname<span class="sr-only">(current)</span></a>
+                            <a class="nav-link" style="padding-bottom:0px" href="#top">@orgname<span class="sr-only">(current)</span></a>
+                            <a style="font-size:15px">@staffN<span class="sr-only">(current)</span></a>
                         </div>
 
                         <div class="profile--nav">
@@ -204,7 +199,7 @@
                             <li>
                                 <ul>
                                     <li class="active">
-                                        <a href="/Roles/Index">
+                                        <a href="/Roles/List">
                                             <i class="fa fa-home"></i>
                                             <span>Roles</span>
                                         </a>

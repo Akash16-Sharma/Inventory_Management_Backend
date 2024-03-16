@@ -61,7 +61,7 @@ namespace BackendAPI.Repository
             else 
                 return false;
         }
-
+        
         bool IRoles.UpdateStaff(Staff staff)
         {
             string PassSecret = "b14ca5898a4e4133bbce2ea2315a1916";
@@ -71,7 +71,7 @@ namespace BackendAPI.Repository
             UpdData.OrgId = staff.OrgId;
             UpdData.RoleType = staff.RoleType;
             UpdData.Email = staff.Email;
-            UpdData.Password = password;
+           // UpdData.Password = password;
             UpdData.InsertedOn = DateTime.Now;
             _datacontext.Staff.Update(UpdData);
             int i = _datacontext.SaveChanges();
@@ -106,14 +106,17 @@ namespace BackendAPI.Repository
             return data;
         }
 
-        public bool UpdateAccess(Access access)
+        public bool UpdateAccess(Access access,int count)
         {
             var UpdateData=_datacontext.StaffAccess.Where(x=>x.StaffId==access.StaffId).ToList();
             for(var i= 0; i < UpdateData.Count;i++)
             {
-                _datacontext.StaffAccess.Remove(UpdateData[i]);
-                _datacontext.SaveChanges();
-                continue;
+                if(count == 0)
+                {
+                    _datacontext.StaffAccess.Remove(UpdateData[i]);
+                    _datacontext.SaveChanges();
+                    continue;
+                }
             }
             access.IsActive = true;
             access.InsertedOn = DateTime.Now;

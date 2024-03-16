@@ -134,12 +134,24 @@
             url: '/Incoming/VendorAdd',
             type: 'POST',
             data: { Name: nameValue, Email: emailValue, Phone: phoneValue },
-            success: function (response) {
-                $("#myModal").modal("hide");
-                location.reload();
+            success: function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Vendor Added",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
+                } else {
+                    alert("Failed to add vendor. Please try again.");
+                }
             },
-            error: function (error) {
-                console.log("Error: " + error);
+            error: function () {
+                alert("Failed to add vendor. Please try again.");
             }
         });
     }
@@ -167,12 +179,24 @@
             url: '/Incoming/VendorEdit',
             type: 'POST',
             data: {Id:idValue, Name: nameValue, Email: emailValue, Phone: phoneValue },
-            success: function (response) {
-                $('#editCategoryModal').modal('hide');
-                location.reload();
+            success: function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Vendor Updated",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
+                } else {
+                    alert("Failed to update vendor. Please try again.");
+                }
             },
-            error: function (error) {
-                console.log("Error: " + error);
+            error: function () {
+                alert("Failed to update vendor. Please try again.");
             }
         });
     }
@@ -183,11 +207,24 @@
                 url: '/Incoming/VendorDelete',
                 type: 'POST',
                 data: { Id: id },
-                success: function (response) {
-                    location.reload();
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Vendor Deleted",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+
+                    } else {
+                        alert("Failed to delete vendor. Please try again.");
+                    }
                 },
-                error: function (error) {
-                    console.log("Error: " + error);
+                error: function () {
+                    alert("Failed to delete vendor. Please try again.");
                 }
             });
         }

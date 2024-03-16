@@ -26,6 +26,10 @@
     .hide {
         display: none;
     }
+
+    label + label {
+        margin-top: 0px;
+    }
 </style>
 @if (isMob == 1)
 {
@@ -109,11 +113,11 @@
         {
             <div class="vertical-line"></div>
             <div class="col-md-6 hide" id="po">
-                <h4>Purchase Order</h4>
+                <h4>Selling Order</h4>
                 <form style="padding:10px">
 
                     <div class="form-group row">
-                        <label for="" class="col-sm-3 col-form-label">Purchase ID</label>
+                        <label for="" class="col-sm-3 col-form-label">Selling ID</label>
                         <label id="purId" class="col-sm-4 col-form-label"></label>
                     </div>
 
@@ -184,8 +188,8 @@
         $("#date").datepicker();
         var orderDate = new Date(data[0].order_Date);
         $("#date").datepicker("setDate", orderDate);
-        $("#purId").text(data[0].purchase_Order_Id);
-        $("#vendorDropdown").val(data[0].vendor_Id);
+        $("#purId").text(data[0].sales_Order_Id);
+        $("#vendorDropdown").val(data[0].customer_Id);
         $("#ID").val(data[0].id);
         var tableHtml = '<table class="table table-sm">';
         tableHtml += '<thead><tr><th>Item Name</th><th>Quantity</th><th>Item Price</th></tr></thead>';
@@ -197,7 +201,7 @@
             tableHtml += '<td contenteditable="true" style="display: none;">' + data[i].itemId + '</td>';
             tableHtml += '<td contenteditable="true" class="dd">' + generateDropdownHtml(data[i].itemId) + '</td>';
             tableHtml += '<td contenteditable="true">' + data[i].quantity + '</td>';
-            tableHtml += '<td contenteditable="true">' + data[i].itemBuyingPrice + '</td>';
+            tableHtml += '<td contenteditable="true">' + data[i].itemSellingPrice + '</td>';
             tableHtml += '</tr>';
         }
 
@@ -242,13 +246,24 @@
             url: '/Outgoing/UpdateOutOrders',
             type: 'POST',
             data: { Inc_Orders: inc_Orders, OrderItems: editedData },
-            success: function (response) {
-                location.reload();
-                console.log(response);
+            success: function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Order Updated",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
+                } else {
+                    alert("Failed to update order. Please try again.");
+                }
             },
-            error: function (error) {
-                location.reload();
-                console.error(error);
+            error: function () {
+                alert("Failed to update order. Please try again.");
             }
         });
     }

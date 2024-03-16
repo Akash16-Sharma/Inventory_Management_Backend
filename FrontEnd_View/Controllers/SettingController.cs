@@ -98,7 +98,7 @@ namespace FrontEnd_View.Controllers
 
                 if (responseMessage.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Login");
+                    return RedirectToAction("Index");
                 }
 
                 return View();
@@ -124,14 +124,14 @@ namespace FrontEnd_View.Controllers
 
                 if (responseMessage.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    return Json(new { success = true });
                 }
 
-                return View();
+                return Json(new { success = false });
             }
             catch (Exception ex)
             {
-                return View();
+                return Json(new { success = false });
                 throw;
             }
         }
@@ -149,14 +149,14 @@ namespace FrontEnd_View.Controllers
 
                 if (responseMessage.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    return Json(new { success = true });
                 }
 
-                return View();
+                return Json(new { success = false });
             }
             catch (Exception ex)
             {
-                return View();
+                return Json(new { success = false });
                 throw;
             }
         }

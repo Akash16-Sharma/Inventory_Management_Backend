@@ -14,7 +14,7 @@ namespace BackendAPI.IRepository.Roles
 
         public Staff GetStaffById(int id);
         bool AddAccess(Access access);
-        bool UpdateAccess(Access access);
+        bool UpdateAccess(Access access,int count);
        List <Access> CheckAccess(int StaffId);
 
         List<Access> GetAccess(int StaffId);

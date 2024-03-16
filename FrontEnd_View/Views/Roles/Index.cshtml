@@ -1,12 +1,12 @@
 ﻿<html>
 <head>
-    <meta charset="utf-8">
+   @*  <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
     <link href="../../css/editor.css" rel="stylesheet">
-    <link href="narrow-jumbotron.css" rel="stylesheet">
+    <link href="narrow-jumbotron.css" rel="stylesheet"> *@
 
     <script src="~/js/jquery-3.7.1.min.js"></script>
   
@@ -291,12 +291,24 @@
             contentType: 'application/json', // Ensure correct Content-Type
             dataType: 'json', // Expect JSON response
             data: JSON.stringify({ staff: staffObject, staffAccess: data }),
-            success: function (response) {
-                location.reload();
-                console.log(response);
+            success: function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Staff Added",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        window.location.href = '/Roles/List';
+                    }, 1300);
+
+                } else {
+                    alert("Failed to add staff. Please try again.");
+                }
             },
-            error: function (error) {
-                console.error(error);
+            error: function () {
+                alert("Failed to add staff. Please try again.");
             }
         });
     }

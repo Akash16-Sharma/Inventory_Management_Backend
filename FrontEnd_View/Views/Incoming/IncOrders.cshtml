@@ -233,12 +233,24 @@
             url: '/Incoming/AddIncOrders',
             type: 'POST',
             data: { Inc_Orders: inc_Orders, OrderItems: orderItems },
-            success: function (response) {
-                location.reload();
-                console.log(response);
+            success: function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Order Added",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
+                } else {
+                    alert("Failed to add order. Please try again.");
+                }
             },
-            error: function (error) {
-                console.error(error);
+            error: function () {
+                alert("Failed to add order. Please try again.");
             }
         });
     }
