@@ -3,6 +3,7 @@ using BackendAPI.IRepository;
 using BackendAPI.IRepository.Roles;
 using BackendAPI.Models;
 using BackendAPI.Models.Class;
+using BackendAPI.Models.Roles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,9 +22,9 @@ namespace BackendAPI.Controllers
         private readonly IOrganisation_Info _organisation_info;
         private readonly ICity_State _city_state;
         private readonly IRoles _roles;
-
+        private readonly IEmail _mail;
         private IAuthenticateService _authenticateService;
-        public AccountController(IUser_Login User_Login, IOptions<AppSettings> appSettings, IAuthenticateService authenticateService, IOrganisation_Info organisation_info, ICity_State city_state,IRoles roles)
+        public AccountController(IUser_Login User_Login, IOptions<AppSettings> appSettings, IAuthenticateService authenticateService, IOrganisation_Info organisation_info, ICity_State city_state,IRoles roles,IEmail mail)
         {
 
             _User_Login = User_Login;
@@ -32,15 +33,35 @@ namespace BackendAPI.Controllers
             _organisation_info = organisation_info;
             _city_state = city_state;
             _roles = roles;
+            _mail = mail;
         }
 
      
         [HttpPost]
         public IActionResult AddOrganisation(AddAllInfo info)
         {
+            EmailModel email = new EmailModel();
             bool Isadd = _organisation_info.AddOrganisation_Info(info);
             if (Isadd == true)
             {
+                email.To = info.Org_Email;
+                email.Subject = "Welcome to Ninja Inventory - Your Login Credentials";
+                
+                email.Body = $"Dear {info.Name},\n\n" +
+                             $"Welcome to Ninja Inventory!\n\n" +
+                             $"We are delighted to have you on board as part of our team. As you embark on this journey with us, we want to ensure a smooth onboarding experience for you.\n\n" +
+                             $"Below are your login credentials for accessing the Ninja Inventory platform:\n\n" +
+                             $"Username: {info.Org_Email}\n" +
+                             $"Password: {info.Password}\n\n" +
+                             $"For security reasons, we recommend that you change your password upon your first login to something memorable but secure.\n\n" +
+                             $"Your role within our organization is vital, and we trust you will find our platform intuitive and efficient for managing inventory tasks.\n\n" +
+                             $"Should you encounter any difficulties or have any questions during the onboarding process, please don't hesitate to reach out to our dedicated support team at support@ninja-inventory.com.\n\n" +
+                             $"Once again, welcome to the Ninja Inventory family!\n\n" +
+                             $"Best regards,\n" +
+                             $"The Ninja Inventory Team";
+
+
+                _mail.SendEmailAsync(email);
                 return Ok(new { Status = 200, Message = "Inserted Successfully" });
             }
             else

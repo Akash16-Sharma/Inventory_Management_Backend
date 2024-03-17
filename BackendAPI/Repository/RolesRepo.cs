@@ -19,7 +19,7 @@ namespace BackendAPI.Repository
 
         public List<Staff> GetStaff(int OrgId)
         {
-           var data=_datacontext.Staff.Where(x=>x.OrgId == OrgId).ToList();
+           var data=_datacontext.Staff.Where(x=>x.OrgId == OrgId&&x.IsActive==true).ToList();
             return data;
         }
 
