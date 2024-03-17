@@ -197,12 +197,12 @@ namespace FrontEnd_View.Controllers
 
         }  //side view order
 
-        public IActionResult UpdateOutOrders(IncOrderRequest ord)
+        public IActionResult UpdateOutOrders(Out_OrderRequest ord)
         {
 
             int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
             int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
-            ord.Inc_Orders.OrgId = OrgId;
+            ord.order.OrgId = OrgId;
             string data = JsonConvert.SerializeObject(ord);
             StringContent con = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage responseMessage = _client.PutAsync(_client.BaseAddress +
@@ -214,5 +214,17 @@ namespace FrontEnd_View.Controllers
             return Json(new { success = false });
         }   //update orders
 
+        public IActionResult DeleteOutOrders(string sellerId)
+        {
+
+            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+            HttpResponseMessage responseMessage = _client.DeleteAsync(_client.BaseAddress +
+                "/Out_Order/DeleteOrder?SellOrderId=" + sellerId + "&StaffId=" + StaffId).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }   //update orders
     }
 }

@@ -69,6 +69,7 @@
 
         </form>
         <button type="button" style="margin-bottom:10px" onclick="updateItemList()" class="btn btn-primary">Update</button>
+        <button type="button" style="margin-bottom:10px" onclick="deleteItemList()" class="btn btn-primary">Delete</button>
     </div>
 
 }
@@ -148,6 +149,7 @@
 
                 </form>
                 <button type="button" onclick="updateItemList()" class="btn btn-primary">Update</button>
+                <button type="button" onclick="deleteItemList()" class="btn btn-warning">Delete</button>
             </div>
         }
     </div>
@@ -223,9 +225,9 @@
 
     function updateItemList() {
 
-        var inc_Orders = {
-            Purchase_Order_Id: $("#purId").text(),
-            Vendor_Id: $("#vendorDropdown").val(),
+        var out_Orders = {
+            Sales_Order_Id: $("#purId").text(),
+            Customer_Id: $("#vendorDropdown").val(),
             Order_Date: $("#date").val(),
             Actual_Date: $("#date").val(),
             Id: $("#ID").val()
@@ -245,7 +247,7 @@
         $.ajax({
             url: '/Outgoing/UpdateOutOrders',
             type: 'POST',
-            data: { Inc_Orders: inc_Orders, OrderItems: editedData },
+            data: { order: out_Orders, OrderItems: editedData },
             success: function (data) {
                 if (data.success) {
                     Swal.fire({
@@ -264,6 +266,35 @@
             },
             error: function () {
                 alert("Failed to update order. Please try again.");
+            }
+        });
+    }
+
+    function deleteItemList() {
+        var Sales_Order_Id = $("#purId").text();
+
+        $.ajax({
+            url: '/Outgoing/DeleteOutOrders',
+            type: 'POST',
+            data: { sellerId: Sales_Order_Id },
+            success: function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Order Deleted",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
+                } else {
+                    alert("Failed to delete order. Please try again.");
+                }
+            },
+            error: function () {
+                alert("Failed to delete order. Please try again.");
             }
         });
     }
