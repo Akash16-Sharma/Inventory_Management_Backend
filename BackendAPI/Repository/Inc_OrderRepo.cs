@@ -14,28 +14,24 @@ namespace BackendAPI.Repository
         public bool AddOrder(Inc_Order order)
         {
             order.Id = 0;
-
-          
             order.Inserted_On = DateTime.Now;
-           // order.Actual_Date = DateTime.Now; //testing purpose
-           
             order.IsActive = true;
-          
 
-            var data=_Context.Items.Where(x=>x.Id==order.Item_Id).FirstOrDefault();
-            data.Opening_Stock += order.Quantity;
-            data.InsertedOn=DateTime.Now;
-            data.Updated_By = order.Updated_By;
-            _Context.Items.Update(data);
-            _Context.SaveChanges();
-            _Context.Inc_Order.Add(order);
-            int i= _Context.SaveChanges();
-            if(i>0)
+            var data = _Context.Items.FirstOrDefault(x => x.Id == order.Item_Id);
+            if (data != null)
             {
-                return true;
+                data.Opening_Stock += order.Quantity;
+                data.InsertedOn = DateTime.Now;
+                data.Updated_By = order.Updated_By;
+                _Context.Items.Update(data);
             }
-            return false;
+
+            _Context.Inc_Order.Add(order);
+            int i = _Context.SaveChanges();
+
+            return i > 0;
         }
+
         // var item_Data = _Context.Items.Where(x => x.Id == order.Item_Id).FirstOrDefault();
 
         //order.PurchaseAmount = item_Data.Buying_Price * order.Quantity;
