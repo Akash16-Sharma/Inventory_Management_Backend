@@ -23,6 +23,12 @@ namespace BackendAPI.Repository
 
         public bool AddOrganisation_Info(AddAllInfo info)
         {
+            var data = _context.Organisation_Info.Where(x => x.Email == info.Org_Email).FirstOrDefault();
+            if (data != null)
+            {
+                return false;//Blocking The Code If The Same Email Is in the database already
+            }
+
             info.Inserted_On = DateTime.Now;
 
             // Creating Organisation Info

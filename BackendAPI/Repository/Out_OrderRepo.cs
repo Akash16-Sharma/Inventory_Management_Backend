@@ -100,6 +100,7 @@ namespace BackendAPI.Repository
                             outOrder.Sales_Order_Id,
                             CustomerName = customer.Name,
                             ItemName = item.Name,
+                            outOrder.Item_Id,
                             ItemSellingPrice = item.Selling_Price,
                             // Add more properties as needed
                         }).ToList<object>();
