@@ -88,5 +88,18 @@ namespace FrontEnd_View.Controllers
             return Json(new { success = false });
 
         }
+
+        public IActionResult DeleteStaff(int Id)
+        {
+            HttpResponseMessage responseMessage = _client.DeleteAsync(_client.BaseAddress +
+                "/Roles/DeleteStaff?DelId="+Id).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+
+        }
+
     }
 }
