@@ -6,6 +6,12 @@
     ViewData["Title"] = "Index";
 }
 
+<style>
+    .required:after {
+        content: " *";
+        color: red;
+    }
+</style>
 
 <h1>Vendor</h1>
 
@@ -57,7 +63,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Vednor</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add Vendor</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -65,7 +71,7 @@
             <div class="modal-body">
                 <div class="row" style="padding-bottom:10px">
                     <div class="col-md-4">
-                        <label for="inputname" class="form-label">Name</label>
+                        <label for="inputname" class="form-label required">Name</label>
                         <input type="text" class="form-control" id="inputname">
                     </div>
                     <div class="col-md-4">
@@ -127,33 +133,40 @@
 
 
     function AddVendor() {
+
+        
+
         var nameValue = $("#inputname").val();
         var phoneValue = $("#inputphone").val();
         var emailValue = $("#inputemail").val();
-        $.ajax({
-            url: '/Incoming/VendorAdd',
-            type: 'POST',
-            data: { Name: nameValue, Email: emailValue, Phone: phoneValue },
-            success: function (data) {
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Vendor Added",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1300);
 
-                } else {
+        if (nameValue == "") { alert("kinldy fill mandatory fields") }
+        else {
+            $.ajax({
+                url: '/Incoming/VendorAdd',
+                type: 'POST',
+                data: { Name: nameValue, Email: emailValue, Phone: phoneValue },
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Vendor Added",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+
+                    } else {
+                        alert("Failed to add vendor. Please try again.");
+                    }
+                },
+                error: function () {
                     alert("Failed to add vendor. Please try again.");
                 }
-            },
-            error: function () {
-                alert("Failed to add vendor. Please try again.");
-            }
-        });
+            });
+        }
     }
 
     $('.modal .close').on('click', function () {
@@ -175,30 +188,35 @@
         var emailValue = $('#editemail').val();
         var phoneValue = $('#editphone').val();
         var idValue = $('#editId').val();
-        $.ajax({
-            url: '/Incoming/VendorEdit',
-            type: 'POST',
-            data: {Id:idValue, Name: nameValue, Email: emailValue, Phone: phoneValue },
-            success: function (data) {
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Vendor Updated",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1300);
 
-                } else {
+        if (nameValue == "") { alert("kinldy fill mandatory fields") }
+        else {
+
+            $.ajax({
+                url: '/Incoming/VendorEdit',
+                type: 'POST',
+                data: { Id: idValue, Name: nameValue, Email: emailValue, Phone: phoneValue },
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Vendor Updated",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+
+                    } else {
+                        alert("Failed to update vendor. Please try again.");
+                    }
+                },
+                error: function () {
                     alert("Failed to update vendor. Please try again.");
                 }
-            },
-            error: function () {
-                alert("Failed to update vendor. Please try again.");
-            }
-        });
+            });
+        }
     }
 
     function deleteVendor(id) {

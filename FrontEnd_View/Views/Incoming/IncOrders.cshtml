@@ -96,7 +96,6 @@
 
 
 
-
 <script>
     $(function () {
         $("#datepicker").datepicker();
@@ -208,13 +207,17 @@
 
     function OnSubmit() {
         debugger;
-
+        var done = 1;
         var inc_Orders = {
             Purchase_Order_Id:$("#purOrd").val(),
             Vendor_Id: $("#inputVend").val(),
             Order_Date: $("#datepicker").val(),
             Actual_Date: $("#datepicker").val(),
         };
+
+        if (inc_Orders.Vendor_Id == "" || inc_Orders.Purchase_Order_Id == "") {
+            done = 0;
+        } 
 
         // Collect data from each row
         var orderItems = [];
@@ -224,35 +227,40 @@
                     Item_Id: $(this).find(".item-select").val(),
                     Quantity: $(this).find(".avqty-input").val()
                 };
-
                 orderItems.push(itemData);
+            } else { 
+                done = 0;
             }
         });
 
-        $.ajax({
-            url: '/Incoming/AddIncOrders',
-            type: 'POST',
-            data: { Inc_Orders: inc_Orders, OrderItems: orderItems },
-            success: function (data) {
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Order Added",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1300);
+        if (done == 1) {
+            $.ajax({
+                url: '/Incoming/AddIncOrders',
+                type: 'POST',
+                data: { Inc_Orders: inc_Orders, OrderItems: orderItems },
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Order Added",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
 
-                } else {
+                    } else {
+                        alert("Failed to add order. Please try again.");
+                    }
+                },
+                error: function () {
                     alert("Failed to add order. Please try again.");
                 }
-            },
-            error: function () {
-                alert("Failed to add order. Please try again.");
-            }
-        });
+            });       
+        } else {
+            alert("Kindly FIll all fields");
+        }
     }
 
 

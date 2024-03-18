@@ -3,7 +3,7 @@
     public class SellInfoById
     {
         public int Id { get; set; }
-        public int ItemId { get; set; }
+        public int Item_Id { get; set; }
         public int Quantity { get; set; }
         public DateTime Actual_Date { get; set; }
         public DateTime Expected_Date { get; set; }

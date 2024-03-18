@@ -259,6 +259,7 @@
     });
 
     function submitForm() {
+
         //user info
         var staffObject = {
             Staff_Name: $('#stname').val(),
@@ -266,51 +267,57 @@
             RoleType: $('#sttype').val(),
             Password: $('#stpassword').val()
         };
+        
 
+        if (staffObject.Staff_Name == '' || staffObject.Email == '' || staffObject.RoleType == '' || staffObject.Password == '') {
+            alert("kindly fill the mandatory fields");
 
-        var data = [];
+        } else {
 
-        $(".rowPm").each(function () {
-            var row = $(this);
-            var sidename = row.find("h6").text().trim();
-            var createChecked = row.find(".create-checkbox").is(":checked") ? true : false;
-            var modifyChecked = row.find(".modify-checkbox").is(":checked") ? true : false;
+            var data = [];
 
-            if (row.find(".endb-checkbox").is(":checked")) {
-                data.push({
-                    SideBarName: sidename,
-                    IsCreate: createChecked,
-                    IsModify: modifyChecked
-                });
-            }
-        });
+            $(".rowPm").each(function () {
+                var row = $(this);
+                var sidename = row.find("h6").text().trim();
+                var createChecked = row.find(".create-checkbox").is(":checked") ? true : false;
+                var modifyChecked = row.find(".modify-checkbox").is(":checked") ? true : false;
 
-        $.ajax({
-            url: '/Roles/AddStaff',
-            type: 'POST',
-            contentType: 'application/json', // Ensure correct Content-Type
-            dataType: 'json', // Expect JSON response
-            data: JSON.stringify({ staff: staffObject, staffAccess: data }),
-            success: function (data) {
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Staff Added",
-                        showConfirmButton: false,
-                        timer: 1500
+                if (row.find(".endb-checkbox").is(":checked")) {
+                    data.push({
+                        SideBarName: sidename,
+                        IsCreate: createChecked,
+                        IsModify: modifyChecked
                     });
-                    setTimeout(() => {
-                        window.location.href = '/Roles/List';
-                    }, 1300);
+                }
+            });
 
-                } else {
+            $.ajax({
+                url: '/Roles/AddStaff',
+                type: 'POST',
+                contentType: 'application/json', // Ensure correct Content-Type
+                dataType: 'json', // Expect JSON response
+                data: JSON.stringify({ staff: staffObject, staffAccess: data }),
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Staff Added",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            window.location.href = '/Roles/List';
+                        }, 1300);
+
+                    } else {
+                        alert("Failed to add staff. Please try again.");
+                    }
+                },
+                error: function () {
                     alert("Failed to add staff. Please try again.");
                 }
-            },
-            error: function () {
-                alert("Failed to add staff. Please try again.");
-            }
-        });
+            });
+        }
     }
 
 

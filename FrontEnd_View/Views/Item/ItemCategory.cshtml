@@ -117,30 +117,36 @@
     function AddCat() {
         var nameValue = $("#inputname").val();
 
-        $.ajax({
-            url: '/Item/ItemCategoryAdd',
-            type: 'POST',
-            data: { Name: nameValue },
-            success: function (data) {
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Category Added",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1300);
+        if (nameValue == '') {
+            alert("kinldy fill all fields");
 
-                } else {
+        } else {
+
+            $.ajax({
+                url: '/Item/ItemCategoryAdd',
+                type: 'POST',
+                data: { Name: nameValue },
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Category Added",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+
+                    } else {
+                        alert("Failed to add category. Please try again.");
+                    }
+                },
+                error: function () {
                     alert("Failed to add category. Please try again.");
                 }
-            },
-            error: function () {
-                alert("Failed to add category. Please try again.");
-            }
-        });
+            });
+        }
     }
 
     function deleteCategory(categoryId) {
@@ -185,30 +191,36 @@
         var nameValue = $("#editCategoryName").val();
         var catId = $('#editCategoryID').val();
 
-        $.ajax({
-            url: '/Item/ItemCategoryEdit',
-            type: 'POST',
-            data: { Name: nameValue, Id: catId },
-           success: function (data) {
-        if (data.success) {
-            Swal.fire({
-                icon: "success",
-                title: "Category Updated",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            setTimeout(() => {
-                location.reload();
-            }, 1300);
+        if (nameValue == '') {
+            alert("kindly fill the field");
 
         } else {
-            alert("Failed to update category. Please try again.");
+
+            $.ajax({
+                url: '/Item/ItemCategoryEdit',
+                type: 'POST',
+                data: { Name: nameValue, Id: catId },
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Category Updated",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+
+                    } else {
+                        alert("Failed to update category. Please try again.");
+                    }
+                },
+                error: function () {
+                    alert("Failed to update category. Please try again.");
+                }
+            });
         }
-    },
-    error: function () {
-                alert("Failed to update category. Please try again.");
-    }
-});
     }
     
 

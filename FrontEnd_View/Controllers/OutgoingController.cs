@@ -86,7 +86,6 @@ namespace FrontEnd_View.Controllers
 
         }
 
-
         public IActionResult OutOrder()  //show orders
         {
             int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
@@ -131,9 +130,9 @@ namespace FrontEnd_View.Controllers
                 "/Out_Order/AddOrder?StaffId=" + StaffId, con).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("GetOutOrders");
+                return Json(new { success = true });
             }
-            return View();
+            return Json(new { success = false });
         }
 
         public IActionResult GetOutOrders()

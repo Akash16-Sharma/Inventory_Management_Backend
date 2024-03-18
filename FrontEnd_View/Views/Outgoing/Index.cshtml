@@ -5,7 +5,13 @@
 @{
     ViewData["Title"] = "Index";
 }
+<style>
+    .required:after {
+        content: " *";
+        color: red;
+    }
 
+</style>
 
 <h1>Customer</h1>
 
@@ -65,7 +71,7 @@
             <div class="modal-body">
                 <div class="row" style="padding-bottom:10px">
                     <div class="col-md-4">
-                        <label for="inputname" class="form-label">Name</label>
+                        <label for="inputname" class="form-label required">Name</label>
                         <input type="text" class="form-control" id="inputname">
                     </div>
                     <div class="col-md-4">
@@ -130,30 +136,33 @@
         var nameValue = $("#inputname").val();
         var phoneValue = $("#inputphone").val();
         var emailValue = $("#inputemail").val();
-        $.ajax({
-            url: '/Outgoing/CustomerAdd',
-            type: 'POST',
-            data: { Name: nameValue, Email: emailValue, Phone: phoneValue },
-            success: function (data) {
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Customer Added",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1300);
+        if (nameValue == "") { alert("kinldy fill mandatory fields") }
+        else {
+            $.ajax({
+                url: '/Outgoing/CustomerAdd',
+                type: 'POST',
+                data: { Name: nameValue, Email: emailValue, Phone: phoneValue },
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Customer Added",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
 
-                } else {
+                    } else {
+                        alert("Failed to add customer. Please try again.");
+                    }
+                },
+                error: function () {
                     alert("Failed to add customer. Please try again.");
                 }
-            },
-            error: function () {
-                alert("Failed to add customer. Please try again.");
-            }
-        });
+            });
+        }
     }
 
     $('.modal .close').on('click', function () {
@@ -175,30 +184,34 @@
         var emailValue = $('#editemail').val();
         var phoneValue = $('#editphone').val();
         var idValue = $('#editId').val();
-        $.ajax({
-            url: '/Outgoing/CustomerEdit',
-            type: 'POST',
-            data: { Id: idValue, Name: nameValue, Email: emailValue, Phone: phoneValue },
-            success: function (data) {
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Customer Updated",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1300);
 
-                } else {
+        if (nameValue == "") { alert("kinldy fill mandatory fields") }
+        else {
+            $.ajax({
+                url: '/Outgoing/CustomerEdit',
+                type: 'POST',
+                data: { Id: idValue, Name: nameValue, Email: emailValue, Phone: phoneValue },
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Customer Updated",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
+
+                    } else {
+                        alert("Failed to update customer. Please try again.");
+                    }
+                },
+                error: function () {
                     alert("Failed to update customer. Please try again.");
                 }
-            },
-            error: function () {
-                alert("Failed to update customer. Please try again.");
-            }
-        });
+            });
+        }
     }
 
     function deleteVendor(id) {

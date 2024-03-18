@@ -196,18 +196,18 @@
         var tableHtml = '<table class="table table-sm">';
         tableHtml += '<thead><tr><th>Item Name</th><th>Quantity</th><th>Item Price</th></tr></thead>';
         tableHtml += '<tbody>';
-
+       
         var itemListData = @Html.Raw(Json.Serialize(itemList));
         for (var i = 0; i < data.length; i++) {
             tableHtml += '<tr>';
-            tableHtml += '<td contenteditable="true" style="display: none;">' + data[i].itemId + '</td>';
-            tableHtml += '<td contenteditable="true" class="dd">' + generateDropdownHtml(data[i].itemId) + '</td>';
+            tableHtml += '<td contenteditable="true" style="display: none;">' + data[i].item_Id + '</td>';
+            tableHtml += '<td contenteditable="true" class="dd">' + generateDropdownHtml(data[i].item_Id) + '</td>';
             tableHtml += '<td contenteditable="true">' + data[i].quantity + '</td>';
             tableHtml += '<td contenteditable="true">' + data[i].itemSellingPrice + '</td>';
             tableHtml += '</tr>';
         }
 
-        tableHtml += '</tbody></table>';
+        tableHtml += '</tbody></table>'; 
 
         return tableHtml;
     }

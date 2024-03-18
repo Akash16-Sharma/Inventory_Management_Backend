@@ -208,12 +208,16 @@
 
     function OnSubmit() {
         debugger;
-
+        var done = 1;
         var inc_Orders = {
             Sales_Order_Id: $("#purOrd").val(),
             Customer_Id: $("#inputVend").val(),
             Order_Date: $("#datepicker").val(),
         };
+
+        if (inc_Orders.Customer_Id == "" || inc_Orders.Sales_Order_Id == "") {
+            done = 0;
+        }
 
         // Collect data from each row
         var orderItems = [];
@@ -225,9 +229,11 @@
                 };
 
                 orderItems.push(itemData);
-            }
+            }else {
+            done = 0;
+        }
         });
-
+        if (done == 1) {
         $.ajax({
             url: '/Outgoing/AddOutOrders',
             type: 'POST',
@@ -252,6 +258,9 @@
                 alert("Failed to add order. Please try again.");
             }
         });
+        } else {
+            alert("Kindly FIll all fields");
+        }
     }
 
 
