@@ -423,7 +423,33 @@
 
     function deleteForm()
     {
+        var id = pubid;
 
+        $.ajax({
+            url: '/Roles/DeleteStaff',
+            type: 'POST',
+            dataType: 'json', // Expect JSON response
+            data: { Id: id },
+            success: function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Staff Deleted",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1300);
+
+                } else {
+                    alert("Failed to delete staff . Please try again.");
+                }
+            },
+            error: function () {
+                alert("Failed to delete staff .Please try again.");
+            }
+        });
     }
 
 </script>
