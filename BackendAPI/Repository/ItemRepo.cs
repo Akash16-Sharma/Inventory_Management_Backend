@@ -109,6 +109,7 @@ namespace BackendAPI.Repository
                             Item.Selling_Price,
                             Item.Opening_Stock,
                             Item.Id,
+                            Item.Stock_Alert,
                             CategoryName = category.Name,  
                            // VendorName = vendor.Name,      
                             UnitTypeName = unitType.Name,  

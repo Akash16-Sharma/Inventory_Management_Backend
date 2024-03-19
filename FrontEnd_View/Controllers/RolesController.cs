@@ -22,8 +22,17 @@ namespace FrontEnd_View.Controllers
         }
 
         public IActionResult Index() //add staff nd roles
-        { 
-            return View();
+        {
+
+            string staffType = HttpContext.Session.GetString("roletype");
+            if (staffType == "Admin")
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Error", "Shared");
+            }
         }
 
         public IActionResult AddStaff([FromBody] StaffRoleRequest staffRoleRequest)
@@ -44,17 +53,25 @@ namespace FrontEnd_View.Controllers
 
         public IActionResult List()
         {
-            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
-
-            List<Staff> stafflist = new List<Staff>();
-            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
-                "/Roles/GetStaff?OrgId=" + OrgId).Result;
-            if (responseMessage.IsSuccessStatusCode)
+            string staffType = HttpContext.Session.GetString("roletype");
+            if (staffType == "Admin")
             {
-                string data = responseMessage.Content.ReadAsStringAsync().Result;
-                stafflist = JsonConvert.DeserializeObject<List<Staff>>(data);  
+                int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+
+                List<Staff> stafflist = new List<Staff>();
+                HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                    "/Roles/GetStaff?OrgId=" + OrgId).Result;
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    string data = responseMessage.Content.ReadAsStringAsync().Result;
+                    stafflist = JsonConvert.DeserializeObject<List<Staff>>(data);
+                }
+                return View(stafflist);
             }
-            return View(stafflist);
+            else
+            {
+                return RedirectToAction("Error", "Shared");
+            }
         }
 
         public object GetAccessById(int Id)

@@ -21,47 +21,56 @@ namespace FrontEnd_View.Controllers
 
         public IActionResult Index()
         {
-            List<StateList> stateLists = new List<StateList>();
-            HttpResponseMessage responseMessage2 = _client.GetAsync(_client.BaseAddress +
-                "/Account/Statelist").Result;
-            if (responseMessage2.IsSuccessStatusCode)
+
+            string staffType = HttpContext.Session.GetString("roletype");
+            if (staffType == "Admin")
             {
-                string data = responseMessage2.Content.ReadAsStringAsync().Result;
-                stateLists = JsonConvert.DeserializeObject<List<StateList>>(data);
-                var stateListData = stateLists.Select(s => new { name = s.Name, id = s.Id }).ToList();
-                ViewBag.StateListData = stateListData;
-            }
-
-            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
-            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
-
-            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
-            "/Account/GetOrganisation?OrgId=" + OrgId).Result; 
-
-            HttpResponseMessage responseMessageInfo = _client.GetAsync(_client.BaseAddress +
-            "/Settings/GetUserInfo?orgid=" + OrgId + "&StaffId=" + StaffId).Result;
-
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                Organisation_Info orginfo = new Organisation_Info();
-                string data = responseMessage.Content.ReadAsStringAsync().Result;
-                orginfo = JsonConvert.DeserializeObject<Organisation_Info>(data);
-
-                if (responseMessageInfo.IsSuccessStatusCode)
+                List<StateList> stateLists = new List<StateList>();
+                HttpResponseMessage responseMessage2 = _client.GetAsync(_client.BaseAddress +
+                    "/Account/Statelist").Result;
+                if (responseMessage2.IsSuccessStatusCode)
                 {
-                    User_Info userinfo = new User_Info();
-                    string datas = responseMessageInfo.Content.ReadAsStringAsync().Result;
-                    userinfo = JsonConvert.DeserializeObject<User_Info>(datas);
+                    string data = responseMessage2.Content.ReadAsStringAsync().Result;
+                    stateLists = JsonConvert.DeserializeObject<List<StateList>>(data);
+                    var stateListData = stateLists.Select(s => new { name = s.Name, id = s.Id }).ToList();
+                    ViewBag.StateListData = stateListData;
+                }
 
-                    //  return View((orginfo, userinfo));
-                    return View(new Tuple<Organisation_Info, User_Info>(orginfo, userinfo));
+                int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+                int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+
+                HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                "/Account/GetOrganisation?OrgId=" + OrgId).Result;
+
+                HttpResponseMessage responseMessageInfo = _client.GetAsync(_client.BaseAddress +
+                "/Settings/GetUserInfo?orgid=" + OrgId + "&StaffId=" + StaffId).Result;
+
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    Organisation_Info orginfo = new Organisation_Info();
+                    string data = responseMessage.Content.ReadAsStringAsync().Result;
+                    orginfo = JsonConvert.DeserializeObject<Organisation_Info>(data);
+
+                    if (responseMessageInfo.IsSuccessStatusCode)
+                    {
+                        User_Info userinfo = new User_Info();
+                        string datas = responseMessageInfo.Content.ReadAsStringAsync().Result;
+                        userinfo = JsonConvert.DeserializeObject<User_Info>(datas);
+
+                        //  return View((orginfo, userinfo));
+                        return View(new Tuple<Organisation_Info, User_Info>(orginfo, userinfo));
+
+                    }
+                    return View();
 
                 }
-                return View();
-
+                else
+                    return View();
             }
             else
-                return View();
+            {
+                return RedirectToAction("Error", "Shared");
+            }
 
         }
 

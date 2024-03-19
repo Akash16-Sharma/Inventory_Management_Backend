@@ -20,44 +20,54 @@ namespace FrontEnd_View.Controllers
 
         public IActionResult Index() //item list
         {
-            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
-            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
-            //category assign to Viewbag 
-            List<Category> categoryLists = new List<Category>();
-            HttpResponseMessage responseMessage1 = _client.GetAsync(_client.BaseAddress +
-                "/Category/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
-            if (responseMessage1.IsSuccessStatusCode)
+            string staffNameJson = HttpContext.Session.GetString("SideBarNameList");
+            string staffType = HttpContext.Session.GetString("roletype");
+            List<string> sideBarNameList = JsonConvert.DeserializeObject<List<string>>(staffNameJson);
+            if (sideBarNameList.Contains("Items") || staffType == "Admin")
             {
-                string data = responseMessage1.Content.ReadAsStringAsync().Result;
-                categoryLists = JsonConvert.DeserializeObject<List<Category>>(data);
-                var stateListData = categoryLists.Select(s => new { name = s.Name, id = s.Id }).ToList();
-                ViewBag.Category = stateListData;
-            }
 
-            //unitytype assign to Viewbag 
-            List<Category> unitLists = new List<Category>();
-            HttpResponseMessage responseMessage2 = _client.GetAsync(_client.BaseAddress +
-                "/UnitType/GetAllUnitTypes?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
-            if (responseMessage1.IsSuccessStatusCode)
+                int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+                int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+                //category assign to Viewbag 
+                List<Category> categoryLists = new List<Category>();
+                HttpResponseMessage responseMessage1 = _client.GetAsync(_client.BaseAddress +
+                    "/Category/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+                if (responseMessage1.IsSuccessStatusCode)
+                {
+                    string data = responseMessage1.Content.ReadAsStringAsync().Result;
+                    categoryLists = JsonConvert.DeserializeObject<List<Category>>(data);
+                    var stateListData = categoryLists.Select(s => new { name = s.Name, id = s.Id }).ToList();
+                    ViewBag.Category = stateListData;
+                }
+
+                //unitytype assign to Viewbag 
+                List<Category> unitLists = new List<Category>();
+                HttpResponseMessage responseMessage2 = _client.GetAsync(_client.BaseAddress +
+                    "/UnitType/GetAllUnitTypes?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+                if (responseMessage1.IsSuccessStatusCode)
+                {
+                    string data = responseMessage2.Content.ReadAsStringAsync().Result;
+                    unitLists = JsonConvert.DeserializeObject<List<Category>>(data);
+                    var stateListData = unitLists.Select(s => new { name = s.Name, id = s.Id }).ToList();
+                    ViewBag.Unit = stateListData;
+                }
+
+                //return item list 
+                List<dynamic> items = new List<dynamic>();
+                HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                    "/Item/GetItemInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    string data = responseMessage.Content.ReadAsStringAsync().Result;
+                    items = JsonConvert.DeserializeObject<List<dynamic>>(data);
+                }
+                return View(items);
+            }
+            else
             {
-                string data = responseMessage2.Content.ReadAsStringAsync().Result;
-                unitLists = JsonConvert.DeserializeObject<List<Category>>(data);
-                var stateListData = unitLists.Select(s => new { name = s.Name, id = s.Id }).ToList();
-                ViewBag.Unit = stateListData;
+                return RedirectToAction("Error", "Shared");
             }
-
-
-            //return item list 
-            List<dynamic> items = new List<dynamic>();
-            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
-                "/Item/GetItemInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
-
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                string data = responseMessage.Content.ReadAsStringAsync().Result;
-                items = JsonConvert.DeserializeObject<List<dynamic>>(data);
-            }
-            return View(items);
         }
 
         public IActionResult AddItem(Item item)
@@ -83,20 +93,30 @@ namespace FrontEnd_View.Controllers
 
         public IActionResult ItemCategory() //category list
         {
-            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
-            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
-
-            List<Category> category = new List<Category>();
-            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
-                "/Category/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
-
-            if (responseMessage.IsSuccessStatusCode)
+            string staffNameJson = HttpContext.Session.GetString("SideBarNameList");
+            string staffType = HttpContext.Session.GetString("roletype");
+            List<string> sideBarNameList = JsonConvert.DeserializeObject<List<string>>(staffNameJson);
+            if (sideBarNameList.Contains("Category") || staffType == "Admin")
             {
-                string data = responseMessage.Content.ReadAsStringAsync().Result;
-                category = JsonConvert.DeserializeObject<List<Category>>(data);
-            }
+                int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+                int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
 
-            return View(category);
+                List<Category> category = new List<Category>();
+                HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                    "/Category/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    string data = responseMessage.Content.ReadAsStringAsync().Result;
+                    category = JsonConvert.DeserializeObject<List<Category>>(data);
+                }
+
+                return View(category);
+            }
+            else
+            {
+                return RedirectToAction("Error", "Shared");
+            }
         }
 
         public IActionResult ItemDelete(int Id)

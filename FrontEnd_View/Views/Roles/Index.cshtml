@@ -17,6 +17,10 @@
             height: 20px;
         }
 
+        .required:after {
+            content: " *";
+            color: red;
+        }
 
         .cbalign {
             -webkit-writing-mode: vertical-lr;
@@ -41,17 +45,17 @@
     <div class="container">
         <div class="row" style="padding-bottom:10px">
             <div class="col-md-3">
-                <label for="inputname" class="form-label">Name</label>
+                <label for="inputname" class="form-label required">Name</label>
                 <input type="text" class="form-control" id="stname">
             </div>
 
             <div class="col-md-3">
-                <label for="inputEmail4" class="form-label">Email</label>
+                <label for="inputEmail4" class="form-label required">Email</label>
                 <input type="text" class="form-control" id="stemail">
             </div>
 
             <div class="col-md-2">
-                <label for="sttype" class="form-label">Type</label>
+                <label for="sttype" class="form-label required">Type</label>
                 <select id="sttype" class="form-control" name="Type" required>
                     <option value="">Select Type</option>
                     <option value="Admin">Admin</option>
@@ -60,7 +64,7 @@
             </div>
 
             <div class="col-md-3">
-                <label for="inputEmail4" class="form-label">Password</label>
+                <label for="inputEmail4" class="form-label required">Password</label>
                 <input type="password" class="form-control" id="stpassword">
             </div>
 

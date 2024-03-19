@@ -37,9 +37,16 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 @{
-    var roletype = Context.Request.HttpContext.Session.GetString("roletype");
-    var orgname = Context.Request.HttpContext.Session.GetString("orgname");
     var staffN = Context.Request.HttpContext.Session.GetString("staffName");
+    var roletype = Context.Request.HttpContext.Session.GetString("roletype");
+    List<string> sideBarNameList = null;
+    var sideBarNameJson = Context.Request.HttpContext.Session.GetString("SideBarNameList");
+    if (!string.IsNullOrEmpty(sideBarNameJson))
+    {
+        sideBarNameList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(sideBarNameJson);
+    }
+
+    var orgname = Context.Request.HttpContext.Session.GetString("orgname");
 }
 
 <body>
@@ -65,172 +72,328 @@
 
     @if (orgname != null)
     {
-        <div class="wrapper">
-            <header class="navbar navbar-fixed">
-                <!-- Navbar Header Start -->
-                <div class="navbar--header">
-                    <!-- Logo Start -->
-                    <a href="/Home/Index" class="logo">
-                        <img src="~/images/log clean bg.png"> Ninja Inventory
-                    </a>
+
+        @if (@roletype == "Admin") //admin get all the access
+        {
+            <div class="wrapper">
+                <header class="navbar navbar-fixed">
+                    <!-- Navbar Header Start -->
+                    <div class="navbar--header">
+                        <!-- Logo Start -->
+                        <a href="/Home/Index" class="logo">
+                            <img src="~/images/log clean bg.png"> Ninja Inventory
+                        </a>
+
+                        <a href="#" class="navbar--btn" data-toggle="sidebar" title="Toggle Sidebar">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                        <!-- Sidebar Toggle Button End -->
+                    </div>
 
                     <a href="#" class="navbar--btn" data-toggle="sidebar" title="Toggle Sidebar">
                         <i class="fa fa-bars"></i>
                     </a>
                     <!-- Sidebar Toggle Button End -->
-                </div>
 
-                <a href="#" class="navbar--btn" data-toggle="sidebar" title="Toggle Sidebar">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <!-- Sidebar Toggle Button End -->
+                    <div class="navbar--nav ml-auto">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa fa-bell"></i>
+                                    <span class="badge text-white bg-blue">7</span>
+                                </a>
+                            </li>
 
-                <div class="navbar--nav ml-auto">
-                    <ul class="nav">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fa fa-bell"></i>
-                                <span class="badge text-white bg-blue">7</span>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Logout", "Account")">Logout</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Logout", "Account")">Logout</a>
-                        </li>
+                        </ul>
+                    </div>
+                </header>
+                <!-- NavBar END -->
+                <!-- Sidebar Start -->
+                <div class="row" id="body-row" style="margin-left:20px">
+                    <aside class="sidebar" data-trigger="scrollbar">
 
-                    </ul>
-                </div>
-            </header>
-            <!-- NavBar END -->
-            <!-- Sidebar Start -->
-            <div class="row" id="body-row" style="margin-left:20px">
-                <aside class="sidebar" data-trigger="scrollbar">
+                        <!-- Sidebar Profile Start -->
+                        <div class="sidebar--profile">
 
-                    <!-- Sidebar Profile Start -->
-                    <div class="sidebar--profile">
+                            <div class="profile--name">
+                                <a class="nav-link" style="padding-bottom:0px" href="#top">@orgname<span class="sr-only">(current)</span></a>
+                                <a style="font-size:15px">@staffN<span class="sr-only">(current)</span></a>
+                            </div>
 
-                        <div class="profile--name">
-                            <a class="nav-link" style="padding-bottom:0px" href="#top">@orgname<span class="sr-only">(current)</span></a>
-                            <a style="font-size:15px">@staffN<span class="sr-only">(current)</span></a>
+                            <div class="profile--nav">
+                                <ul class="nav">
+
+                                    <li class="nav-item">
+                                        <a href="/Account/Logout" class="nav-link" title="Logout">
+                                            <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
+                        <!-- Sidebar Profile End -->
+                        <!-- Sidebar Navigation Start -->
+                        <div class="sidebar--nav">
+                            <ul>
+                                <li>
+                                    <ul>
+                                        <li class="active">
+                                            <a href="/Home/Index">
+                                                <i class="fa fa-home"></i>
+                                                <span>Dashboard</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
 
-                        <div class="profile--nav">
-                            <ul class="nav">
+                                <li>
+                                    <a href="#">Items</a>
 
-                                <li class="nav-item">
-                                    <a href="/Account/Logout" class="nav-link" title="Logout">
-                                        <i class="fa fa-sign-out" aria-hidden="true"></i>
-                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="/Item/Index">
+                                                <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                                                <span>Add Items</span>
+                                            </a>
+
+                                        </li>
+                                        <li>
+                                            <a href="/Item/ItemCategory">
+                                                <i class="fa fa-th-list"></i>
+                                                <span>Category</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="#">Incoming Order</a>
+                                    <ul>
+                                        <li>
+                                            <a href="/Incoming/GetIncORders">
+                                                <i class="far fa-newspaper"></i>
+                                                <span>Order</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/Incoming/Index">
+                                                <i class="fab fa-wpforms"></i>
+                                                <span>Vendor</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="#">Outgoing Order</a>
+                                    <ul>
+                                        <li>
+                                            <a href="/Outgoing/GetOutORders">
+                                                <i class="far fa-newspaper"></i>
+                                                <span>Order</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/Outgoing/Index">
+                                                <i class="fab fa-wpforms"></i>
+                                                <span>Customer</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <ul>
+                                        <li class="active">
+                                            <a href="/Roles/List">
+                                                <i class="fa fa-home"></i>
+                                                <span>Roles</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                                <li>
+                                    <ul>
+                                        <li class="active">
+                                            <a href="/Setting/Index">
+                                                <i class="fa fa-home"></i>
+                                                <span>Setting</span>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
                             </ul>
                         </div>
+                        <!-- Sidebar Navigation End -->
+
+                    </aside>
+                    <!-- MAIN body-->
+                    <main class="main--container">
+                        <div class="col p-4 ">
+                            @RenderBody()
+                        </div>
+                    </main>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="wrapper">
+                <header class="navbar navbar-fixed">
+                    <!-- Navbar Header Start -->
+                    <div class="navbar--header">
+                        <!-- Logo Start -->
+                        <a href="/Home/Index" class="logo">
+                            <img src="~/images/log clean bg.png"> Ninja Inventory
+                        </a>
+
+                        <a href="#" class="navbar--btn" data-toggle="sidebar" title="Toggle Sidebar">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                        <!-- Sidebar Toggle Button End -->
                     </div>
-                    <!-- Sidebar Profile End -->
-                    <!-- Sidebar Navigation Start -->
-                    <div class="sidebar--nav">
-                        <ul>
-                            <li>
-                                <ul>
-                                    <li class="active">
-                                        <a href="/Home/Index">
-                                            <i class="fa fa-home"></i>
-                                            <span>Dashboard</span>
-                                        </a>
-                                    </li>
-                                </ul>
+
+                    <a href="#" class="navbar--btn" data-toggle="sidebar" title="Toggle Sidebar">
+                        <i class="fa fa-bars"></i>
+                    </a>
+                    <!-- Sidebar Toggle Button End -->
+
+                    <div class="navbar--nav ml-auto">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa fa-bell"></i>
+                                    <span class="badge text-white bg-blue">7</span>
+                                </a>
                             </li>
 
-                            <li>
-                                <a href="#">Items</a>
-
-                                <ul>
-                                    <li>
-                                        <a href="/Item/Index">
-                                            <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                                            <span>Add Items</span>
-                                        </a>
-
-                                    </li>
-                                    <li>
-                                        <a href="/Item/ItemCategory">
-                                            <i class="fa fa-th-list"></i>
-                                            <span>Category</span>
-                                        </a>
-                                    </li>
-                                </ul>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Logout", "Account")">Logout</a>
                             </li>
 
-                            <li>
-                                <a href="#">Incoming Order</a>
-                                <ul>
-                                    <li>
-                                        <a href="/Incoming/GetIncORders">
-                                            <i class="far fa-newspaper"></i>
-                                            <span>Order</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/Incoming/Index">
-                                            <i class="fab fa-wpforms"></i>
-                                            <span>Vendor</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li>
-                                <a href="#">Outgoing Order</a>
-                                <ul>
-                                    <li>
-                                        <a href="/Outgoing/GetOutORders">
-                                            <i class="far fa-newspaper"></i>
-                                            <span>Order</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/Outgoing/Index">
-                                            <i class="fab fa-wpforms"></i>
-                                            <span>Customer</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li>
-                                <ul>
-                                    <li class="active">
-                                        <a href="/Roles/List">
-                                            <i class="fa fa-home"></i>
-                                            <span>Roles</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-
-
-                            <li>
-                                <ul>
-                                    <li class="active">
-                                        <a href="/Setting/Index">
-                                            <i class="fa fa-home"></i>
-                                            <span>Setting</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
                         </ul>
                     </div>
-                    <!-- Sidebar Navigation End -->
+                </header>
+                <!-- NavBar END -->
+                <!-- Sidebar Start -->
+                <div class="row" id="body-row" style="margin-left:20px">
+                    <aside class="sidebar" data-trigger="scrollbar">
 
-                </aside>
-                <!-- MAIN body-->
-                <main class="main--container">
-                    <div class="col p-4 ">
-                        @RenderBody()
-                    </div>
-                </main>
+                        <!-- Sidebar Profile Start -->
+                        <div class="sidebar--profile">
+
+                            <div class="profile--name">
+                                <a class="nav-link" style="padding-bottom:0px" href="#top">@orgname<span class="sr-only">(current)</span></a>
+                                <a style="font-size:15px">@staffN<span class="sr-only">(current)</span></a>
+                            </div>
+
+                            <div class="profile--nav">
+                                <ul class="nav">
+
+                                    <li class="nav-item">
+                                        <a href="/Account/Logout" class="nav-link" title="Logout">
+                                            <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Sidebar Profile End -->
+                        <!-- Sidebar Navigation Start -->
+                        <div class="sidebar--nav">
+                            <ul>
+                                <li>
+                                    <a href="#">Items</a>
+                                    <ul>
+                                        @if (sideBarNameList != null && sideBarNameList.Contains("Items"))
+                                        {
+                                            <li>
+                                                <a href="/Item/Index">
+                                                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                                                    <span>Add Items</span>
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (sideBarNameList != null && sideBarNameList.Contains("Category"))
+                                        {
+                                            <li>
+                                                <a href="/Item/ItemCategory">
+                                                    <i class="fa fa-th-list"></i>
+                                                    <span>Category</span>
+                                                </a>
+                                            </li>
+                                        }
+
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Incoming Order</a>
+                                    <ul>
+                                        @if (sideBarNameList != null && sideBarNameList.Contains("Incoming Orders"))
+                                        {
+                                            <li>
+                                                <a href="/Incoming/GetIncORders">
+                                                    <i class="far fa-newspaper"></i>
+                                                    <span>Order</span>
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (sideBarNameList != null && sideBarNameList.Contains("Vendor"))
+                                        {
+                                            <li>
+                                                <a href="/Incoming/Index">
+                                                    <i class="fab fa-wpforms"></i>
+                                                    <span>Vendor</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Outgoing Order</a>
+                                    <ul>
+                                        @if (sideBarNameList != null && sideBarNameList.Contains("Outgoing Orders"))
+                                        {
+                                            <li>
+                                                <a href="/Outgoing/GetOutORders">
+                                                    <i class="far fa-newspaper"></i>
+                                                    <span>Order</span>
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (sideBarNameList != null && sideBarNameList.Contains("Customer"))
+                                        {
+                                            <li>
+                                                <a href="/Outgoing/Index">
+                                                    <i class="fab fa-wpforms"></i>
+                                                    <span>Customer</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        <!-- Sidebar Navigation End -->
+
+                    </aside>
+                    <!-- MAIN body-->
+                    <main class="main--container">
+                        <div class="col p-4 ">
+                            @RenderBody()
+                        </div>
+                    </main>
+                </div>
             </div>
-        </div>
+
+        }
     }
     else
     {

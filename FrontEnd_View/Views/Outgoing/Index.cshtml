@@ -129,6 +129,20 @@
         $("#save").click(function () {
             $("#myModal").modal("show");
         });
+
+        $("#inputphone").keypress(function () {
+            if(this.value.length == 10)
+            {
+                return false;
+            }
+        })
+
+        $("#editphone").keypress(function () {
+            if (this.value.length == 10) {
+                return false;
+            }
+        })
+        
     });
 
 

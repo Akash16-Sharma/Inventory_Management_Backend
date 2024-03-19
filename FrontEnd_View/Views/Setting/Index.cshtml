@@ -136,6 +136,13 @@
             isPrsnInfo= $("#prsnlname").val();
         $('#myForm :input').prop('disabled', true);
         $('#myPrsnlForm :input').prop('disabled', true);
+      
+        $("#prsnlphone").keypress(function () {
+            if (this.value.length == 10) {
+                return false;
+            }
+        })
+
     });
 
 

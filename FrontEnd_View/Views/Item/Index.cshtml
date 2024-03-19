@@ -47,8 +47,14 @@
 </style>
 
 <h2>Items</h2>
+<div class="col-sm-6 alert alert-danger alert-dismissible fade show" style="margin:0px" role="alert">
+    <strong>NOTE:</strong> Pink color indicates low stock item
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 
-<div style="display:flex;flex-direction: row-reverse;margin-top:-30px;margin-bottom:15px">
+<div style="display:flex;flex-direction: row-reverse;margin-top:-40px;margin-bottom:15px">
     <button type="button" id="new" class="btn btn-primary">NEW</button>
 
 </div>
@@ -81,7 +87,11 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
+
+                bool isDanger = item.opening_Stock < item.stock_Alert;
+                string rowClass = isDanger ? "table-danger" : "";
+
+                <tr class="@rowClass">
                     <td>
                         @item.name
                     </td>
@@ -110,6 +120,9 @@
 
         </tbody>
     </table>
+
+
+
 </div>
 
 @* New Item Modal  *@
@@ -157,7 +170,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="inputEmail4" class="form-label">Min Stock Level</label>
+                        <label for="inputEmail4" class="form-label required">Min Stock Level</label>
                         <input type="number" class="form-control" id="minstocklvl">
                     </div>
 
@@ -388,7 +401,7 @@
         var cprice = $("#costprice").val();
         var sprice = $("#sellprice").val();
 
-        if (name == "" || type == "Select" || category == "Select") {
+        if (name == "" || type == "Select" || category == "Select" || minstock == "") {
             alert("kinldy fill the mandatory fields");
 
         } else {
@@ -489,7 +502,7 @@
                                                                                                                                                                                         
     function updateItem() {
 
-        if ($('#editInputName').val() == "" || $('#editinputtype').val() == "Select" || $('#editInputCategory').val() == "Select") {
+        if ($('#editInputName').val() == "" || $('#editinputtype').val() == "Select" || $('#editInputCategory').val() == "Select" || $('#editInputMinStock').val() == "") {
             alert("kinldy fill the mandatory fields");
 
         } else {

@@ -22,19 +22,30 @@ namespace FrontEnd_View.Controllers
 
         public IActionResult Index() //for showing customer list 
         {
-            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
-            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
-            List<Customer> customer = new List<Customer>();
-            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
-                "/Customer/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
-
-            if (responseMessage.IsSuccessStatusCode)
+            string staffNameJson = HttpContext.Session.GetString("SideBarNameList");
+            string staffType = HttpContext.Session.GetString("roletype");
+            List<string> sideBarNameList = JsonConvert.DeserializeObject<List<string>>(staffNameJson);
+            if (sideBarNameList.Contains("Customer") || staffType == "Admin")
             {
-                string data = responseMessage.Content.ReadAsStringAsync().Result;
-                customer = JsonConvert.DeserializeObject<List<Customer>>(data);
-            }
 
-            return View(customer);
+                int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+                int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+                List<Customer> customer = new List<Customer>();
+                HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                    "/Customer/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    string data = responseMessage.Content.ReadAsStringAsync().Result;
+                    customer = JsonConvert.DeserializeObject<List<Customer>>(data);
+                }
+
+                return View(customer);
+            }
+            else
+            {
+                return RedirectToAction("Error", "Shared");
+            }
 
         }
 
@@ -137,45 +148,56 @@ namespace FrontEnd_View.Controllers
 
         public IActionResult GetOutOrders()
         {
-            int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
-            int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
-            List<Customer> customer = new List<Customer>();
-            HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
-                "/Customer/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
-
-            if (responseMessage.IsSuccessStatusCode)
+            string staffNameJson = HttpContext.Session.GetString("SideBarNameList");
+            string staffType = HttpContext.Session.GetString("roletype");
+            List<string> sideBarNameList = JsonConvert.DeserializeObject<List<string>>(staffNameJson);
+            if (sideBarNameList.Contains("Outgoing Orders") || staffType == "Admin")
             {
-                string data = responseMessage.Content.ReadAsStringAsync().Result;
-                customer = JsonConvert.DeserializeObject<List<Customer>>(data);
-                var customerlist = customer.Select(s => new { name = s.Name, id = s.Id }).ToList();
-                ViewBag.customerListData = customerlist;
+
+                int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
+                int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
+                List<Customer> customer = new List<Customer>();
+                HttpResponseMessage responseMessage = _client.GetAsync(_client.BaseAddress +
+                    "/Customer/Get?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    string data = responseMessage.Content.ReadAsStringAsync().Result;
+                    customer = JsonConvert.DeserializeObject<List<Customer>>(data);
+                    var customerlist = customer.Select(s => new { name = s.Name, id = s.Id }).ToList();
+                    ViewBag.customerListData = customerlist;
+                }
+
+                List<dynamic> items = new List<dynamic>();
+                HttpResponseMessage itemresponseMessage = _client.GetAsync(_client.BaseAddress +
+                    "/Item/GetItemInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+                if (itemresponseMessage.IsSuccessStatusCode)
+                {
+                    string data = itemresponseMessage.Content.ReadAsStringAsync().Result;
+                    items = JsonConvert.DeserializeObject<List<dynamic>>(data);
+                    var itemlist = items.Select(s => new SelectListItem { Text = s.name, Value = s.id.ToString() }).ToList();
+                    ViewBag.ItemListData = itemlist;
+
+                }
+
+
+                List<dynamic> incord = new List<dynamic>();
+                HttpResponseMessage responseMessage2 = _client.GetAsync(_client.BaseAddress +
+                    "/Out_Order/GetOrderInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
+
+                if (responseMessage2.IsSuccessStatusCode)
+                {
+                    string data = responseMessage2.Content.ReadAsStringAsync().Result;
+                    incord = JsonConvert.DeserializeObject<List<dynamic>>(data);
+                }
+
+                return View(incord);
             }
-
-            List<dynamic> items = new List<dynamic>();
-            HttpResponseMessage itemresponseMessage = _client.GetAsync(_client.BaseAddress +
-                "/Item/GetItemInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
-
-            if (itemresponseMessage.IsSuccessStatusCode)
+            else
             {
-                string data = itemresponseMessage.Content.ReadAsStringAsync().Result;
-                items = JsonConvert.DeserializeObject<List<dynamic>>(data);
-                var itemlist = items.Select(s => new SelectListItem { Text = s.name, Value = s.id.ToString() }).ToList();
-                ViewBag.ItemListData = itemlist;
-
+                return RedirectToAction("Error", "Shared");
             }
-
-
-            List<dynamic> incord = new List<dynamic>();
-            HttpResponseMessage responseMessage2 = _client.GetAsync(_client.BaseAddress +
-                "/Out_Order/GetOrderInfo?OrgId=" + OrgId + "&StaffId=" + StaffId).Result;
-
-            if (responseMessage2.IsSuccessStatusCode)
-            {
-                string data = responseMessage2.Content.ReadAsStringAsync().Result;
-                incord = JsonConvert.DeserializeObject<List<dynamic>>(data);
-            }
-
-            return View(incord);
 
         }
 
