@@ -130,14 +130,14 @@ namespace FrontEnd_View.Controllers
                     
                 if (responseMessage.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Login");
+                    return Json(new { success = true });
                 }
 
-                return View();
+                return Json(new { success = false });
             }
             catch (Exception ex)
             {
-                return View();
+                return Json(new { success = false });
                 throw;
             }
         }

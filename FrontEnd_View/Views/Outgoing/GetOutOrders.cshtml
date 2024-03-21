@@ -10,7 +10,7 @@
 
 <h2>Selling</h2>
 
-<div style="display:flex;flex-direction: row-reverse;margin-top:-30px;margin-bottom:15px">
+<div style="display:flex;flex-direction: row-reverse;margin-top:-45px;margin-bottom:30px">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <a href="@Url.Action("OutOrder", "Outgoing")" class="btn btn-primary">ADD</a>
 
@@ -271,32 +271,34 @@
     }
 
     function deleteItemList() {
-        var Sales_Order_Id = $("#purId").text();
+        if (confirm("Are you sure you want to delete this Item?")) {
+            var Sales_Order_Id = $("#purId").text();
 
-        $.ajax({
-            url: '/Outgoing/DeleteOutOrders',
-            type: 'POST',
-            data: { sellerId: Sales_Order_Id },
-            success: function (data) {
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Order Deleted",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1300);
+            $.ajax({
+                url: '/Outgoing/DeleteOutOrders',
+                type: 'POST',
+                data: { sellerId: Sales_Order_Id },
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Order Deleted",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1300);
 
-                } else {
+                    } else {
+                        alert("Failed to delete order. Please try again.");
+                    }
+                },
+                error: function () {
                     alert("Failed to delete order. Please try again.");
                 }
-            },
-            error: function () {
-                alert("Failed to delete order. Please try again.");
-            }
-        });
+            });
+        }
     }
 
 
