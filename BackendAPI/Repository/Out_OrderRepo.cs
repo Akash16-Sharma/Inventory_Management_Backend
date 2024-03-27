@@ -99,7 +99,7 @@ namespace BackendAPI.Repository
                         {
                             outOrder.Id,
                             outOrder.Quantity,
-                            outOrder.Actual_Date,
+                            outOrder.Order_Date,
                             outOrder.Customer_Id,//returning customer id
                             outOrder.Sales_Order_Id,
                             CustomerName = customer.Name,
