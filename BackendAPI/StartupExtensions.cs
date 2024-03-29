@@ -28,6 +28,9 @@ namespace BackendAPI
             services.AddScoped<ICustomer,CustomerRepo>();
             services.AddScoped<IDashboard,DashboardRepo>();
             services.AddScoped<IEmail,EmailRepo>();
+            services.AddScoped<IGST_HSN_SAC,GST_HSN_SACRepo>();
+
+
             services.AddScoped<AppSettings>();
             services.AddScoped<User_Info>();
             services.AddScoped<EncDycPassword>();
@@ -46,6 +49,9 @@ namespace BackendAPI
             services.AddScoped<Inc_Order>();
             services.AddScoped<Out_Order>();
             services.AddScoped<Customer>();
+            services.AddScoped<Gst>();
+            services.AddScoped<Hsn>();
+
 
 
 

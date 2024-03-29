@@ -26,5 +26,7 @@ namespace BackendAPI.Models
         public DbSet<Customer> Customer { get; set; }
         public DbSet<Out_Order> Out_Order { get; set; }
         public DbSet<History> History { get; set; }
+        public DbSet<Gst> Gst { get; set; }
+        public DbSet<Hsn> HSN_SAC { get; set; }
     }
 }
