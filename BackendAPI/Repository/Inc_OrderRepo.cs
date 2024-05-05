@@ -135,7 +135,7 @@ namespace BackendAPI.Repository
                     data.Updated_By = order.Updated_By;
                     data.Vendor_Id = order.Vendor_Id;
                     data.Item_Id = order.Item_Id;
-                    data.Quantity = order.Quantity;
+                    data.Quantity = data.Quantity;
                    // data.Expected_Date = order.Expected_Date;
                     data.Order_Date = order.Order_Date;
                     _Context.Inc_Order.Update(data);

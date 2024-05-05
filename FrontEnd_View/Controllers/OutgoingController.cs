@@ -46,7 +46,6 @@ namespace FrontEnd_View.Controllers
             {
                 return RedirectToAction("Error", "Shared");
             }
-
         }
 
         public IActionResult CustomerAdd(Customer cust) //customer add

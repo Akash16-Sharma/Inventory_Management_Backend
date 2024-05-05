@@ -159,10 +159,9 @@
         $(document).on('change', '.dd select', function () {
         $(this).find('option').removeAttr('selected');
 
-        // Set 'selected' attribute for the chosen option
         var selectedValue = $(this).val();
         $(this).find('option[value="' + selectedValue + '"]').attr('selected', 'selected');
-            // Your additional logic here
+
         });
 
     function OpenPurchaseInfo(purchase_Order_Id) {

@@ -33,6 +33,7 @@ namespace BackendAPI.Models
     {
         public int Item_Id { get; set; }
         public int Quantity { get; set; }
+        public int UpdatedQuantity { get; set; }
     }
     
    

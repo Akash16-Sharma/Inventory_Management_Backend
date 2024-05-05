@@ -231,7 +231,29 @@ namespace FrontEnd_View.Controllers
 
         public IActionResult UpdateIncOrders(IncOrderRequest ord)
         {
+            object old = GetOrderInfoByPurchaseOrderId(ord.Inc_Orders.Purchase_Order_Id);
 
+            if (old is List<PurchaseInfoById> incord)
+            {
+
+                for (int i = 0; i < incord.Count; i++)
+                {
+                    int Oitem = Convert.ToInt32(incord[i].Quantity);
+                    int Nitem = Convert.ToInt32(ord.OrderItems[i].Quantity);
+                    
+                    if(Nitem> Oitem)
+                    {
+                        int Newnew = Nitem - Oitem;
+                        ord.OrderItems[i].Quantity = Newnew;
+                    }
+                    else if (Oitem > Nitem)
+                    {
+                        int Newnew = Oitem - Nitem;
+                        ord.OrderItems[i].Quantity = -Newnew;
+                    }
+
+                }
+            }
             int OrgId = HttpContext.Session.GetInt32("orgId") ?? 0;
             int StaffId = HttpContext.Session.GetInt32("staffId") ?? 0;
             ord.Inc_Orders.OrgId = OrgId;
