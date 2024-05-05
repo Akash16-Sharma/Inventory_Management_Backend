@@ -42,26 +42,45 @@ namespace BackendAPI.Controllers
         {
             EmailModel email = new EmailModel();
             bool Isadd = _organisation_info.AddOrganisation_Info(info);
-            if (Isadd == true)
+
+            if (Isadd)
             {
                 email.To = info.Org_Email;
                 email.Subject = "Welcome to Ninja Inventory - Your Login Credentials";
-                
-                email.Body = $"Dear {info.Name},\n\n" +
-                             $"Welcome to Ninja Inventory!\n\n" +
-                             $"We are delighted to have you on board as part of our team. As you embark on this journey with us, we want to ensure a smooth onboarding experience for you.\n\n" +
-                             $"Below are your login credentials for accessing the Ninja Inventory platform:\n\n" +
-                             $"Username: {info.Org_Email}\n" +
-                             $"Password: {info.Password}\n\n" +
-                             $"For security reasons, we recommend that you change your password upon your first login to something memorable but secure.\n\n" +
-                             $"Your role within our organization is vital, and we trust you will find our platform intuitive and efficient for managing inventory tasks.\n\n" +
-                             $"Should you encounter any difficulties or have any questions during the onboarding process, please don't hesitate to reach out to our dedicated support team at support@ninja-inventory.com.\n\n" +
-                             $"Once again, welcome to the Ninja Inventory family!\n\n" +
-                             $"Best regards,\n" +
-                             $"The Ninja Inventory Team";
 
+                email.Body = @"
+            <html>
+            <head>
+                <style>
+                    @media only screen and (max-width: 600px) {
+                        .container {
+                            width: 100%;
+                            padding: 10px;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class='container' style='max-width: 600px; margin: 0 auto;'>
+                    <h2 style='text-align: center; color: #007bff;'>Welcome to Ninja Inventory!</h2>
+                    <p>Dear " + info.Name + @",</p>
+                    <p>We are delighted to have you on board as part of our team. As you embark on this journey with us, we want to ensure a smooth onboarding experience for you.</p>
+                    <p>Below are your login credentials for accessing the Ninja Inventory platform:</p>
+                    <ul>
+                        <li><strong>Username:</strong> " + info.Org_Email + @"</li>
+                        <li><strong>Password:</strong> " + info.Password + @"</li>
+                    </ul>
+                    <p>For security reasons, we recommend that you change your password upon your first login to something memorable but secure.</p>
+                    <p>Your role within our organization is vital, and we trust you will find our platform intuitive and efficient for managing inventory tasks.</p>
+                    <p>If you encounter any difficulties or have any questions during the onboarding process, please don't hesitate to reach out to our dedicated support team at <a href='mailto:support@ninja-inventory.com'>support@ninja-inventory.com</a>.</p>
+                    <p>Once again, welcome to the Ninja Inventory family!</p>
+                    <p>Best regards,<br/>The Ninja Inventory Team</p>
+                </div>
+            </body>
+            </html>";
 
                 _mail.SendEmailAsync(email);
+
                 return Ok(new { Status = 200, Message = "Inserted Successfully" });
             }
             else
@@ -69,6 +88,9 @@ namespace BackendAPI.Controllers
                 return Ok(new { Status = 400, Message = "BadRequest" });
             }
         }
+
+
+
 
         [HttpGet]
         public IActionResult GetOrganisation(int OrgId)
